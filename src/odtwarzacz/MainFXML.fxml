@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane fx:id="pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MainFXMLController">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="%menu.file">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#chooseFile" text="%menu.file.open" />
+                  <Menu fx:id="openRecentMenu" mnemonicParsing="false" text="%menu.file.openrecent" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.connect">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#connectWifi" text="%menu.connect.wifi" />
+                        <MenuItem mnemonicParsing="false" onAction="#connectBT" text="%menu.connect.bt" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.language">
+                    <items>
+                        <RadioMenuItem fx:id="englishLanguageButton" mnemonicParsing="false" selected="true" text="%menu.language.english">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="languageGroup" />
+                            </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem fx:id="polishLanguageButton" mnemonicParsing="false" text="%menu.language.polish" toggleGroup="$languageGroup" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.view">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#showHidePlaylist" text="%menu.view.showhideplaylist" />
+                    </items>
+                </Menu>
+            <Menu mnemonicParsing="false" text="Send message">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#wifiSendTAK" text="Wifi - &quot;TAK&quot;" />
+                  <MenuItem mnemonicParsing="false" onAction="#BTSendTAK" text="Bluetooth - &quot;TAK&quot;" />
+                  <MenuItem mnemonicParsing="false" onAction="#sendDirectoryTree" text="Send directory tree" />
+               </items>
+            </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+   <center>
+      <SplitPane fx:id="splitPane" BorderPane.alignment="CENTER">
+         <items>
+            <StackPane fx:id="centerPane" />
+         </items>
+      </SplitPane>
+   </center>
+</BorderPane>
