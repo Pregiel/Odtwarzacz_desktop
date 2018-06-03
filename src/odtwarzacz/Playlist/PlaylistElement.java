@@ -6,7 +6,9 @@
 package odtwarzacz.Playlist;
 
 import java.io.File;
+import java.util.Arrays;
 
+import it.sauronsoftware.jave.*;
 import javafx.collections.MapChangeListener;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -14,11 +16,15 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
+import javafx.util.Duration;
+import odtwarzacz.FileType;
 import odtwarzacz.MainFXMLController;
-import odtwarzacz.Metadata.MetadataMusic;
+import odtwarzacz.Metadata.Metadata;
+import odtwarzacz.Metadata.MetadataAudio;
+import odtwarzacz.Metadata.MetadataVideo;
+import org.apache.commons.io.FilenameUtils;
 
 /**
- *
  * @author Pregiel
  */
 public class PlaylistElement {
@@ -36,9 +42,12 @@ public class PlaylistElement {
     private boolean playing;
     private boolean playable;
 
-    private MetadataMusic metadata;
+    private Metadata metadata;
 
     private File file;
+
+    private FileType fileType;
+
 
     public PlaylistElement(int index, String path, GridPane pane) {
         this.index = index;
@@ -51,7 +60,16 @@ public class PlaylistElement {
         setSelected(false);
         setPlaying(false);
 
-        metadata = new MetadataMusic();
+        if (Arrays.asList(MainFXMLController.SUPPORTED_AUDIO).contains("*." + FilenameUtils.getExtension(path).toUpperCase())) {
+            metadata = new MetadataAudio();
+            fileType = FileType.AUDIO;
+        } else if (Arrays.asList(MainFXMLController.SUPPORTED_VIDEO).contains("*." + FilenameUtils.getExtension(path).toUpperCase())) {
+            metadata = new MetadataVideo();
+            fileType = FileType.VIDEO;
+        } else {
+            fileType = FileType.NONE;
+        }
+        metadata.generate(file);
         generateMetadata();
 
         this.titleLabel.setText(generateLabel());
@@ -61,6 +79,8 @@ public class PlaylistElement {
                 if (event.getClickCount() == 2) {
                     MainFXMLController.getPlaylist().play(index);
                 } else if (event.getClickCount() == 1) {
+
+                    System.out.println(metadata);
                     if (!event.isControlDown()) {
                         MainFXMLController.getPlaylist().unselectAll();
                         setSelected(true);
@@ -74,19 +94,41 @@ public class PlaylistElement {
 
     private String generateLabel() {
 
-        String label = index + ". ";
-        if (metadata.getTitle() != null) {
-            if (metadata.getArtist() != null) {
-                {
-                    label = label + metadata.getArtist() + " - ";
+        StringBuilder label = new StringBuilder();
+
+        label.append(index).append(". ");
+
+
+        switch (fileType) {
+            case AUDIO:
+                if (metadata.getTitle() != null) {
+                    if (((MetadataAudio) metadata).getArtist() != null) {
+                        {
+                            label.append(((MetadataAudio) metadata).getArtist()).append(" - ");
+                        }
+                        label.append(metadata.getTitle());
+                    }
+                } else {
+                    label.append(file.getName());
                 }
-                label = label + metadata.getTitle();
-            }
-        } else {
-            label = label + file.getName();
+                break;
+
+            case VIDEO:
+                if (metadata.getTitle() != null) {
+                    label.append(metadata.getTitle());
+                } else {
+                    label.append(file.getName());
+                }
+                break;
+
+            default:
+                label.append(file.getName());
+//                    label.append(metadata.getDuration());
+
         }
 
-        return label;
+
+        return label.toString();
     }
 
     public int getIndex() {
@@ -118,8 +160,7 @@ public class PlaylistElement {
     public boolean isPlayable() {
         return getSongCheckbox().isSelected();
     }
-    
-    
+
 
     public void setSelected(boolean selected) {
         this.selected = selected;
@@ -149,20 +190,18 @@ public class PlaylistElement {
         return titleLabel;
     }
 
-    public MetadataMusic getMetadata() {
+    public Metadata getMetadata() {
         return metadata;
     }
 
     private void generateMetadata() {
 
         Media media = new Media(file.toURI().toString());
-        media.getMetadata().addListener(new MapChangeListener<String, Object>() {
-            @Override
-            public void onChanged(MapChangeListener.Change<? extends String, ? extends Object> change) {
-                if (change.wasAdded()) {
-                    handleMetadata(change.getKey(), change.getValueAdded());
-                    titleLabel.setText(generateLabel());
-                }
+        media.getMetadata().addListener((MapChangeListener<String, Object>) change -> {
+            if (change.wasAdded()) {
+                System.out.println(change.getKey() + " : " + change.getValueAdded());
+                handleMetadata(change.getKey(), change.getValueAdded());
+                titleLabel.setText(generateLabel());
             }
         });
 
@@ -175,11 +214,11 @@ public class PlaylistElement {
                 break;
 
             case "artist":
-                metadata.setArtist(value.toString());
+                ((MetadataAudio) metadata).setArtist(value.toString());
                 break;
 
             case "album":
-                metadata.setAlbum(value.toString());
+                ((MetadataAudio) metadata).setAlbum(value.toString());
                 break;
 
         }

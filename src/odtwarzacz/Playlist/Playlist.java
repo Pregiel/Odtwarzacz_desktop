@@ -152,7 +152,8 @@ public class Playlist {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Video Files", "*.AIFF", "*.FXN", "*.FLV", "*.HLS", "*.MP3", "*.MP4", "*.WAV"),
+                new FileChooser.ExtensionFilter("Video Files", MainFXMLController.SUPPORTED_VIDEO),
+                new FileChooser.ExtensionFilter("Audio Files", MainFXMLController.SUPPORTED_AUDIO),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         List<File> list = fileChooser.showOpenMultipleDialog(null);
         if (list != null) {

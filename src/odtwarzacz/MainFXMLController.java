@@ -41,6 +41,9 @@ import odtwarzacz.Connection.WifiConnection;
  */
 public class MainFXMLController implements Initializable {
 
+    public static final String[] SUPPORTED_AUDIO = {"*.MP3"};//{"*.AIFF", "*.MP3", "*.WAV"};
+    public static final String[] SUPPORTED_VIDEO = {"*.MP4"};//{"*.FLV", "*.MP4"};
+
     @FXML
     private BorderPane pane;
 
@@ -219,7 +222,8 @@ public class MainFXMLController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Video Files", "*.AIFF", "*.FXN", "*.FLV", "*.HLS", "*.MP3", "*.MP4", "*.WAV"),
+                new ExtensionFilter("Video Files", SUPPORTED_VIDEO),
+                new ExtensionFilter("Audio Files", SUPPORTED_AUDIO),
                 new ExtensionFilter("All Files", "*.*"));
         file = fileChooser.showOpenDialog(null);
         if (file != null) {
