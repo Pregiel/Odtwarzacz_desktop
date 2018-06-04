@@ -79,8 +79,6 @@ public class PlaylistElement {
                 if (event.getClickCount() == 2) {
                     MainFXMLController.getPlaylist().play(index);
                 } else if (event.getClickCount() == 1) {
-
-                    System.out.println(metadata);
                     if (!event.isControlDown()) {
                         MainFXMLController.getPlaylist().unselectAll();
                         setSelected(true);

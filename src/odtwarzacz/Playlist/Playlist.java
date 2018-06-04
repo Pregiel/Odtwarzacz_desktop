@@ -26,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.MyLocale;
 import odtwarzacz.Odtwarzacz;
@@ -269,6 +270,17 @@ public class Playlist {
         this.random = random;
         Odtwarzacz.getConfig().setProperty("random", String.valueOf(random));
         Odtwarzacz.getConfig().save();
+
     }
 
+
+    public String toMessage() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String s : playlistList) {
+            stringBuilder.append(s).append(Connection.SEPARATOR);
+        }
+
+        return stringBuilder.toString();
+    }
 }

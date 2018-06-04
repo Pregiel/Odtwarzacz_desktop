@@ -15,13 +15,14 @@ import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.application.Platform;
 import odtwarzacz.InfoLabel;
+import odtwarzacz.MainFXMLController;
 import odtwarzacz.MediaFXMLController;
 import odtwarzacz.MyLocale;
 
 /**
- *
  * @author Pregiel
  */
 public abstract class Connection {
@@ -34,6 +35,14 @@ public abstract class Connection {
     public static final String MUTE = "MUTE";
     public static final String UNMUTE = "UNMUTE";
     public static final String DEVICE_NAME = "DEVICE_NAME";
+    public static final String PLAYLIST_SEND = "PLAYLIST_SEND";
+    public static final String PLAYLIST_UPDATE = "PLAYLIST_UPDATE";
+    public static final String FORWARD_PRESSED = "FORWARD_PRESSED";
+    public static final String FORWARD_RELEASED = "FORWARD_RELEASED";
+    public static final String BACKWARD_PRESSED = "BACKWARD_PRESSED";
+    public static final String BACKWARD_RELEASED = "BACKWARD_RELEASED";
+
+    public static final String SEPARATOR = "::";
 
     private DataInputStream DIS;
     private DataOutputStream DOS;
@@ -130,7 +139,7 @@ public abstract class Connection {
     }
 
     public void pilotController(String msg) {
-        String[] message = msg.split("/");
+        String[] message = msg.split(SEPARATOR);
 
         switch (message[0]) {
             case Connection.TIME:
@@ -138,49 +147,49 @@ public abstract class Connection {
 //            final double mediaTimeMilis = Double.parseDouble(message[2]);
                 if (mediaController != null) {
 
-                mediaController.getTimeSlider().moveTo(currentTimeMilis);
+                    mediaController.getTimeSlider().moveTo(currentTimeMilis);
                 }
                 break;
 
-            case Connection.VOLUME:
+            case VOLUME:
                 if (mediaController != null) {
-                final double volumeValue = Double.parseDouble(message[1]);
+                    final double volumeValue = Double.parseDouble(message[1]);
 
-                mediaController.getVolSlider().setVolume(volumeValue);
+                    mediaController.getVolSlider().setVolume(volumeValue);
                 }
                 break;
 
-            case Connection.PLAY:
+            case PLAY:
                 if (mediaController != null) {
                     mediaController.playPauseButton(null);
                 }
                 break;
 
-            case Connection.FORWARD:
+            case FORWARD:
                 if (mediaController != null) {
-                mediaController.forwardButton(null);
+                    mediaController.forwardButton(null);
                 }
                 break;
 
-            case Connection.BACKWARD:
+            case BACKWARD:
                 if (mediaController != null) {
-                mediaController.backwardButton(null);
+                    mediaController.backwardButton(null);
                 }
                 break;
 
-            case Connection.MUTE:
+            case MUTE:
                 if (mediaController != null) {
-                mediaController.getVolSlider().mute();
+                    mediaController.getVolSlider().mute();
                 }
                 break;
 
-            case Connection.UNMUTE:
+            case UNMUTE:
                 if (mediaController != null) {
-                mediaController.getVolSlider().mute();
+                    mediaController.getVolSlider().mute();
                 }
                 break;
 
-            case Connection.DEVICE_NAME:
+            case DEVICE_NAME:
                 setConnectedDeviceName(message[1]);
                 ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
                         ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
@@ -192,17 +201,37 @@ public abstract class Connection {
                     }
                 });
                 break;
+
+            case PLAYLIST_SEND:
+                sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+                break;
+
+            case FORWARD_PRESSED:
+                mediaController.forwardButtonPressed(null);
+                break;
+
+            case FORWARD_RELEASED:
+                mediaController.forwardButtonReleased(null);
+                break;
+
+            case BACKWARD_PRESSED:
+                mediaController.backwardButtonPressed(null);
+                break;
+
+            case BACKWARD_RELEASED:
+                mediaController.backwardButtonReleased(null);
+                break;
         }
     }
 
     public void sendMessage(Object... messages) {
         if (isConnected()) {
             try {
-                String message = "";
+                StringBuilder stringBuilder = new StringBuilder();
                 for (Object o : messages) {
-                    message = message + o + "/";
+                    stringBuilder.append(o).append(SEPARATOR);
                 }
-                DOS.writeUTF(message);
+                DOS.writeUTF(stringBuilder.toString());
             } catch (IOException ex) {
                 disconnect();
 //                    Logger.getLogger(WifiConnection.class.getName()).log(Level.SEVERE, null, ex);
