@@ -38,6 +38,7 @@ public abstract class Connection {
     public static final String PLAYLIST_SEND = "PLAYLIST_SEND";
     public static final String PLAYLIST_UPDATE = "PLAYLIST_UPDATE";
     public static final String PLAYLIST_PLAY = "PLAYLIST_PLAY";
+    public static final String PLAYLIST_PLAYING_INDEX = "PLAYLIST_PLAYING_INDEX";
     public static final String FORWARD_PRESSED = "FORWARD_PRESSED";
     public static final String FORWARD_RELEASED = "FORWARD_RELEASED";
     public static final String BACKWARD_PRESSED = "BACKWARD_PRESSED";
@@ -207,6 +208,7 @@ public abstract class Connection {
 
             case PLAYLIST_SEND:
                 sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+                sendMessage(PLAYLIST_PLAYING_INDEX, MainFXMLController.getPlaylist().getPlaylistIndex());
                 break;
 
             case FORWARD_PRESSED:

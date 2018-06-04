@@ -207,6 +207,7 @@ public class Playlist {
 
     public void play(int index) {
         mainController.loadFile(new File(playlistList.get(index - 1)), index);
+        mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, playlistIndex);
         playlistElementList.forEach((t) -> {
             if (t.getIndex() == index) {
                 t.setPlaying(true);
@@ -221,6 +222,7 @@ public class Playlist {
         if (getPlaylistIndex() <= playlistList.size()) {
             play(getPlaylistIndex());
         } else {
+            mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, 0);
             setNoPlayAll();
         }
     }
