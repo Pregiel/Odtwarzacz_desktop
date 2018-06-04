@@ -5,6 +5,7 @@
  */
 package odtwarzacz;
 
+import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import odtwarzacz.Playlist.Playlist;
 import java.io.File;
@@ -147,14 +148,20 @@ public class MainFXMLController implements Initializable {
     private void refreshScene() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MediaFXML.fxml"), resourceBundle);
         Pane mediaPane = loader.load();
-        mediaControl = loader.getController();
-        mediaControl.setConnectionInfo(infoLabel);
-        mediaControl.setConnection(connection);
+                mediaControl = loader.getController();
+                mediaControl.setConnectionInfo(infoLabel);
+                mediaControl.setConnection(connection);
 
-        centerPane.getChildren().clear();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                centerPane.getChildren().clear();
 
-        centerPane.getChildren().add(mediaPane);
-        centerPane.getChildren().add(infoLabel);
+                centerPane.getChildren().add(mediaPane);
+                centerPane.getChildren().add(infoLabel);
+
+            }
+        });
 
     }
 
@@ -186,6 +193,10 @@ public class MainFXMLController implements Initializable {
 //        return wifiConnection;
 //    }
     private Connection connection;
+
+    public Connection getConnection() {
+        return connection;
+    }
 
     @FXML
     private void connectWifi(ActionEvent event) {

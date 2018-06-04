@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Hyperlink;
@@ -31,8 +32,9 @@ import odtwarzacz.MainFXMLController;
 import odtwarzacz.MyLocale;
 import odtwarzacz.Odtwarzacz;
 
+import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
+
 /**
- *
  * @author Pregiel
  */
 public class Playlist {
@@ -132,6 +134,10 @@ public class Playlist {
             } catch (IOException ex) {
                 Logger.getLogger(Playlist.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+
+        if (mainController.getConnection() != null) {
+            mainController.getConnection().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
         }
     }
 
@@ -250,7 +256,7 @@ public class Playlist {
         if (random) {
             int newIndex;
             do {
-                newIndex = new Random().nextInt(playlistList.size())+1;
+                newIndex = new Random().nextInt(playlistList.size()) + 1;
             } while (newIndex == getPlaylistIndex());
             setPlaylistIndex(newIndex);
         } else {
@@ -272,7 +278,6 @@ public class Playlist {
         Odtwarzacz.getConfig().save();
 
     }
-
 
     public String toMessage() {
         StringBuilder stringBuilder = new StringBuilder();

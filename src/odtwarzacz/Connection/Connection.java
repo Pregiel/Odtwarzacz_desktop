@@ -37,6 +37,7 @@ public abstract class Connection {
     public static final String DEVICE_NAME = "DEVICE_NAME";
     public static final String PLAYLIST_SEND = "PLAYLIST_SEND";
     public static final String PLAYLIST_UPDATE = "PLAYLIST_UPDATE";
+    public static final String PLAYLIST_PLAY = "PLAYLIST_PLAY";
     public static final String FORWARD_PRESSED = "FORWARD_PRESSED";
     public static final String FORWARD_RELEASED = "FORWARD_RELEASED";
     public static final String BACKWARD_PRESSED = "BACKWARD_PRESSED";
@@ -142,7 +143,7 @@ public abstract class Connection {
         String[] message = msg.split(SEPARATOR);
 
         switch (message[0]) {
-            case Connection.TIME:
+            case TIME:
                 final double currentTimeMilis = Double.parseDouble(message[1]);
 //            final double mediaTimeMilis = Double.parseDouble(message[2]);
                 if (mediaController != null) {
@@ -200,6 +201,8 @@ public abstract class Connection {
                         connectionInfo.setInfoText(InfoLabel.CONNECTION_CONNECTED, message[1]);
                     }
                 });
+
+                sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
                 break;
 
             case PLAYLIST_SEND:
@@ -220,6 +223,10 @@ public abstract class Connection {
 
             case BACKWARD_RELEASED:
                 mediaController.backwardButtonReleased(null);
+                break;
+
+            case PLAYLIST_PLAY:
+                MainFXMLController.getPlaylist().play(Integer.parseInt(message[1]) + 1);
                 break;
         }
     }
