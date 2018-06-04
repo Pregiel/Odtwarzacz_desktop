@@ -218,23 +218,11 @@ public class Playlist {
 
     public void playNext() {
         nextPlaylistIndex();
-        for (PlaylistElement t : playlistElementList) {
-            if (t.getIndex() == getPlaylistIndex()) {
-                if (t.isPlayable()) {
-                    t.setPlaying(true);
-                } else {
-                    t.setPlaying(false);
-                    nextPlaylistIndex();
-                }
-            } else {
-                t.setPlaying(false);
-            }
-        }
-
         if (getPlaylistIndex() <= playlistList.size()) {
-            mainController.loadFile(new File(playlistList.get(getPlaylistIndex() - 1)), getPlaylistIndex());
+            play(getPlaylistIndex());
+        } else {
+            setNoPlayAll();
         }
-
     }
 
     public void setNoPlayAll() {
@@ -252,7 +240,7 @@ public class Playlist {
         return playlistIndex;
     }
 
-    public void nextPlaylistIndex() {
+    private void nextPlaylistIndex() {
         if (random) {
             int newIndex;
             do {
@@ -260,7 +248,17 @@ public class Playlist {
             } while (newIndex == getPlaylistIndex());
             setPlaylistIndex(newIndex);
         } else {
-            playlistIndex++;
+            boolean next = true;
+            do {
+                playlistIndex++;
+                if (playlistElementList.get(playlistIndex - 1).isPlayable()) {
+                    next = false;
+                } else if (playlistIndex == playlistElementList.size()) {
+                    next = false;
+                    playlistIndex++;
+                }
+
+            } while (next);
         }
     }
 

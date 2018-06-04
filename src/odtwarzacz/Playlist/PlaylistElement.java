@@ -146,13 +146,15 @@ public class PlaylistElement {
     }
 
     public void setPlaying(boolean playing) {
-        this.playing = playing;
-
         if (playing) {
-            titleLabel.getStyleClass().add(CSS_TITLE_PLAYING);
+            if (!this.playing) {
+                titleLabel.getStyleClass().add(CSS_TITLE_PLAYING);
+            }
         } else {
             titleLabel.getStyleClass().remove(CSS_TITLE_PLAYING);
         }
+
+        this.playing = playing;
     }
 
     public boolean isPlayable() {
