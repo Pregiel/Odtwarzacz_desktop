@@ -5,11 +5,7 @@
  */
 package odtwarzacz.Connection;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ResourceBundle;
@@ -17,10 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
-import odtwarzacz.InfoLabel;
-import odtwarzacz.MainFXMLController;
-import odtwarzacz.MediaFXMLController;
-import odtwarzacz.MyLocale;
+import odtwarzacz.*;
 
 /**
  * @author Pregiel
@@ -43,6 +36,11 @@ public abstract class Connection {
     public static final String FORWARD_RELEASED = "FORWARD_RELEASED";
     public static final String BACKWARD_PRESSED = "BACKWARD_PRESSED";
     public static final String BACKWARD_RELEASED = "BACKWARD_RELEASED";
+    public static final String FILECHOOSER_DIRECTORY_TREE = "FILECHOOSER_DIRECTORY_TREE";
+    public static final String FILECHOOSER_SHOW = "FILECHOOSER_SHOW";
+    public static final String FILECHOOSER_DRIVE_LIST = "FILECHOOSER_DRIVE_LIST";
+    public static final String FILECHOOSER_PLAY = "FILECHOOSER_PLAY";
+    public static final String FILECHOOSER_PLAYLIST_ADD = "FILECHOOSER_PLAYLIST_ADD";
 
     public static final String SEPARATOR = "::";
 
@@ -57,9 +55,18 @@ public abstract class Connection {
 
     private MediaFXMLController mediaController;
 
+    private MainFXMLController mainFXMLController;
+
     public Connection() {
         this.connected = false;
+    }
 
+    public MainFXMLController getMainFXMLController() {
+        return mainFXMLController;
+    }
+
+    public void setMainFXMLController(MainFXMLController mainFXMLController) {
+        this.mainFXMLController = mainFXMLController;
     }
 
     public MediaFXMLController getMediaController() {
@@ -229,6 +236,26 @@ public abstract class Connection {
 
             case PLAYLIST_PLAY:
                 MainFXMLController.getPlaylist().play(Integer.parseInt(message[1]) + 1);
+                break;
+
+            case FILECHOOSER_DIRECTORY_TREE:
+                sendMessage(FILECHOOSER_DIRECTORY_TREE, Utils.getDirectoryTree(new File(message[1])));
+                break;
+
+            case FILECHOOSER_SHOW:
+                sendMessage(FILECHOOSER_SHOW, Utils.getDriveList());
+                break;
+
+            case FILECHOOSER_DRIVE_LIST:
+                sendMessage(FILECHOOSER_DRIVE_LIST, Utils.getDriveList());
+                break;
+
+            case FILECHOOSER_PLAY:
+                mainFXMLController.loadFile(new File(message[1]));
+                break;
+
+            case FILECHOOSER_PLAYLIST_ADD:
+                MainFXMLController.getPlaylist().add(new File(message[1]));
                 break;
         }
     }

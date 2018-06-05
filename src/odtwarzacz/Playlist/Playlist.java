@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Hyperlink;
@@ -152,7 +153,13 @@ public class Playlist {
     public void add(File file) {
         playlistList.add(file.getAbsolutePath());
         save();
-        loadPlaylist();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                loadPlaylist();
+
+            }
+        });
     }
 
     public void addNew() {

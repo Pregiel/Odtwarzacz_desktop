@@ -36,6 +36,8 @@ import odtwarzacz.Connection.BtConnection;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.Connection.WifiConnection;
 
+import javax.swing.filechooser.FileSystemView;
+
 /**
  *
  * @author Pregiel
@@ -202,6 +204,7 @@ public class MainFXMLController implements Initializable {
     private void connectWifi(ActionEvent event) {
         connection = new WifiConnection();
         connection.setMediaController(mediaControl);
+        connection.setMainFXMLController(this);
         connection.setConnectionInfo(infoLabel);
         connection.connect();
     }
@@ -214,9 +217,9 @@ public class MainFXMLController implements Initializable {
 //    private BtConnection btConnection;
     @FXML
     private void connectBT(ActionEvent event) {
-
         connection = new BtConnection();
         connection.setMediaController(mediaControl);
+        connection.setMainFXMLController(this);
         connection.setConnectionInfo(infoLabel);
         connection.connect();
     }
@@ -328,20 +331,8 @@ public class MainFXMLController implements Initializable {
         if(selectedDirectory == null){
             System.out.println("No Directory selected");
         }else{
-            System.out.println(getDirectoryTree(selectedDirectory));
+            System.out.println(Utils.getDirectoryTree(selectedDirectory));
         }
-    }
-
-    public String getDirectoryTree(File directory) {
-        StringBuilder tree = new StringBuilder();
-        File[] list = directory.listFiles();
-        if (list != null) {
-            for (File file : list) {
-                System.out.println(file.getName());
-                tree.append(file.getName()).append("|");
-            }
-        }
-        return tree.toString();
     }
 
     public void disconnect(ActionEvent actionEvent) {
