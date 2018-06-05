@@ -61,5 +61,16 @@ public class BtConnection extends Connection {
         connect.setDaemon(true);
         connect.start();
     }
-    
+
+    @Override
+    public void disconnect() {
+        super.disconnect();
+        try {
+            connection.close();
+            streamConnNotifier.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

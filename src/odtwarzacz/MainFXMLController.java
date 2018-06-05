@@ -343,4 +343,9 @@ public class MainFXMLController implements Initializable {
         }
         return tree.toString();
     }
+
+    public void disconnect(ActionEvent actionEvent) {
+        connection.disconnect();
+
+    }
 }

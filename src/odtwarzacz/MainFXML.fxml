@@ -4,12 +4,13 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<BorderPane fx:id="pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MainFXMLController">
+<BorderPane fx:id="pane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MainFXMLController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
@@ -23,6 +24,8 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#connectWifi" text="%menu.connect.wifi" />
                         <MenuItem mnemonicParsing="false" onAction="#connectBT" text="%menu.connect.bt" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#disconnect" text="%menu.connect.disconnect" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="%menu.language">

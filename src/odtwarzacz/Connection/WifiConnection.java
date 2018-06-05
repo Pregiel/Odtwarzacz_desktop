@@ -52,8 +52,15 @@ public class WifiConnection extends Connection {
         connect.start();
     
     }
-    
-    
-    
-    
+
+    @Override
+    public void disconnect() {
+        super.disconnect();
+        try {
+            socket.close();
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
