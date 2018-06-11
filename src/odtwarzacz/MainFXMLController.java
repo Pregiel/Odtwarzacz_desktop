@@ -212,6 +212,7 @@ public class MainFXMLController implements Initializable {
     @FXML
     private void wifiSendTAK(ActionEvent event) {
 //        wifiConnection.sendMessage("TAK");
+        connection.sendSnapshot();
     }
 
 //    private BtConnection btConnection;

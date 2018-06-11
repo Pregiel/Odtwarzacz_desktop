@@ -13,7 +13,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
 import odtwarzacz.*;
+
+import javax.imageio.ImageIO;
 
 /**
  * @author Pregiel
@@ -41,6 +46,8 @@ public abstract class Connection {
     public static final String FILECHOOSER_DRIVE_LIST = "FILECHOOSER_DRIVE_LIST";
     public static final String FILECHOOSER_PLAY = "FILECHOOSER_PLAY";
     public static final String FILECHOOSER_PLAYLIST_ADD = "FILECHOOSER_PLAYLIST_ADD";
+    public static final String SNAPSHOT = "SNAPSHOT";
+    public static final String SNAPSHOT_REQUEST = "SNAPSHOT_REQUEST";
 
     public static final String SEPARATOR = "::";
 
@@ -257,6 +264,15 @@ public abstract class Connection {
             case FILECHOOSER_PLAYLIST_ADD:
                 MainFXMLController.getPlaylist().add(new File(message[1]));
                 break;
+
+            case SNAPSHOT_REQUEST:
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendSnapshot();
+
+                    }
+                });
         }
     }
 
@@ -271,6 +287,26 @@ public abstract class Connection {
             } catch (IOException ex) {
                 disconnect();
 //                    Logger.getLogger(WifiConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+
+    public void sendSnapshot() {
+        if (isConnected() && mediaController.getMediaView() != null) {
+            WritableImage image = mediaController.getMediaView().snapshot(new SnapshotParameters(), null);
+
+            ByteArrayOutputStream s = new ByteArrayOutputStream();
+            byte[] res;
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", s);
+                res = s.toByteArray();
+                sendMessage(Connection.SNAPSHOT, res.length);
+                DOS.write(res);
+
+                s.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

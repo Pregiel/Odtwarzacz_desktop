@@ -5,21 +5,19 @@
  */
 package odtwarzacz;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -33,6 +31,15 @@ import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.Sliders.TimeSlider;
 import odtwarzacz.Sliders.VolumeSlider;
+
+import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * FXML Controller class
@@ -88,6 +95,9 @@ public class MediaFXMLController implements Initializable {
     private ToggleButton repeatTooglebutton;
 
 
+    private Timer previewTimer;
+
+
     public InfoLabel getConnectionInfo() {
         return connectionInfo;
     }
@@ -139,6 +149,10 @@ public class MediaFXMLController implements Initializable {
             repeatTooglebutton.setSelected(true);
         }
 
+//        previewTimer = new Timer();
+//        previewTimer.schedule(new PreviewSend(), 0, 100);
+
+
 //        mediaView.setPreserveRatio(true);
 //        mediaView.fitWidthProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
 //        mediaView.fitHeightProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
@@ -154,6 +168,7 @@ public class MediaFXMLController implements Initializable {
 
     }
 
+
     public void changeMediaPlayer(File file) {
         Media media = new Media(file.toURI().toString());
         MediaPlayer mp = new MediaPlayer(media);
@@ -166,6 +181,7 @@ public class MediaFXMLController implements Initializable {
         mp.setOnPlaying(() -> {
 //            System.out.println(mediaPlayer.getStatus() + " : onPlaying");
             playButton.setText("||");
+
         });
 
         mp.setOnPaused(() -> {
@@ -244,6 +260,7 @@ public class MediaFXMLController implements Initializable {
 
             if (connection != null) {
                 connection.sendMessage(Connection.TIME, currentTime.toMillis(), duration.toMillis());
+
             }
 
             if (duration.greaterThan(Duration.ZERO) && !timeSlider.isChanging()) {
@@ -329,7 +346,6 @@ public class MediaFXMLController implements Initializable {
     private static final Duration BACKWARD_VALUE = Duration.seconds(-5);
 
 
-
     public void forwardButtonPressed(MouseEvent mouseEvent) {
         moveToValueJump = 0;
         moveToTimer = new Timer();
@@ -348,10 +364,10 @@ public class MediaFXMLController implements Initializable {
 
     public void forwardButtonDrag(MouseEvent mouseEvent) {
         Bounds buttonBounds = forwardButton.localToScene(forwardButton.getBoundsInLocal());
-        int buttonPosition = (int) (buttonBounds.getMaxX() - (buttonBounds.getWidth()) + (backwardButton.getWidth()/2));
+        int buttonPosition = (int) (buttonBounds.getMaxX() - (buttonBounds.getWidth()) + (backwardButton.getWidth() / 2));
         int maxPosition = (int) (timeSlider.getWidth() - buttonPosition);
 
-        double mouseX = mouseEvent.getX() - (forwardButton.getWidth()/2);
+        double mouseX = mouseEvent.getX() - (forwardButton.getWidth() / 2);
 
         if (mouseX >= 0) {
             moveToValueJump = (int) ((mouseEvent.getX() / maxPosition) * MAX_MOVETO_VALUE_SPEED);
@@ -389,10 +405,10 @@ public class MediaFXMLController implements Initializable {
 
     public void backwardButtonDrag(MouseEvent mouseEvent) {
         Bounds buttonBounds = backwardButton.localToScene(backwardButton.getBoundsInLocal());
-        int buttonPosition = (int) (buttonBounds.getMaxX() - (buttonBounds.getWidth()) + (backwardButton.getWidth()/2));
+        int buttonPosition = (int) (buttonBounds.getMaxX() - (buttonBounds.getWidth()) + (backwardButton.getWidth() / 2));
         int maxPosition = (int) (timeSlider.getWidth() - buttonPosition);
 
-        double mouseX = -(mouseEvent.getX() - (backwardButton.getWidth()/2));
+        double mouseX = -(mouseEvent.getX() - (backwardButton.getWidth() / 2));
 
 
         if (mouseX >= 0) {
@@ -427,5 +443,9 @@ public class MediaFXMLController implements Initializable {
         Odtwarzacz.getConfig().save();
 
         mediaPlayer.setCycleCount(repeat ? MediaPlayer.INDEFINITE : 1);
+    }
+
+    public MediaView getMediaView() {
+        return mediaView;
     }
 }
