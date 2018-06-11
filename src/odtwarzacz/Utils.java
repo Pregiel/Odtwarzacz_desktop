@@ -29,4 +29,8 @@ public class Utils {
 
         return list.toString();
     }
+
+    public static String getExtension(String file) {
+        return file.substring(file.lastIndexOf(".") + 1);
+    }
 }

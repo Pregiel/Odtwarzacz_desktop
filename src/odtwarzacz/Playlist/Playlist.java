@@ -214,7 +214,9 @@ public class Playlist {
 
     public void play(int index) {
         mainController.loadFile(new File(playlistList.get(index - 1)), index);
-        mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, playlistIndex);
+        if (mainController.getConnection() != null) {
+            mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, playlistIndex);
+        }
         playlistElementList.forEach((t) -> {
             if (t.getIndex() == index) {
                 t.setPlaying(true);
@@ -229,7 +231,9 @@ public class Playlist {
         if (getPlaylistIndex() <= playlistList.size()) {
             play(getPlaylistIndex());
         } else {
-            mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, 0);
+            if (mainController.getConnection() != null) {
+                mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, 0);
+            }
             setNoPlayAll();
         }
     }
@@ -260,11 +264,11 @@ public class Playlist {
             boolean next = true;
             do {
                 playlistIndex++;
-                if (playlistElementList.get(playlistIndex - 1).isPlayable()) {
-                    next = false;
-                } else if (playlistIndex == playlistElementList.size()) {
+                if (playlistIndex  >= playlistElementList.size()) {
                     next = false;
                     playlistIndex++;
+                } else if (playlistElementList.get(playlistIndex - 1).isPlayable()) {
+                    next = false;
                 }
 
             } while (next);

@@ -28,17 +28,18 @@ public class Odtwarzacz extends Application {
 
     private static final String CONFIGFILENAME = "config.properties";
     private static final String DEFAULTCONFIGFILENAME = "src/Resources/DefaultConfigFile.properties";
-    
-    
-    public ResourceBundle resourceBundle;
-    public static ConfigProperties configProp;
+
+
+    private ResourceBundle resourceBundle;
+    private static ConfigProperties configProp;
 
     @Override
     public void start(Stage stage) throws Exception {
 
         configProp = new ConfigProperties(CONFIGFILENAME, DEFAULTCONFIGFILENAME);
 //            Locale.setDefault(MyLocale.ENGLISH);
-        resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", Locale.getDefault());
+        resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
+                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
         Parent root = FXMLLoader.load(getClass().getResource("MainFXML.fxml"), resourceBundle);
 
         Scene scene = new Scene(root);

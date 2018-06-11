@@ -22,7 +22,7 @@ import odtwarzacz.MainFXMLController;
 import odtwarzacz.Metadata.Metadata;
 import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
-import org.apache.commons.io.FilenameUtils;
+import odtwarzacz.Utils;
 
 /**
  * @author Pregiel
@@ -60,10 +60,10 @@ public class PlaylistElement {
         setSelected(false);
         setPlaying(false);
 
-        if (Arrays.asList(MainFXMLController.SUPPORTED_AUDIO).contains("*." + FilenameUtils.getExtension(path).toUpperCase())) {
+        if (Arrays.asList(MainFXMLController.SUPPORTED_AUDIO).contains("*." + Utils.getExtension(path).toUpperCase())) {
             metadata = new MetadataAudio();
             fileType = FileType.AUDIO;
-        } else if (Arrays.asList(MainFXMLController.SUPPORTED_VIDEO).contains("*." + FilenameUtils.getExtension(path).toUpperCase())) {
+        } else if (Arrays.asList(MainFXMLController.SUPPORTED_VIDEO).contains("*." + Utils.getExtension(path).toUpperCase())) {
             metadata = new MetadataVideo();
             fileType = FileType.VIDEO;
         } else {
@@ -199,7 +199,6 @@ public class PlaylistElement {
         Media media = new Media(file.toURI().toString());
         media.getMetadata().addListener((MapChangeListener<String, Object>) change -> {
             if (change.wasAdded()) {
-                System.out.println(change.getKey() + " : " + change.getValueAdded());
                 handleMetadata(change.getKey(), change.getValueAdded());
                 titleLabel.setText(generateLabel());
             }
