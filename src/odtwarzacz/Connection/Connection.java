@@ -9,12 +9,16 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import odtwarzacz.*;
 
@@ -48,6 +52,9 @@ public abstract class Connection {
     public static final String FILECHOOSER_PLAYLIST_ADD = "FILECHOOSER_PLAYLIST_ADD";
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final String SNAPSHOT_REQUEST = "SNAPSHOT_REQUEST";
+
+    private static final int SNAPSHOT_WIDTH = 200;
+    private static final int SNAPSHOT_HEIGHT = 200;
 
     public static final String SEPARATOR = "::";
 
@@ -111,6 +118,7 @@ public abstract class Connection {
     public void setStreams(InputStream inputStream, OutputStream outputStream) {
         this.DIS = new DataInputStream(inputStream);
         this.DOS = new DataOutputStream(outputStream);
+        executorService = Executors.newFixedThreadPool(10);
 //        connectionInfo = mediaController.getConnectionInfo();
         getMessage();
         if (mediaController != null) {
@@ -266,15 +274,23 @@ public abstract class Connection {
                 break;
 
             case SNAPSHOT_REQUEST:
-                Platform.runLater(new Runnable() {
+                executorService.execute(new Runnable() {
                     @Override
                     public void run() {
-                        sendSnapshot();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                sendSnapshot();
+
+                            }
+                        });
 
                     }
                 });
         }
     }
+
+    private ExecutorService executorService;
 
     public void sendMessage(Object... messages) {
         if (isConnected()) {
@@ -294,7 +310,10 @@ public abstract class Connection {
 
     public void sendSnapshot() {
         if (isConnected() && mediaController.getMediaView() != null) {
-            WritableImage image = mediaController.getMediaView().snapshot(new SnapshotParameters(), null);
+            Image image = Utils.scale(mediaController.getMediaView().snapshot(new SnapshotParameters(), null),
+                    SNAPSHOT_WIDTH,
+                    SNAPSHOT_HEIGHT,
+                    true);
 
             ByteArrayOutputStream s = new ByteArrayOutputStream();
             byte[] res;
@@ -319,6 +338,7 @@ public abstract class Connection {
             Platform.runLater(() -> {
                 connectionInfo.setInfoText(InfoLabel.CONNECTION_DISCONNECTED, getConnectedDeviceName());
             });
+            executorService.shutdown();
         }
 
     }
