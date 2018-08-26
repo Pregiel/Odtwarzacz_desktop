@@ -35,21 +35,42 @@ public abstract class Connection {
     public static final String TIME = "TIME";
     public static final String VOLUME = "VOLUME";
     public static final String MUTE = "MUTE";
+    public static final String MUTE_ON = "MUTE_ON";
+    public static final String MUTE_OFF = "MUTE_OFF";
     public static final String UNMUTE = "UNMUTE";
+    public static final String RANDOM = "RANDOM";
+    public static final String RANDOM_ON = "RANDOM_ON";
+    public static final String RANDOM_OFF = "RANDOM_OFF";
+    public static final String REPEAT = "REPEAT";
+    public static final String REPEAT_ON = "REPEAT_ON";
+    public static final String REPEAT_OFF = "REPEAT_OFF";
     public static final String DEVICE_NAME = "DEVICE_NAME";
+
     public static final String PLAYLIST_SEND = "PLAYLIST_SEND";
     public static final String PLAYLIST_UPDATE = "PLAYLIST_UPDATE";
     public static final String PLAYLIST_PLAY = "PLAYLIST_PLAY";
     public static final String PLAYLIST_PLAYING_INDEX = "PLAYLIST_PLAYING_INDEX";
+
     public static final String FORWARD_PRESSED = "FORWARD_PRESSED";
     public static final String FORWARD_RELEASED = "FORWARD_RELEASED";
+    public static final String FORWARD_CLICKED = "FORWARD_CLICKED";
     public static final String BACKWARD_PRESSED = "BACKWARD_PRESSED";
     public static final String BACKWARD_RELEASED = "BACKWARD_RELEASED";
+    public static final String BACKWARD_CLICKED = "BACKWARD_CLICKED";
+
+    public static final String VOLUME_UP_PRESSED = "VOLUME_UP_PRESSED";
+    public static final String VOLUME_UP_RELEASED = "VOLUME_UP_RELEASED";
+    public static final String VOLUME_UP_CLICKED = "VOLUME_UP_CLICKED";
+    public static final String VOLUME_DOWN_PRESSED = "VOLUME_DOWN_PRESSED";
+    public static final String VOLUME_DOWN_RELEASED = "VOLUME_DOWN_RELEASED";
+    public static final String VOLUME_DOWN_CLICKED = "VOLUME_DOWN_CLICKED";
+
     public static final String FILECHOOSER_DIRECTORY_TREE = "FILECHOOSER_DIRECTORY_TREE";
     public static final String FILECHOOSER_SHOW = "FILECHOOSER_SHOW";
     public static final String FILECHOOSER_DRIVE_LIST = "FILECHOOSER_DRIVE_LIST";
     public static final String FILECHOOSER_PLAY = "FILECHOOSER_PLAY";
     public static final String FILECHOOSER_PLAYLIST_ADD = "FILECHOOSER_PLAYLIST_ADD";
+
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final String SNAPSHOT_REQUEST = "SNAPSHOT_REQUEST";
 
@@ -211,6 +232,10 @@ public abstract class Connection {
                 if (mediaController != null) {
                     mediaController.getVolSlider().mute();
                 }
+                break;
+
+            case REPEAT:
+                mediaController.repeatToggle();
                 break;
 
             case DEVICE_NAME:

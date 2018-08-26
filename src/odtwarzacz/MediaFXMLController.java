@@ -443,6 +443,12 @@ public class MediaFXMLController implements Initializable {
         Odtwarzacz.getConfig().save();
 
         mediaPlayer.setCycleCount(repeat ? MediaPlayer.INDEFINITE : 1);
+
+        connection.sendMessage(repeat ? Connection.REPEAT_ON : Connection.REPEAT_OFF);
+    }
+
+    public void repeatToggle() {
+        repeatTooglebutton.fire();
     }
 
     public MediaView getMediaView() {

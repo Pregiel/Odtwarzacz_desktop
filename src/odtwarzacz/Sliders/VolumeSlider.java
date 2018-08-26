@@ -7,6 +7,7 @@ package odtwarzacz.Sliders;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -21,7 +22,6 @@ import odtwarzacz.MediaFXMLController;
 import odtwarzacz.Odtwarzacz;
 
 /**
- *
  * @author Pregiel
  */
 public class VolumeSlider extends CustomSlider {
@@ -65,13 +65,13 @@ public class VolumeSlider extends CustomSlider {
             setMutedVolume(mediaPlayer.getVolume());
             setVolume(0.0);
             if (connection != null) {
-                connection.sendMessage(Connection.MUTE);
+                connection.sendMessage(Connection.MUTE_ON);
             }
         } else {
             setVolume(mutedVolume);
             mutedVolume = 0;
             if (connection != null) {
-                connection.sendMessage(Connection.UNMUTE);
+                connection.sendMessage(Connection.MUTE_OFF);
             }
         }
     }
