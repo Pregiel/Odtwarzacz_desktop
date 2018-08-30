@@ -14,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 
 import static odtwarzacz.MainFXMLController.getPlaylist;
@@ -31,8 +32,10 @@ public class PlaylistFXMLController implements Initializable {
     private VBox playlistPane;
     @FXML
     private ToggleButton randomTogglebutton;
-    
-    
+
+    public ToggleButton getRandomTogglebutton() {
+        return randomTogglebutton;
+    }
 
     /**
      * Initializes the controller class.
@@ -79,6 +82,8 @@ public class PlaylistFXMLController implements Initializable {
     @FXML
     private void randomToggle(ActionEvent event) {
         getPlaylist().setRandom(randomTogglebutton.isSelected());
+        Connection.getInstance().sendMessage(randomTogglebutton.isSelected() ? Connection.RANDOM_ON : Connection.RANDOM_OFF);
     }
+
 
 }

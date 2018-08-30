@@ -29,6 +29,7 @@ public class InfoLabel extends Label {
     public static final String CONNECTION_CONNECTED = "CONNECTION_CONNECTED";
     public static final String CONNECTION_DISCONNECTED = "CONNECTION_DISCONNECTED";
     public static final String FILE_NOFILE = "FILE_NOFILE";
+    public static final String FILE_OPEN = "FILE_OPEN";
 
     private Timeline animation;
 
@@ -118,6 +119,12 @@ public class InfoLabel extends Label {
                 this.setText(resourceBundle.getString("file.nofile") + extra[0]);
                 setAnimation(Animations.hideIn);
                 break;
+
+            case FILE_OPEN:
+                this.setText(extra[0]);
+                setAnimation(Animations.hideIn);
+                break;
+
 
             default:
                 this.setText(msg + Arrays.toString(extra));

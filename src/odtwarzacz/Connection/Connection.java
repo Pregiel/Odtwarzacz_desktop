@@ -7,11 +7,12 @@ package odtwarzacz.Connection;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.UnknownHostException;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,10 +20,10 @@ import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import odtwarzacz.*;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 
 /**
  * @author Pregiel
@@ -30,6 +31,7 @@ import javax.imageio.ImageIO;
 public abstract class Connection {
 
     public static final String PLAY = "PLAY";
+    public static final String PAUSE = "PAUSE";
     public static final String FORWARD = "FORWARD";
     public static final String BACKWARD = "BACKWARD";
     public static final String TIME = "TIME";
@@ -44,7 +46,12 @@ public abstract class Connection {
     public static final String REPEAT = "REPEAT";
     public static final String REPEAT_ON = "REPEAT_ON";
     public static final String REPEAT_OFF = "REPEAT_OFF";
+
     public static final String DEVICE_NAME = "DEVICE_NAME";
+    public static final String FILE_NAME = "FILE_NAME";
+
+    public static final String TIMESLIDER_START = "TIMESLIDER_START";
+    public static final String TIMESLIDER_STOP = "TIMESLIDER_STOP";
 
     public static final String PLAYLIST_SEND = "PLAYLIST_SEND";
     public static final String PLAYLIST_UPDATE = "PLAYLIST_UPDATE";
@@ -79,6 +86,8 @@ public abstract class Connection {
 
     public static final String SEPARATOR = "::";
 
+    private static Connection instance;
+
     private DataInputStream DIS;
     private DataOutputStream DOS;
 
@@ -94,6 +103,11 @@ public abstract class Connection {
 
     public Connection() {
         this.connected = false;
+        instance = this;
+    }
+
+    public static Connection getInstance() {
+        return instance;
     }
 
     public MainFXMLController getMainFXMLController() {
@@ -210,6 +224,34 @@ public abstract class Connection {
                 }
                 break;
 
+            case TIMESLIDER_START:
+                if (mediaController != null) {
+                    mediaController.pause();
+                    mediaController.setPilotTimeSliderMoving(true);
+                    executorService.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sendSnapshot();
+
+                                }
+                            });
+
+                        }
+                    });
+                }
+                break;
+
+            case TIMESLIDER_STOP:
+                if (mediaController != null) {
+                    mediaController.setPilotTimeSliderMoving(false);
+                    mediaController.getTimeSlider().moveTo(Double.parseDouble(message[1]));
+                    mediaController.play();
+                }
+                break;
+
             case FORWARD:
                 if (mediaController != null) {
                     mediaController.forwardButton(null);
@@ -236,6 +278,10 @@ public abstract class Connection {
 
             case REPEAT:
                 mediaController.repeatToggle();
+                break;
+
+            case RANDOM:
+                MainFXMLController.getPlaylist().randomToggle();
                 break;
 
             case DEVICE_NAME:
@@ -332,20 +378,23 @@ public abstract class Connection {
         }
     }
 
+    private int snapshotId = 0;
 
     public void sendSnapshot() {
         if (isConnected() && mediaController.getMediaView() != null) {
-            Image image = Utils.scale(mediaController.getMediaView().snapshot(new SnapshotParameters(), null),
-                    SNAPSHOT_WIDTH,
-                    SNAPSHOT_HEIGHT,
-                    true);
+//            Image image = Utils.scale(mediaController.getMediaView().snapshot(new SnapshotParameters(), null),
+//                    SNAPSHOT_WIDTH,
+//                    SNAPSHOT_HEIGHT,
+//                    true);
+
+            Image image = mediaController.getMediaView().snapshot(new SnapshotParameters(), null);
 
             ByteArrayOutputStream s = new ByteArrayOutputStream();
             byte[] res;
             try {
                 ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", s);
                 res = s.toByteArray();
-                sendMessage(Connection.SNAPSHOT, res.length);
+                sendMessage(Connection.SNAPSHOT, snapshotId++, Calendar.getInstance().getTimeInMillis(), res.length);
                 DOS.write(res);
 
                 s.close();

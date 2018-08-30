@@ -8,16 +8,13 @@ package odtwarzacz;
 
 import javafx.application.Platform;
 import javafx.beans.Observable;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -29,14 +26,15 @@ import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
+import odtwarzacz.Metadata.Metadata;
+import odtwarzacz.Metadata.MetadataAudio;
+import odtwarzacz.Metadata.MetadataVideo;
 import odtwarzacz.Sliders.TimeSlider;
 import odtwarzacz.Sliders.VolumeSlider;
 
-import javax.imageio.ImageIO;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -89,39 +87,39 @@ public class MediaFXMLController implements Initializable {
     @FXML
     private Button forwardButton;
 
-    private InfoLabel connectionInfo;
-
     @FXML
     private ToggleButton repeatTooglebutton;
 
+    private InfoLabel fileInfoLabel;
 
     private Timer previewTimer;
 
+    private Metadata metadata;
 
-    public InfoLabel getConnectionInfo() {
-        return connectionInfo;
-    }
-
-    public void setConnectionInfo(InfoLabel connectionInfo) {
-        this.connectionInfo = connectionInfo;
-    }
 
     public void setConnection(Connection connection) {
         this.connection = connection;
         if (connection != null) {
             connection.setMediaController(this);
+            if (volSlider != null) {
+                volSlider.setConnection(connection);
+            }
+            if (metadata != null) {
+                sendFileLabel(metadata);
+            }
         }
-
-//        volSlider.setConnection(connection);
 //
 //        volSlider.setVolume(mediaPlayer.getVolume());
+    }
+
+    public void setFileInfoLabel(InfoLabel fileInfoLabel) {
+        this.fileInfoLabel = fileInfoLabel;
     }
 
     /**
      * Initializes the controller class.
      */
-    public File file;
-
+//    public File file;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 //        File file = new File("C:\\video.mp4");
@@ -165,13 +163,13 @@ public class MediaFXMLController implements Initializable {
 //        Media media = new Media(file.toURI().toString());
         changeMediaPlayer(file);
         mediaView.setMediaPlayer(mediaPlayer);
-
     }
 
 
     public void changeMediaPlayer(File file) {
         Media media = new Media(file.toURI().toString());
         MediaPlayer mp = new MediaPlayer(media);
+
         mp.setAutoPlay(true);
 
         mp.currentTimeProperty().addListener((Observable observable) -> {
@@ -243,13 +241,63 @@ public class MediaFXMLController implements Initializable {
 
         timeSlider = new TimeSlider(timeBackTrack, timeTrack, mp);
 
-//        connectionInfo = new InfoLabel(connectionLabel);
-//        return mp;
         mediaPlayer = mp;
 
         volSlider.setVolume(mediaPlayer.getVolume());
 
+        metadata = generateMetadata(file);
 
+        metadata.generate(file, () -> {
+            sendFileLabel(metadata);
+            fileInfoLabel.setInfoText(InfoLabel.FILE_OPEN, metadata.generateLabel());
+        });
+
+        sendFileLabel(metadata);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                fileInfoLabel.setInfoText(InfoLabel.FILE_OPEN, metadata.generateLabel());
+            }
+        });
+
+    }
+
+    public Metadata generateMetadata(File file) {
+        Metadata metadata;
+
+        if (Arrays.asList(MainFXMLController.SUPPORTED_AUDIO).contains("*." + Utils.getExtension(file.getAbsolutePath()).toUpperCase())) {
+            metadata = new MetadataAudio();
+        } else if (Arrays.asList(MainFXMLController.SUPPORTED_VIDEO).contains("*." + Utils.getExtension(file.getAbsolutePath()).toUpperCase())) {
+            metadata = new MetadataVideo();
+        } else {
+            metadata = new Metadata() {
+                @Override
+                public void generateMetadata(File file) {
+                }
+            };
+        }
+
+        return metadata;
+    }
+
+    private void sendFileLabel(Metadata metadata) {
+        if (connection != null) {
+            if (metadata instanceof MetadataAudio) {
+                if (((MetadataAudio) metadata).getArtist() != null) {
+                    connection.sendMessage(Connection.FILE_NAME, metadata.getTitle(), ((MetadataAudio) metadata).getArtist());
+                } else {
+                    connection.sendMessage(Connection.FILE_NAME, metadata.generateLabel());
+                }
+            } else {
+                connection.sendMessage(Connection.FILE_NAME, metadata.generateLabel());
+            }
+        }
+    }
+
+    private boolean pilotTimeSliderMoving = false;
+
+    public void setPilotTimeSliderMoving(boolean pilotTimeSliderMoving) {
+        this.pilotTimeSliderMoving = pilotTimeSliderMoving;
     }
 
     private void updateValues() {
@@ -258,15 +306,20 @@ public class MediaFXMLController implements Initializable {
             String timeText = durationToTime(currentTime) + "/" + durationToTime(duration);
             timeLabel.setText(timeText);
 
-            if (connection != null) {
-                connection.sendMessage(Connection.TIME, currentTime.toMillis(), duration.toMillis());
-
-            }
 
             if (duration.greaterThan(Duration.ZERO) && !timeSlider.isChanging()) {
                 timeSlider.setSliderPosition(currentTime.divide(
                         duration.toMillis()).toMillis() * timeSlider.getBackTrack().getWidth()
                         / timeSlider.getBackTrack().getWidth());
+            }
+
+
+            if (connection != null) {
+                if (!pilotTimeSliderMoving) {
+                    connection.sendMessage(Connection.TIME, currentTime.toMillis(), duration.toMillis());
+                } else {
+//                    connection.sendSnapshot();
+                }
             }
         });
     }
@@ -289,38 +342,52 @@ public class MediaFXMLController implements Initializable {
 
     @FXML
     public void playPauseButton(ActionEvent event) {
-        Status status = mediaPlayer.getStatus();
-        System.out.println(mediaPlayer.getStatus());
+        if (!pilotTimeSliderMoving) {
+            Status status = mediaPlayer.getStatus();
+            System.out.println(mediaPlayer.getStatus());
 
-        switch (status) {
-            case UNKNOWN:
-            case HALTED:
-                System.out.println("Blad");
-                break;
-            case PAUSED:
-            case READY:
-            case STOPPED:
-                if (atEndOfMedia) {
-                    mediaPlayer.seek(mediaPlayer.getStartTime());
-                    atEndOfMedia = false;
-                }
-                mediaPlayer.play();
-                break;
-            case PLAYING:
-                if (atEndOfMedia) {
-                    mediaPlayer.seek(mediaPlayer.getStartTime());
-                    atEndOfMedia = false;
+            switch (status) {
+                case UNKNOWN:
+                case HALTED:
+                    System.out.println("Blad");
+                    break;
+                case PAUSED:
+                case READY:
+                case STOPPED:
+                    if (atEndOfMedia) {
+                        mediaPlayer.seek(mediaPlayer.getStartTime());
+                        atEndOfMedia = false;
+                    }
+                    mediaPlayer.play();
+                    break;
+                case PLAYING:
+                    if (atEndOfMedia) {
+                        mediaPlayer.seek(mediaPlayer.getStartTime());
+                        atEndOfMedia = false;
 //                    mediaPlayer.play();
 //                    playButton.setText("||");
-                } else {
+                    } else {
+                        mediaPlayer.pause();
+                    }
+                    break;
+                default:
                     mediaPlayer.pause();
-                }
-                break;
-            default:
-                mediaPlayer.pause();
-                break;
+                    break;
+            }
         }
 
+    }
+
+    public void pause() {
+        mediaPlayer.pause();
+    }
+
+    public void play() {
+        if (atEndOfMedia) {
+            mediaPlayer.seek(mediaPlayer.getStartTime());
+            atEndOfMedia = false;
+        }
+        mediaPlayer.play();
     }
 
     @FXML

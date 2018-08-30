@@ -48,6 +48,7 @@ public class Playlist {
     private List<String> playlistList;
     private List<PlaylistElement> playlistElementList;
     private VBox playlistPane;
+    private PlaylistFXMLController playlistFXMLController;
 
     private int playlistIndex;
 
@@ -71,9 +72,11 @@ public class Playlist {
                 ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("PlaylistFXML.fxml"), resourceBundle);
-        this.pane = loader.load();
 
+        this.pane = loader.load();
+        playlistFXMLController = loader.getController();
     }
+
 
     public void setPlaylistPane(VBox playlistPane) {
         this.playlistPane = playlistPane;
@@ -298,5 +301,9 @@ public class Playlist {
         }
 
         return stringBuilder.toString();
+    }
+
+    public void randomToggle() {
+        playlistFXMLController.getRandomTogglebutton().fire();
     }
 }

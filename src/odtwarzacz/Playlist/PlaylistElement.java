@@ -69,10 +69,10 @@ public class PlaylistElement {
         } else {
             fileType = FileType.NONE;
         }
-        metadata.generate(file);
-        generateMetadata();
+        metadata.generate(file, () -> titleLabel.setText(index + ". " + metadata.generateLabel()));
+//        generateMetadata();
 
-        this.titleLabel.setText(generateLabel());
+        this.titleLabel.setText(index + ". " + metadata.generateLabel());
 
         this.pane.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
@@ -90,44 +90,42 @@ public class PlaylistElement {
         });
     }
 
-    private String generateLabel() {
-
-        StringBuilder label = new StringBuilder();
-
-        label.append(index).append(". ");
-
-
-        switch (fileType) {
-            case AUDIO:
-                if (metadata.getTitle() != null) {
-                    if (((MetadataAudio) metadata).getArtist() != null) {
-                        {
-                            label.append(((MetadataAudio) metadata).getArtist()).append(" - ");
-                        }
-                        label.append(metadata.getTitle());
-                    }
-                } else {
-                    label.append(file.getName());
-                }
-                break;
-
-            case VIDEO:
-                if (metadata.getTitle() != null) {
-                    label.append(metadata.getTitle());
-                } else {
-                    label.append(file.getName());
-                }
-                break;
-
-            default:
-                label.append(file.getName());
-//                    label.append(metadata.getDuration());
-
-        }
-
-
-        return label.toString();
-    }
+//    private String generateLabel() {
+//
+//        StringBuilder label = new StringBuilder();
+//
+//        label.append(index).append(". ");
+//
+//
+//        switch (fileType) {
+//            case AUDIO:
+//                if (metadata.getTitle() != null) {
+//                    if (((MetadataAudio) metadata).getArtist() != null) {
+//                        {
+//                            label.append(((MetadataAudio) metadata).getArtist()).append(" - ");
+//                        }
+//                        label.append(metadata.getTitle());
+//                    }
+//                } else {
+//                    label.append(file.getName());
+//                }
+//                break;
+//
+//            case VIDEO:
+//                if (metadata.getTitle() != null) {
+//                    label.append(metadata.getTitle());
+//                } else {
+//                    label.append(file.getName());
+//                }
+//                break;
+//
+//            default:
+//                label.append(file.getName());
+////                    label.append(metadata.getDuration());
+//
+//        }
+//        return label.toString();
+//    }
 
     public int getIndex() {
         return index;
@@ -194,33 +192,32 @@ public class PlaylistElement {
         return metadata;
     }
 
-    private void generateMetadata() {
-
-        Media media = new Media(file.toURI().toString());
-        media.getMetadata().addListener((MapChangeListener<String, Object>) change -> {
-            if (change.wasAdded()) {
-                handleMetadata(change.getKey(), change.getValueAdded());
-                titleLabel.setText(generateLabel());
-            }
-        });
-
-    }
-
-    private void handleMetadata(String key, Object value) {
-        switch (key) {
-            case "title":
-                metadata.setTitle(value.toString());
-                break;
-
-            case "artist":
-                ((MetadataAudio) metadata).setArtist(value.toString());
-                break;
-
-            case "album":
-                ((MetadataAudio) metadata).setAlbum(value.toString());
-                break;
-
-        }
-    }
+//    private void generateMetadata() {
+//        Media media = new Media(file.toURI().toString());
+//        media.getMetadata().addListener((MapChangeListener<String, Object>) change -> {
+//            if (change.wasAdded()) {
+//                handleMetadata(change.getKey(), change.getValueAdded());
+//                titleLabel.setText(generateLabel());
+//            }
+//        });
+//
+//    }
+//
+//    private void handleMetadata(String key, Object value) {
+//        switch (key) {
+//            case "title":
+//                metadata.setTitle(value.toString());
+//                break;
+//
+//            case "artist":
+//                ((MetadataAudio) metadata).setArtist(value.toString());
+//                break;
+//
+//            case "album":
+//                ((MetadataAudio) metadata).setAlbum(value.toString());
+//                break;
+//
+//        }
+//    }
 
 }

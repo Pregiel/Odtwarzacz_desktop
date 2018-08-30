@@ -23,7 +23,7 @@ public class MetadataVideo extends Metadata {
     }
 
     @Override
-    public void generate(File file) {
+    public void generateMetadata(File file) {
         Encoder encoder = new Encoder();
 
         try {
@@ -68,6 +68,19 @@ public class MetadataVideo extends Metadata {
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
+    }
+
+    @Override
+    public String generateLabel() {
+        StringBuilder label = new StringBuilder();
+
+        if (getTitle() != null) {
+            label.append(getTitle());
+        } else {
+            label.append(getFile().getName());
+        }
+
+        return label.toString();
     }
 
     @Override

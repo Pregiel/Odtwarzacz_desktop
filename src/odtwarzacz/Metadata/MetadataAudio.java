@@ -24,7 +24,7 @@ public class MetadataAudio extends Metadata {
     }
 
     @Override
-    public void generate(File file) {
+    public void generateMetadata(File file) {
         Encoder encoder = new Encoder();
 
         try {
@@ -78,6 +78,25 @@ public class MetadataAudio extends Metadata {
 
     public void setSamplingRate(int samplingRate) {
         this.samplingRate = samplingRate;
+    }
+
+    @Override
+    public String generateLabel() {
+
+        StringBuilder label = new StringBuilder();
+
+        if (getTitle() != null) {
+            if (getArtist() != null) {
+                {
+                    label.append(getArtist()).append(" - ");
+                }
+                label.append(getTitle());
+            }
+        } else {
+            label.append(getFile().getName());
+        }
+
+        return label.toString();
     }
 
     @Override

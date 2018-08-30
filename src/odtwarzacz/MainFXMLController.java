@@ -8,12 +8,15 @@ package odtwarzacz;
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import odtwarzacz.Playlist.Playlist;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,10 +39,9 @@ import odtwarzacz.Connection.BtConnection;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.Connection.WifiConnection;
 
-import javax.swing.filechooser.FileSystemView;
+import javax.sound.sampled.*;
 
 /**
- *
  * @author Pregiel
  */
 public class MainFXMLController implements Initializable {
@@ -65,7 +67,7 @@ public class MainFXMLController implements Initializable {
 
     private Pane lastPickedPane;
 
-    private InfoLabel infoLabel;
+    private InfoLabel connectionInfoLabel, fileInfoLabel;
     @FXML
     private SplitPane splitPane;
 
@@ -74,6 +76,7 @@ public class MainFXMLController implements Initializable {
     public static Playlist getPlaylist() {
         return playlist;
     }
+
     @FXML
     private Menu openRecentMenu;
 
@@ -127,12 +130,18 @@ public class MainFXMLController implements Initializable {
     }
 
     private void addInfoLabel() {
-        infoLabel = new InfoLabel();
-//        infoLabel.setText("");
-        infoLabel.getStyleClass().add("info-label");
+        connectionInfoLabel = new InfoLabel();
+//        connectionInfoLabel.setText("");
+        connectionInfoLabel.getStyleClass().add("info-label");
 
-        centerPane.getChildren().add(infoLabel);
-        StackPane.setAlignment(infoLabel, Pos.TOP_RIGHT);
+        centerPane.getChildren().add(connectionInfoLabel);
+        StackPane.setAlignment(connectionInfoLabel, Pos.TOP_RIGHT);
+
+        fileInfoLabel = new InfoLabel();
+        fileInfoLabel.getStyleClass().add("info-label");
+
+        centerPane.getChildren().add(fileInfoLabel);
+        StackPane.setAlignment(fileInfoLabel, Pos.TOP_LEFT);
     }
 
     private void changeLanguage(String language) {
@@ -150,9 +159,10 @@ public class MainFXMLController implements Initializable {
     private void refreshScene() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MediaFXML.fxml"), resourceBundle);
         Pane mediaPane = loader.load();
-                mediaControl = loader.getController();
-                mediaControl.setConnectionInfo(infoLabel);
-                mediaControl.setConnection(connection);
+        mediaControl = loader.getController();
+//                mediaControl.setConnectionInfo(connectionInfoLabel);
+        mediaControl.setConnection(connection);
+        mediaControl.setFileInfoLabel(fileInfoLabel);
 
         Platform.runLater(new Runnable() {
             @Override
@@ -160,7 +170,8 @@ public class MainFXMLController implements Initializable {
                 centerPane.getChildren().clear();
 
                 centerPane.getChildren().add(mediaPane);
-                centerPane.getChildren().add(infoLabel);
+                centerPane.getChildren().add(connectionInfoLabel);
+                centerPane.getChildren().add(fileInfoLabel);
 
             }
         });
@@ -189,7 +200,7 @@ public class MainFXMLController implements Initializable {
 
     }
 
-//    private WifiConnection wifiConnection;
+    //    private WifiConnection wifiConnection;
 //    
 //    public WifiConnection getWifiConnection() {
 //        return wifiConnection;
@@ -205,7 +216,7 @@ public class MainFXMLController implements Initializable {
         connection = new WifiConnection();
         connection.setMediaController(mediaControl);
         connection.setMainFXMLController(this);
-        connection.setConnectionInfo(infoLabel);
+        connection.setConnectionInfo(connectionInfoLabel);
         connection.connect();
     }
 
@@ -215,20 +226,22 @@ public class MainFXMLController implements Initializable {
         connection.sendSnapshot();
     }
 
-//    private BtConnection btConnection;
+    //    private BtConnection btConnection;
     @FXML
     private void connectBT(ActionEvent event) {
         connection = new BtConnection();
         connection.setMediaController(mediaControl);
         connection.setMainFXMLController(this);
-        connection.setConnectionInfo(infoLabel);
+        connection.setConnectionInfo(connectionInfoLabel);
         connection.connect();
     }
 
     @FXML
     private void BTSendTAK(ActionEvent event) {
 //        btConnection.sendMessage("TAK");
+
     }
+
 
     private File file;
 
@@ -270,7 +283,7 @@ public class MainFXMLController implements Initializable {
             saveFileToRecent(file.getAbsolutePath());
         } else {
             removeFromRecentFiles(file.getAbsolutePath());
-            infoLabel.setInfoText(InfoLabel.FILE_NOFILE, file.getName());
+            fileInfoLabel.setInfoText(InfoLabel.FILE_NOFILE, file.getName());
         }
         refreshRecentFiles();
 
@@ -329,9 +342,9 @@ public class MainFXMLController implements Initializable {
         File selectedDirectory =
                 directoryChooser.showDialog(null);
 
-        if(selectedDirectory == null){
+        if (selectedDirectory == null) {
             System.out.println("No Directory selected");
-        }else{
+        } else {
             System.out.println(Utils.getDirectoryTree(selectedDirectory));
         }
     }
