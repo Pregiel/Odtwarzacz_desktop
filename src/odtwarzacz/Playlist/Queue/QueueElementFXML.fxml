@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="odtwarzacz.Playlist.Queue.QueueElementFXMLController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Label fx:id="fileName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="title" text="0. Author - Title" GridPane.columnIndex="0">
+            <GridPane.margin>
+                <Insets bottom="4.0" left="8.0" right="8.0" top="4.0" />
+            </GridPane.margin>
+        </Label>
+        <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+            <children>
+                <Button fx:id="queueRemove" mnemonicParsing="false" text="-" />
+            </children>
+        </HBox>
+    </children>
+</GridPane>

@@ -109,12 +109,11 @@ public class PlaylistElement {
             setQueueLabel();
 
             queueRemoveBtn.setDisable(false);
+            MainFXMLController.getPlaylist().refreshQueueView();
         });
 
         queueRemoveBtn.setOnAction((event) -> {
             int elementIndex = MainFXMLController.getPlaylist().getQueue().removeLastElementByPlaylistIndex(index);
-
-            System.out.println(elementIndex);
 
             if (elementIndex > -1) {
                 for (int i = elementIndex; i < MainFXMLController.getPlaylist().getQueue().getQueueElements().size(); i++) {
@@ -126,6 +125,8 @@ public class PlaylistElement {
 
             setQueueLabel();
 
+            MainFXMLController.getPlaylist().refreshQueueView();
+
             for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
                 if (queueElement.getPlaylistIndex() == index) {
                     return;
@@ -133,13 +134,22 @@ public class PlaylistElement {
             }
 
             queueRemoveBtn.setDisable(true);
+
         });
 
 
     }
 
+    public void removeFromQueue() {
+        queueIndexLabel.setTooltip(null);
+        queueIndexLabel.setText("");
+
+        queueRemoveBtn.setDisable(true);
+    }
+
     public void setQueueLabel() {
         queueIndexLabel.setTooltip(null);
+
         List<Integer> queueIndexes = new ArrayList<>();
         int i = 0;
         for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
@@ -150,7 +160,6 @@ public class PlaylistElement {
         }
         StringBuilder stringBuilder = new StringBuilder();
         if (queueIndexes.size() == 0) {
-
         } else if (queueIndexes.size() == 1) {
             stringBuilder.append(queueIndexes.get(0).toString());
         } else if (queueIndexes.size() < 4) {

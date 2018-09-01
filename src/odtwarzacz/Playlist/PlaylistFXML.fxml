@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistFXMLController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistFXMLController">
    <center>
       <ScrollPane fx:id="playlistScroll" fitToWidth="true" hbarPolicy="NEVER">
          <content>
@@ -48,6 +48,7 @@
             <Button mnemonicParsing="false" onAction="#remove" text="%playlist.remove" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#play" text="%playlist.playall" />
             <ToggleButton fx:id="randomTogglebutton" mnemonicParsing="false" onAction="#randomToggle" text="%playlist.random" />
+            <Button layoutX="102.0" layoutY="22.0" mnemonicParsing="false" onAction="#showQueue" text="%playlist.showQueue" />
          </children>
          <padding>
             <Insets top="12.0" />

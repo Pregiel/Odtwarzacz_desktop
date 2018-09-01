@@ -27,6 +27,7 @@ import odtwarzacz.MainFXMLController;
 import odtwarzacz.MyLocale;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.Queue;
+import odtwarzacz.Playlist.Queue.QueueFXMLController;
 import odtwarzacz.Utils;
 
 import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
@@ -54,6 +55,8 @@ public class Playlist {
 
     private MainFXMLController mainController;
 
+    private QueueFXMLController queueFXMLController;
+
     public Playlist(MainFXMLController mainController) {
         this.playlistProperties = new PlaylistProperties(DEFAULT_PLAYLIST);
         this.mainController = mainController;
@@ -69,6 +72,16 @@ public class Playlist {
 
     public Queue getQueue() {
         return queue;
+    }
+
+    public void setQueueFXMLController(QueueFXMLController queueFXMLController) {
+        this.queueFXMLController = queueFXMLController;
+    }
+
+    public void refreshQueueView() {
+        if (queueFXMLController !=  null) {
+            queueFXMLController.loadQueue();
+        }
     }
 
     public void makePlaylistPane() throws IOException {
