@@ -6,22 +6,23 @@
 package odtwarzacz.Playlist;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-import it.sauronsoftware.jave.*;
-import javafx.collections.MapChangeListener;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.media.Media;
-import javafx.util.Duration;
 import odtwarzacz.FileType;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Metadata.Metadata;
 import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
+import odtwarzacz.Playlist.Queue.QueueElement;
 import odtwarzacz.Utils;
 
 /**
@@ -31,16 +32,16 @@ public class PlaylistElement {
 
     private static final String CSS_BACKGROUND_SELECTED = "background-selected";
     private static final String CSS_TITLE_PLAYING = "title-playing";
+    private static final String CSS_TITLE_NOTFOUND = "title-notfound";
 
     private int index;
 
     private GridPane pane;
     private CheckBox songCheckbox;
-    private Label titleLabel;
+    private Label titleLabel, queueIndexLabel;
+    private Button queueAddBtn, queueRemoveBtn;
 
-    private boolean selected;
-    private boolean playing;
-    private boolean playable;
+    private boolean selected, playing, notFounded;
 
     private Metadata metadata;
 
@@ -54,6 +55,11 @@ public class PlaylistElement {
         this.pane = pane;
         this.titleLabel = (Label) pane.lookup("#songName");
         this.songCheckbox = (CheckBox) pane.lookup("#songCheckbox");
+
+        this.queueIndexLabel = (Label) pane.lookup("#queueIndex");
+        this.queueAddBtn = (Button) pane.lookup("#queueAdd");
+        this.queueRemoveBtn = (Button) pane.lookup("#queueRemove");
+
         this.songCheckbox.selectedProperty().set(true);
         this.file = new File(path);
 
@@ -69,10 +75,16 @@ public class PlaylistElement {
         } else {
             fileType = FileType.NONE;
         }
-        metadata.generate(file, () -> titleLabel.setText(index + ". " + metadata.generateLabel()));
+        if (file.exists()) {
+            metadata.generate(file, () -> titleLabel.setText(index + ". " + metadata.generateLabel()));
+            this.titleLabel.setText(index + ". " + metadata.generateLabel());
+        } else {
+            setNotFounded(true);
+
+            this.titleLabel.setText(index + ". " + file.getName());
+        }
 //        generateMetadata();
 
-        this.titleLabel.setText(index + ". " + metadata.generateLabel());
 
         this.pane.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
@@ -88,44 +100,88 @@ public class PlaylistElement {
                 }
             }
         });
+
+        queueRemoveBtn.setDisable(true);
+
+        queueAddBtn.setOnAction((event) -> {
+            MainFXMLController.getPlaylist().getQueue().addToQueue(new QueueElement(index, titleLabel.getText()));
+
+            setQueueLabel();
+
+            queueRemoveBtn.setDisable(false);
+        });
+
+        queueRemoveBtn.setOnAction((event) -> {
+            int elementIndex = MainFXMLController.getPlaylist().getQueue().removeLastElementByPlaylistIndex(index);
+
+            System.out.println(elementIndex);
+
+            if (elementIndex > -1) {
+                for (int i = elementIndex; i < MainFXMLController.getPlaylist().getQueue().getQueueElements().size(); i++) {
+                    MainFXMLController.getPlaylist().getPlaylistElementList().get(
+                            MainFXMLController.getPlaylist().getQueue().getQueueElements().get(i).getPlaylistIndex() - 1
+                    ).setQueueLabel();
+                }
+            }
+
+            setQueueLabel();
+
+            for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
+                if (queueElement.getPlaylistIndex() == index) {
+                    return;
+                }
+            }
+
+            queueRemoveBtn.setDisable(true);
+        });
+
+
     }
 
-//    private String generateLabel() {
-//
-//        StringBuilder label = new StringBuilder();
-//
-//        label.append(index).append(". ");
-//
-//
-//        switch (fileType) {
-//            case AUDIO:
-//                if (metadata.getTitle() != null) {
-//                    if (((MetadataAudio) metadata).getArtist() != null) {
-//                        {
-//                            label.append(((MetadataAudio) metadata).getArtist()).append(" - ");
-//                        }
-//                        label.append(metadata.getTitle());
-//                    }
-//                } else {
-//                    label.append(file.getName());
-//                }
-//                break;
-//
-//            case VIDEO:
-//                if (metadata.getTitle() != null) {
-//                    label.append(metadata.getTitle());
-//                } else {
-//                    label.append(file.getName());
-//                }
-//                break;
-//
-//            default:
-//                label.append(file.getName());
-////                    label.append(metadata.getDuration());
-//
-//        }
-//        return label.toString();
-//    }
+    public void setQueueLabel() {
+        queueIndexLabel.setTooltip(null);
+        List<Integer> queueIndexes = new ArrayList<>();
+        int i = 0;
+        for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
+            if (queueElement.getPlaylistIndex() == index) {
+                queueIndexes.add(i + 1);
+            }
+            i++;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        if (queueIndexes.size() == 0) {
+
+        } else if (queueIndexes.size() == 1) {
+            stringBuilder.append(queueIndexes.get(0).toString());
+        } else if (queueIndexes.size() < 4) {
+            String prefix = "[";
+            for (int ii : queueIndexes) {
+                stringBuilder.append(prefix).append(ii);
+                prefix = ", ";
+            }
+            stringBuilder.append("]");
+
+        } else {
+            stringBuilder.append("[")
+                    .append(queueIndexes.get(0))
+                    .append(" ... ")
+                    .append(queueIndexes.get(queueIndexes.size() - 1))
+                    .append("]");
+
+            StringBuilder stringBuilder1 = new StringBuilder();
+            String prefix = "[";
+            for (int ii : queueIndexes) {
+                stringBuilder1.append(prefix).append(ii);
+                prefix = ", ";
+            }
+            stringBuilder1.append("]");
+            Tooltip tooltip = new Tooltip();
+            tooltip.setText(stringBuilder1.toString());
+            queueIndexLabel.setTooltip(tooltip);
+        }
+
+        queueIndexLabel.setText(stringBuilder.toString());
+    }
 
     public int getIndex() {
         return index;
@@ -172,6 +228,19 @@ public class PlaylistElement {
         }
     }
 
+    public boolean isNotFounded() {
+        return notFounded;
+    }
+
+    public void setNotFounded(boolean notFounded) {
+        this.notFounded = notFounded;
+        if (notFounded) {
+            titleLabel.getStyleClass().add(CSS_TITLE_NOTFOUND);
+        } else {
+            titleLabel.getStyleClass().remove(CSS_TITLE_NOTFOUND);
+        }
+    }
+
     public void setSongCheckbox(CheckBox songCheckbox) {
         this.songCheckbox = songCheckbox;
     }
@@ -191,33 +260,5 @@ public class PlaylistElement {
     public Metadata getMetadata() {
         return metadata;
     }
-
-//    private void generateMetadata() {
-//        Media media = new Media(file.toURI().toString());
-//        media.getMetadata().addListener((MapChangeListener<String, Object>) change -> {
-//            if (change.wasAdded()) {
-//                handleMetadata(change.getKey(), change.getValueAdded());
-//                titleLabel.setText(generateLabel());
-//            }
-//        });
-//
-//    }
-//
-//    private void handleMetadata(String key, Object value) {
-//        switch (key) {
-//            case "title":
-//                metadata.setTitle(value.toString());
-//                break;
-//
-//            case "artist":
-//                ((MetadataAudio) metadata).setArtist(value.toString());
-//                break;
-//
-//            case "album":
-//                ((MetadataAudio) metadata).setAlbum(value.toString());
-//                break;
-//
-//        }
-//    }
 
 }

@@ -6,6 +6,7 @@ import odtwarzacz.Connection.Connection;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.util.ResourceBundle;
 
 public class Utils {
     public static String getDirectoryTree(File directory) {
@@ -42,5 +43,20 @@ public class Utils {
 
     public static String getExtension(String file) {
         return file.substring(file.lastIndexOf(".") + 1);
+    }
+
+    private static ResourceBundle resourceBundle;
+
+    public static ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
+    public static void initResourceBundle() {
+        resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
+                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+    }
+
+    public static String getString(String key) {
+        return resourceBundle.getString(key);
     }
 }

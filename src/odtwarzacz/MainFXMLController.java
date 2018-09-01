@@ -60,8 +60,6 @@ public class MainFXMLController implements Initializable {
     @FXML
     private RadioMenuItem polishLanguageButton;
 
-    public ResourceBundle resourceBundle;
-
     @FXML
     private StackPane centerPane;
 
@@ -84,11 +82,8 @@ public class MainFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         try {
-            resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
-                    ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
-
 //            refreshScene();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("FirstViewFXML.fxml"), resourceBundle);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FirstViewFXML.fxml"), Utils.getResourceBundle());
             lastPickedPane = loader.load();
 
             playlist = new Playlist(this);
@@ -157,7 +152,7 @@ public class MainFXMLController implements Initializable {
     }
 
     private void refreshScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MediaFXML.fxml"), resourceBundle);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MediaFXML.fxml"), Utils.getResourceBundle());
         Pane mediaPane = loader.load();
         mediaControl = loader.getController();
 //                mediaControl.setConnectionInfo(connectionInfoLabel);
@@ -260,12 +255,13 @@ public class MainFXMLController implements Initializable {
 
     }
 
-    public void loadFile(File file) {
+    public boolean loadFile(File file) {
         getPlaylist().setNoPlayAll();
         loadFile(file, -1);
+        return true;
     }
 
-    public void loadFile(File file, int playlistIndex) {
+    public boolean loadFile(File file, int playlistIndex) {
         if (ifFileExists(file)) {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Load file: {0}", file);
 
@@ -281,12 +277,15 @@ public class MainFXMLController implements Initializable {
             }
             getPlaylist().setPlaylistIndex(playlistIndex);
             saveFileToRecent(file.getAbsolutePath());
+            refreshRecentFiles();
         } else {
             removeFromRecentFiles(file.getAbsolutePath());
             fileInfoLabel.setInfoText(InfoLabel.FILE_NOFILE, file.getName());
+            refreshRecentFiles();
+            return false;
         }
-        refreshRecentFiles();
 
+        return true;
     }
 
     private boolean ifFileExists(File file) {

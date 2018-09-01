@@ -33,3 +33,7 @@ and open the template in the editor.
     -fx-text-fill: #cc0033;
     -fx-font-weight: bold;
 }
+
+.title-notfound {
+    -fx-text-fill: #a5a5a5;
+}

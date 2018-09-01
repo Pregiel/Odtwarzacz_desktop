@@ -30,7 +30,6 @@ public class Odtwarzacz extends Application {
     private static final String DEFAULTCONFIGFILENAME = "src/Resources/DefaultConfigFile.properties";
 
 
-    private ResourceBundle resourceBundle;
     private static ConfigProperties configProp;
 
     @Override
@@ -38,9 +37,8 @@ public class Odtwarzacz extends Application {
 
         configProp = new ConfigProperties(CONFIGFILENAME, DEFAULTCONFIGFILENAME);
 //            Locale.setDefault(MyLocale.ENGLISH);
-        resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
-                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
-        Parent root = FXMLLoader.load(getClass().getResource("MainFXML.fxml"), resourceBundle);
+        Utils.initResourceBundle();
+        Parent root = FXMLLoader.load(getClass().getResource("MainFXML.fxml"), Utils.getResourceBundle());
 
         Scene scene = new Scene(root);
         scene.getStylesheets().add("odtwarzacz/styleSheet.css");

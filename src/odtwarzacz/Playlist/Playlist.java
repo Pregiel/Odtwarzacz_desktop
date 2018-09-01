@@ -7,20 +7,14 @@ package odtwarzacz.Playlist;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -32,6 +26,8 @@ import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.MyLocale;
 import odtwarzacz.Odtwarzacz;
+import odtwarzacz.Playlist.Queue.Queue;
+import odtwarzacz.Utils;
 
 import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
 
@@ -50,6 +46,8 @@ public class Playlist {
     private VBox playlistPane;
     private PlaylistFXMLController playlistFXMLController;
 
+    private Queue queue;
+
     private int playlistIndex;
 
     private boolean random;
@@ -60,11 +58,17 @@ public class Playlist {
         this.playlistProperties = new PlaylistProperties(DEFAULT_PLAYLIST);
         this.mainController = mainController;
         playlistElementList = new ArrayList<>();
+        queue = new Queue();
 
         this.random = Boolean.parseBoolean(String.valueOf(Odtwarzacz.getConfig().get("random")));
 
+
         loadPlaylistList();
 
+    }
+
+    public Queue getQueue() {
+        return queue;
     }
 
     public void makePlaylistPane() throws IOException {
@@ -154,15 +158,33 @@ public class Playlist {
     }
 
     public void add(File file) {
+        if (playlistList.contains(file.getAbsolutePath())) {
+            ButtonType addButton = new ButtonType(Utils.getString("dialog.add"), ButtonBar.ButtonData.OK_DONE);
+            ButtonType cancelButton = new ButtonType(Utils.getString("dialog.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    Utils.getString("playlist.alreadyAdded"),
+                    addButton,
+                    cancelButton);
+            alert.setTitle(Utils.getString("playlist.alreadyAdded.title"));
+            alert.setHeaderText(null);
+//            alert.setContentText(Utils.getString("playlist.alreadyAdded"));
+
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == cancelButton) {
+                return;
+            }
+        }
         playlistList.add(file.getAbsolutePath());
         save();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 loadPlaylist();
-
             }
         });
+
     }
 
     public void addNew() {
@@ -216,17 +238,21 @@ public class Playlist {
     }
 
     public void play(int index) {
-        mainController.loadFile(new File(playlistList.get(index - 1)), index);
-        if (mainController.getConnection() != null) {
-            mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, playlistIndex);
-        }
-        playlistElementList.forEach((t) -> {
-            if (t.getIndex() == index) {
-                t.setPlaying(true);
-            } else {
-                t.setPlaying(false);
+        if (mainController.loadFile(new File(playlistList.get(index - 1)), index)) {
+            playlistElementList.get(index - 1).setNotFounded(false);
+            if (mainController.getConnection() != null) {
+                mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, playlistIndex);
             }
-        });
+            playlistElementList.forEach((t) -> {
+                if (t.getIndex() == index) {
+                    t.setPlaying(true);
+                } else {
+                    t.setPlaying(false);
+                }
+            });
+        } else {
+            playlistElementList.get(index - 1).setNotFounded(true);
+        }
     }
 
     public void playNext() {
@@ -256,8 +282,19 @@ public class Playlist {
         return playlistIndex;
     }
 
+    public List<PlaylistElement> getPlaylistElementList() {
+        return playlistElementList;
+    }
+
     private void nextPlaylistIndex() {
-        if (random) {
+        if (queue.getQueueElements().size() > 0) {
+            playlistIndex = queue.getQueueElements().get(0).getPlaylistIndex();
+            queue.removeFirstElement();
+            playlistElementList.forEach(PlaylistElement::setQueueLabel);
+            if (playlistElementList.get(playlistIndex - 1).isNotFounded()) {
+                nextPlaylistIndex();
+            }
+        } else if (random) {
             int newIndex;
             do {
                 newIndex = new Random().nextInt(playlistList.size()) + 1;
@@ -267,10 +304,11 @@ public class Playlist {
             boolean next = true;
             do {
                 playlistIndex++;
-                if (playlistIndex  >= playlistElementList.size()) {
+                if (playlistIndex - 1 >= playlistElementList.size()) {
                     next = false;
                     playlistIndex++;
-                } else if (playlistElementList.get(playlistIndex - 1).isPlayable()) {
+                } else if (playlistElementList.get(playlistIndex - 1).isPlayable() &&
+                        !playlistElementList.get(playlistIndex - 1).isNotFounded()) {
                     next = false;
                 }
 
