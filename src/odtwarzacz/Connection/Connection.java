@@ -104,6 +104,14 @@ public abstract class Connection {
     public Connection() {
         this.connected = false;
         instance = this;
+
+
+        Thread closeSocketOnShutdown = new Thread() {
+            public void run() {
+                disconnect();
+            }
+        };
+        Runtime.getRuntime().addShutdownHook(closeSocketOnShutdown);
     }
 
     public static Connection getInstance() {
@@ -183,6 +191,7 @@ public abstract class Connection {
 
                     try {
                         msg_received = DIS.readUTF();
+                        setUsbConnection();
                         System.out.println("Message: " + msg_received);
                         pilotController(msg_received);
                         getMessage();
@@ -196,6 +205,7 @@ public abstract class Connection {
             connect.start();
         }
     }
+
 
     public void pilotController(String msg) {
         String[] message = msg.split(SEPARATOR);
@@ -410,10 +420,24 @@ public abstract class Connection {
             DIS = null;
             DOS = null;
             Platform.runLater(() -> {
+                if (this instanceof UsbConnection) {
+                    if (((UsbConnection) this).isRetryConnect()) {
+                        return;
+                    }
+                }
                 connectionInfo.setInfoText(InfoLabel.CONNECTION_DISCONNECTED, getConnectedDeviceName());
             });
             executorService.shutdown();
         }
 
     }
+
+
+    private void setUsbConnection() {
+        if (this instanceof UsbConnection) {
+            ((UsbConnection) this).setRetryConnect(false);
+        }
+    }
+
+
 }

@@ -7,6 +7,7 @@ package odtwarzacz;
 
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
+import odtwarzacz.Connection.UsbConnection;
 import odtwarzacz.Playlist.Playlist;
 
 import java.io.File;
@@ -238,6 +239,15 @@ public class MainFXMLController implements Initializable {
     }
 
 
+    public void connectUSB(ActionEvent event) {
+        connection = new UsbConnection();
+        connection.setMediaController(mediaControl);
+        connection.setMainFXMLController(this);
+        connection.setConnectionInfo(connectionInfoLabel);
+        connection.connect();
+    }
+
+
     private File file;
 
     @FXML
@@ -352,4 +362,5 @@ public class MainFXMLController implements Initializable {
         connection.disconnect();
 
     }
+
 }

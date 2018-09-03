@@ -26,6 +26,7 @@ public class InfoLabel extends Label {
     public static final String CONNECTION_WAITFORCLIENT = "CONNECTION_WAITFORCLIENT";
     public static final String CONNECTION_WAITFORCLIENT_WIFI = "CONNECTION_WAITFORCLIENT_WIFI";
     public static final String CONNECTION_WAITFORCLIENT_BT = "CONNECTION_WAITFORCLIENT_BT";
+    public static final String CONNECTION_WAITFORCLIENT_USB = "CONNECTION_WAITFORCLIENT_USB";
     public static final String CONNECTION_CONNECTED = "CONNECTION_CONNECTED";
     public static final String CONNECTION_DISCONNECTED = "CONNECTION_DISCONNECTED";
     public static final String FILE_NOFILE = "FILE_NOFILE";
@@ -102,6 +103,11 @@ public class InfoLabel extends Label {
 
             case CONNECTION_WAITFORCLIENT_BT:
                 this.setText(resourceBundle.getString("connection.connectingbt") + ".");
+                setAnimation(Animations.threeDots);
+                break;
+
+            case CONNECTION_WAITFORCLIENT_USB:
+                this.setText(resourceBundle.getString("connection.connectingusb") + ".");
                 setAnimation(Animations.threeDots);
                 break;
 
