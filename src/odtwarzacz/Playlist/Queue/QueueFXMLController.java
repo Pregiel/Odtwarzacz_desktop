@@ -11,7 +11,6 @@ import javafx.scene.layout.VBox;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.MyLocale;
 import odtwarzacz.Playlist.Playlist;
-import odtwarzacz.Playlist.PlaylistElement;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,8 +18,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
 
 public class QueueFXMLController implements Initializable {
     public ScrollPane queueScroll;
@@ -55,7 +52,7 @@ public class QueueFXMLController implements Initializable {
         int i = 0;
         for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("QueueElementFXML.fxml"), resourceBundle);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../../Layouts/QueueElementFXML.fxml"), resourceBundle);
 
                 GridPane pane = loader.load();
 

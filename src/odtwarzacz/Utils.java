@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 import odtwarzacz.Connection.Connection;
 
 import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
 import java.io.File;
 import java.util.ResourceBundle;
 
@@ -24,7 +25,7 @@ public class Utils {
         StringBuilder list = new StringBuilder();
         File[] rootDrive = File.listRoots();
 
-        for(File sysDrive : rootDrive){
+        for (File sysDrive : rootDrive) {
 //            list.append(sysDrive).append(FileSystemView.getFileSystemView().getSystemDisplayName(sysDrive)).append(Connection.SEPARATOR);
 
             list.append(sysDrive).append(Connection.SEPARATOR);
@@ -58,5 +59,19 @@ public class Utils {
 
     public static String getString(String key) {
         return resourceBundle.getString(key);
+    }
+
+    public static float[] rgbToHsb(String rgb) {
+        return rgbToHsb(Integer.valueOf(rgb.substring(1, 3), 16),
+                Integer.valueOf(rgb.substring(3, 5), 16),
+                Integer.valueOf(rgb.substring(5, 7), 16));
+    }
+
+    private static float[] rgbToHsb(int red, int green, int blue) {
+        float[] hsb = new float[3];
+        Color.RGBtoHSB(red, green, blue, hsb);
+        return hsb;
+
+
     }
 }

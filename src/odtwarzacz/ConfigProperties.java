@@ -40,7 +40,7 @@ public final class ConfigProperties extends Properties {
         }
     }
 
-    public void load(File file) throws IOException {
+    private void load(File file) throws IOException {
         FileReader reader = new FileReader(file);
         this.load(reader);
         reader.close();

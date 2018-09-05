@@ -21,7 +21,7 @@
                   <Insets bottom="8.0" />
                </VBox.margin>
             </Label>
-            <VBox fx:id="recentFiles" alignment="CENTER_LEFT" spacing="8.0" styleClass="recent-pane" stylesheets="@styleSheet.css" />
+            <VBox fx:id="recentFiles" alignment="CENTER_LEFT" spacing="8.0" styleClass="recent-pane" stylesheets="@../styleSheet.css" />
          </children>
          <padding>
             <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />

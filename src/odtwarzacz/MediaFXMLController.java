@@ -9,12 +9,18 @@ package odtwarzacz;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.CacheHint;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Glow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -46,7 +52,15 @@ import java.util.TimerTask;
  */
 public class MediaFXMLController implements Initializable {
 
+    private static final String PLAYIMAGE_PATH = "Layouts/Icons/ic_play_white.png";
+    private static final String PAUSEIMAGE_PATH = "Layouts/Icons/ic_pause_white.png";
 
+    public ImageView playImageButton;
+    public ImageView volImageButton;
+    public ImageView backwardImageButton;
+    public ImageView forwardImageButton;
+    public ImageView playlistImageButton;
+    public Button playlistButton;
     @FXML
     private BorderPane pane;
     @FXML
@@ -154,7 +168,22 @@ public class MediaFXMLController implements Initializable {
 //        mediaView.setPreserveRatio(true);
 //        mediaView.fitWidthProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
 //        mediaView.fitHeightProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
+Glow glow = new Glow(1);
 
+        playButton.setOnMouseEntered(event -> playImageButton.setEffect(glow));
+        playButton.setOnMouseExited(event -> playImageButton.setEffect(null));
+
+        volButton.setOnMouseEntered(event -> volImageButton.setEffect(glow));
+        volButton.setOnMouseExited(event -> volImageButton.setEffect(null));
+
+        backwardButton.setOnMouseEntered(event -> backwardImageButton.setEffect(glow));
+        backwardButton.setOnMouseExited(event -> backwardImageButton.setEffect(null));
+
+        forwardButton.setOnMouseEntered(event -> forwardImageButton.setEffect(glow));
+        forwardButton.setOnMouseExited(event -> forwardImageButton.setEffect(null));
+
+        playlistButton.setOnMouseEntered(event -> playlistImageButton.setEffect(glow));
+        playlistButton.setOnMouseExited(event -> playlistImageButton.setEffect(null));
     }
 
     public void changeFile(File file) {
@@ -178,14 +207,13 @@ public class MediaFXMLController implements Initializable {
 
         mp.setOnPlaying(() -> {
 //            System.out.println(mediaPlayer.getStatus() + " : onPlaying");
-            playButton.setText("||");
-
+            playImageButton.setImage(new Image(getClass().getResource(PAUSEIMAGE_PATH).toExternalForm()));
         });
 
         mp.setOnPaused(() -> {
 //            System.out.println(mediaPlayer.getStatus() + " : onPaused");
             if (!timeSlider.isChanging()) {
-                playButton.setText(">");
+                playImageButton.setImage(new Image(getClass().getResource(PLAYIMAGE_PATH).toExternalForm()));
             }
         });
 
@@ -204,7 +232,7 @@ public class MediaFXMLController implements Initializable {
 //            System.out.println(mediaPlayer.getStatus() + " : onEndOfMedia");
             if (!repeat) {
                 if (MainFXMLController.getPlaylist().getPlaylistIndex() == -1) {
-                    playButton.setText(">");
+                    playImageButton.setImage(new Image(getClass().getResource(PLAYIMAGE_PATH).toExternalForm()));
                     atEndOfMedia = true;
                 } else {
 //                    nextPlaylistIndex();
@@ -222,12 +250,12 @@ public class MediaFXMLController implements Initializable {
         });
 
         volSlider.getBackTrack().setScaleX(0);
-        volButton.setOnMouseEntered((event) -> {
-            if (volSlider.getCollapseOnRelease()) {
-                volSlider.setCollapseOnRelease(false);
-            }
-            volSlider.animateVolumeSliderExpand(event);
-        });
+//        volButton.setOnMouseEntered((event) -> {
+//            if (volSlider.getCollapseOnRelease()) {
+//                volSlider.setCollapseOnRelease(false);
+//            }
+//            volSlider.animateVolumeSliderExpand(event);
+//        });
 
         volSlider.setConnection(connection);
 
@@ -510,8 +538,9 @@ public class MediaFXMLController implements Initializable {
         Odtwarzacz.getConfig().save();
 
         mediaPlayer.setCycleCount(repeat ? MediaPlayer.INDEFINITE : 1);
-
-        connection.sendMessage(repeat ? Connection.REPEAT_ON : Connection.REPEAT_OFF);
+        if (connection != null) {
+            connection.sendMessage(repeat ? Connection.REPEAT_ON : Connection.REPEAT_OFF);
+        }
     }
 
     public void repeatToggle() {

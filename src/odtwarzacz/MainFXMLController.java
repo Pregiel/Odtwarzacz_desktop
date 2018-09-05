@@ -12,7 +12,6 @@ import odtwarzacz.Playlist.Playlist;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -39,8 +38,6 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import odtwarzacz.Connection.BtConnection;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.Connection.WifiConnection;
-
-import javax.sound.sampled.*;
 
 /**
  * @author Pregiel
@@ -84,7 +81,7 @@ public class MainFXMLController implements Initializable {
 
         try {
 //            refreshScene();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("FirstViewFXML.fxml"), Utils.getResourceBundle());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/FirstViewFXML.fxml"), Utils.getResourceBundle());
             lastPickedPane = loader.load();
 
             playlist = new Playlist(this);
@@ -153,8 +150,10 @@ public class MainFXMLController implements Initializable {
     }
 
     private void refreshScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MediaFXML.fxml"), Utils.getResourceBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/MediaFXML.fxml"), Utils.getResourceBundle());
         Pane mediaPane = loader.load();
+        mediaPane.setStyle(Theme.getStyleConst(Theme.MEDIA_FXML));
+
         mediaControl = loader.getController();
 //                mediaControl.setConnectionInfo(connectionInfoLabel);
         mediaControl.setConnection(connection);

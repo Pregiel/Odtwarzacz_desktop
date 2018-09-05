@@ -12,14 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
-import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import odtwarzacz.Connection.Connection;
@@ -88,7 +83,7 @@ public class Playlist {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
                 ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("PlaylistFXML.fxml"), resourceBundle);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/PlaylistFXML.fxml"), resourceBundle);
 
         this.pane = loader.load();
         playlistFXMLController = loader.getController();
@@ -146,7 +141,7 @@ public class Playlist {
         int i = 1;
         for (String s : playlistList) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("PlaylistElementFXML.fxml"), resourceBundle);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/PlaylistElementFXML.fxml"), resourceBundle);
 
                 PlaylistElement element = new PlaylistElement(i++, s, loader.load());
                 playlistElementList.add(element);

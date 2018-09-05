@@ -5,15 +5,6 @@
  */
 package odtwarzacz;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,13 +12,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- *
  * @author Pregiel
  */
 public class Odtwarzacz extends Application {
 
     private static final String CONFIGFILENAME = "config.properties";
     private static final String DEFAULTCONFIGFILENAME = "src/Resources/DefaultConfigFile.properties";
+
+    private static final String THEMEFILE = "src/Resources/DefaultConfigFile.properties";
 
 
     private static ConfigProperties configProp;
@@ -36,13 +28,17 @@ public class Odtwarzacz extends Application {
     public void start(Stage stage) throws Exception {
 
         configProp = new ConfigProperties(CONFIGFILENAME, DEFAULTCONFIGFILENAME);
-//            Locale.setDefault(MyLocale.ENGLISH);
+
+        new Theme(Theme.DARK_THEME);
+
         Utils.initResourceBundle();
-        Parent root = FXMLLoader.load(getClass().getResource("MainFXML.fxml"), Utils.getResourceBundle());
+        Parent root = FXMLLoader.load(getClass().getResource("Layouts/MainFXML.fxml"), Utils.getResourceBundle());
+
+        root.setStyle(Theme.getStyleConst(Theme.MAIN_FXML));
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("odtwarzacz/styleSheet.css");
-        
+//        scene.getStylesheets().add("odtwarzacz/styleSheet.css");
+
 
         stage.setScene(scene);
         stage.setWidth(Integer.valueOf(getConfig().getProperty("window.width")));
@@ -65,7 +61,7 @@ public class Odtwarzacz extends Application {
         launch(args);
     }
 
-    
+
     public static ConfigProperties getConfig() {
         return configProp;
     }

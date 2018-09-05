@@ -102,7 +102,7 @@ public class PlaylistFXMLController implements Initializable {
 
         if (queueRoot == null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("Queue/QueueFXML.fxml"), Utils.getResourceBundle());
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/QueueFXML.fxml"), Utils.getResourceBundle());
 //                queueRoot = FXMLLoader.load(getClass().getResource("Queue/QueueFXML.fxml"), Utils.getResourceBundle());
 
                 queueRoot = loader.load();

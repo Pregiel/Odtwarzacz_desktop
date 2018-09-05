@@ -1,0 +1,92 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Thin.ttf');
+}
+
+.root {
+	-color-background: #545454;
+	-color-background-highlight: #6d6d6d;
+	-color-text: #d6d6d6;
+	-color-text-highlight: #ffffff;
+}
+
+.info-label {
+    -fx-background-color:  rgba(0, 0, 0, 0.1);
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+    -fx-padding: 4px 6px 4px 6px;
+    -fx-border-insets: 4px;
+    -fx-background-insets: 4px;
+}
+
+.recent-pane {
+    -fx-background-color: #fbfbfb;
+    -fx-border-width: 1px;
+    -fx-border-color: #666666;
+    -fx-border-style: dashed;
+}
+
+/*** menu-bar ***/
+ 
+.menu-bar{
+    -fx-background-color: -color-background;
+}
+
+.menu-bar > .container > .menu-button {
+    -fx-background-color: -color-background;
+}
+
+.menu-bar > .container > .menu-button > .label {
+	-fx-font-family: 'Roboto Light';
+	-fx-text-fill: -color-text;
+	-fx-font-size: 24px;
+}
+
+.menu-bar > .container > .menu-button:hover,
+.menu-bar > .container > .menu-button:focused,
+.menu-bar > .container > .menu-button:showing {
+	-fx-background-color: -color-background-highlight;
+}
+
+.menu-bar > .container > .menu-button:hover > .label,
+.menu-bar > .container > .menu-button:focused > .label,
+.menu-bar > .container > .menu-button:showing > .label {
+    -fx-text-fill: -color-text-highlight;
+}
+
+/*** menu-item ***/
+
+.menu-item {
+	-fx-background-color: -color-background;
+}
+ 
+.menu-item .label {
+	-fx-font-family: 'Roboto Light';
+    -fx-text-fill: -color-text;
+	-fx-font-size: 15px;
+}
+
+.menu-item .left-container,
+.menu-item .right-container {
+	-fx-color: #000000;
+}
+
+.menu-item .label:disabled {
+    -fx-opacity: 1.0;
+}    
+   
+.menu-item:focused,
+.menu-item:hovered {
+    -fx-background-color: -color-background-highlight; 
+}
+
+.menu-item:focused .label,
+.menu-item:hovered .label {
+    -fx-text-fill: -color-text-highlight;
+}
+
+
+.context-menu {
+    -fx-background-color: -color-background; 
+}

@@ -1,0 +1,35 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Thin.ttf');
+}
+
+
+* {
+	-color-background: #545454;
+	-color-background-highlight: #6d6d6d;
+	-color-text: #d6d6d6;
+	-color-text-highlight: #ffffff;
+}
+
+/*** slider ***/
+
+.slider .track {
+    -fx-padding: 7;
+}
+
+.slider .thumb {
+    /*-fx-background-image: url("thumb.png");*/
+    -fx-padding: 7 2;
+}
+
+.slider {
+    -fx-background-color: black;
+}
+
+/*** button ***/
+
+.button {
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-padding: 0;
+
+}
