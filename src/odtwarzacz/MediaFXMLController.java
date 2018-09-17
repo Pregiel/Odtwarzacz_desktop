@@ -73,7 +73,7 @@ public class MediaFXMLController implements Initializable {
     private boolean repeat;
 
     @FXML
-    public ToggleButton volButton;
+    private ToggleButton volButton;
     @FXML
     private AnchorPane volBox;
     @FXML
@@ -235,10 +235,10 @@ public class MediaFXMLController implements Initializable {
     }
 
     private ExpandableTimeTask volBoxDisapear;
-    private boolean waitForReleaseVolumeSlider = false;
+    private boolean waitForReleaseVolumeSlider = false, mouseInBox = false;
 
     private void setupVolume(MediaPlayer mp) {
-        volSlider = new VolumeSlider(volBackTrack, volTrack, mp, volLabel);
+        volSlider = new VolumeSlider(volBackTrack, volTrack, mp, volLabel, volButton);
         volSlider.setConnection(connection);
 
         Platform.runLater(() -> {
@@ -256,6 +256,7 @@ public class MediaFXMLController implements Initializable {
                 volBoxDisapear.stop();
             }
             waitForReleaseVolumeSlider = false;
+            mouseInBox = true;
         });
 
         volButton.setOnMouseExited(event -> {
@@ -264,11 +265,13 @@ public class MediaFXMLController implements Initializable {
             } else {
                 volBoxDisapear.resume();
             }
+            mouseInBox = false;
         });
 
         volBox.setOnMouseEntered(event -> {
             volBoxDisapear.stop();
             waitForReleaseVolumeSlider = false;
+            mouseInBox = true;
         });
 
         volBox.setOnMouseExited(event -> {
@@ -277,6 +280,7 @@ public class MediaFXMLController implements Initializable {
             } else {
                 volBoxDisapear.resume();
             }
+            mouseInBox = false;
         });
 
         pane.setOnMouseReleased(event -> {
@@ -291,7 +295,9 @@ public class MediaFXMLController implements Initializable {
             if (volBoxDisapear.isFinished() || !volBoxDisapear.isStarted()) {
                 volBoxDisapear.start();
             } else {
-                volBoxDisapear.resume();
+                if (!mouseInBox) {
+                    volBoxDisapear.resume();
+                }
             }
             volSlider.setVolume(volSlider.getSliderPosition() + Math.signum(event.getDeltaY()) * 0.02);
         });
@@ -427,7 +433,7 @@ public class MediaFXMLController implements Initializable {
     }
 
     @FXML
-    private void expand(ActionEvent event) {
+    private void muteButton(ActionEvent event) {
         volSlider.mute();
     }
 

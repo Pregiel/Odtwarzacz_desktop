@@ -26,6 +26,9 @@
 	-color-icon: #ffffff;
 	-color-icon-off: #666666;
 
+	-color-icon-background: rgba(255,255,255,0);
+	-color-icon-background-hover: rgba(255,255,255,0.16);
+
 }
 
 .background {
@@ -51,12 +54,12 @@
 /*** toggle-button ***/
 /*** volume-button ***/
 .button, .toggle-button{
-    -fx-background-color: rgba(0,0,0,0);
+    -fx-background-color: -color-icon-background;
     -fx-padding: 5 5 2 5;
 }
 
 .button:hover, .toggle-button:hover{
-    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-background-color: -color-icon-background-hover;
 }
 
 .button > .text {

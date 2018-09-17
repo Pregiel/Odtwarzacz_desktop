@@ -56,7 +56,9 @@ public class Theme {
                         getStyle("-color-volume-box-border", "player.volume.box.border.color"),
                         getStyle("-color-volume-box-text", "player.volume.box.text.color"),
                         getStyle("-color-volume-slider-background", "player.volume.slider.background.color"),
-                        getStyle("-color-volume-slider-foreground", "player.volume.slider.foreground.color"));
+                        getStyle("-color-volume-slider-foreground", "player.volume.slider.foreground.color"),
+                        getStyle("-color-icon-background", "player.icon.background.color"),
+                        getStyle("-color-icon-background-hover", "player.icon.background.hover.color"));
         }
         return "";
     }

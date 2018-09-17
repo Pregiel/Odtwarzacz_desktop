@@ -12,12 +12,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
+import odtwarzacz.Layouts.Styles.Fonts.IconFont;
 import odtwarzacz.Odtwarzacz;
 
 /**
@@ -31,14 +33,16 @@ public class VolumeSlider extends CustomSlider {
     private double mutedVolume = 0;
     private Connection connection;
     private Label volLabel;
+    private ToggleButton volButton;
 
-    public VolumeSlider(AnchorPane slider, Pane track, MediaPlayer mediaPlayer, Label volLabel) {
+    public VolumeSlider(AnchorPane slider, Pane track, MediaPlayer mediaPlayer, Label volLabel, ToggleButton volButton) {
         super(slider, track);
         this.collapseOnRelease = false;
         this.isExpanded = false;
         this.mediaPlayer = mediaPlayer;
         this.connection = null;
         this.volLabel = volLabel;
+        this.volButton = volButton;
         setDirection(Direction.VERTICAL);
     }
 
@@ -62,20 +66,28 @@ public class VolumeSlider extends CustomSlider {
         this.mutedVolume = mutedVolume;
     }
 
+    private boolean muted = false;
+
     public void mute() {
-        if (getMutedVolume() == 0) {
+        if (!muted) {
             setMutedVolume(mediaPlayer.getVolume());
             setVolume(0.0);
+
             if (connection != null) {
                 connection.sendMessage(Connection.MUTE_ON);
             }
+            muted = true;
         } else {
             setVolume(mutedVolume);
             mutedVolume = 0;
+
             if (connection != null) {
                 connection.sendMessage(Connection.MUTE_OFF);
             }
+            muted = false;
         }
+
+        setButtonIcon(mediaPlayer.getVolume());
     }
 
     @Override
@@ -108,11 +120,14 @@ public class VolumeSlider extends CustomSlider {
     }
 
     public void setVolume(double volume) {
-        if (volume > 1.0) {
-            volume = 1.0;
-        } else if (volume < 0.0) {
+        if (volume < 0.0) {
             volume = 0.0;
+        } else if (volume > 1.0) {
+            volume = 1.0;
         }
+
+        setButtonIcon(volume);
+
 
         setSliderPosition(volume);
         mediaPlayer.setVolume(volume);
@@ -122,6 +137,19 @@ public class VolumeSlider extends CustomSlider {
             connection.sendMessage(Connection.VOLUME, volume);
         }
     }
+
+    private void setButtonIcon(double volume) {
+        if (muted) {
+            volButton.setText(IconFont.ICON_MUTE);
+        } else if (volume == 0.0) {
+            volButton.setText(IconFont.ICON_SOUND_OFF);
+        } else if (volume < 0.5) {
+            volButton.setText(IconFont.ICON_SOUND_HALF);
+        } else {
+            volButton.setText(IconFont.ICON_SOUND_MAX);
+        }
+    }
+
 
     public void setVolume(MouseEvent event) {
         if (event.getY() <= getBackTrack().getHeight() && event.getY() >= 0) {

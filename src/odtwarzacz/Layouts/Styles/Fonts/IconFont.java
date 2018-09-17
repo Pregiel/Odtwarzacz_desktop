@@ -8,7 +8,8 @@ public class IconFont {
     public static final String ICON_NEXT = "5";
     public static final String ICON_PREVIOUS = "6";
     public static final String ICON_SOUND_OFF = "7";
-    public static final String ICON_SOUND_ON = "8";
+    public static final String ICON_SOUND_MAX = "8";
+    public static final String ICON_SOUND_HALF = "K";
     public static final String ICON_MUTE = "9";
     public static final String ICON_MAXIMIZE = "A";
     public static final String ICON_MINIMIZE = "B";

@@ -26,7 +26,7 @@
                      <padding>
                         <Insets left="8.0" />
                      </padding>
-                     <ToggleButton fx:id="volButton" mnemonicParsing="false" onAction="#expand" styleClass="volume-button" text="8">
+                     <ToggleButton fx:id="volButton" mnemonicParsing="false" onAction="#muteButton" styleClass="volume-button" text="8">
                         <HBox.margin>
                            <Insets />
                         </HBox.margin>
