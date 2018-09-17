@@ -3,6 +3,11 @@
 	src: url('Fonts/Roboto-Thin.ttf');
 }
 
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Light.ttf');
+}
+
 .root {
 	-color-background: #545454;
 	-color-background-highlight: #6d6d6d;

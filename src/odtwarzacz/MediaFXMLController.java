@@ -7,29 +7,21 @@ package odtwarzacz;
 
 
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
-import javafx.scene.CacheHint;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Glow;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.Metadata.Metadata;
@@ -45,6 +37,9 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static odtwarzacz.Layouts.Styles.Fonts.IconFont.ICON_PAUSE;
+import static odtwarzacz.Layouts.Styles.Fonts.IconFont.ICON_PLAY;
+
 /**
  * FXML Controller class
  *
@@ -55,12 +50,8 @@ public class MediaFXMLController implements Initializable {
     private static final String PLAYIMAGE_PATH = "Layouts/Icons/ic_play_white.png";
     private static final String PAUSEIMAGE_PATH = "Layouts/Icons/ic_pause_white.png";
 
-    public ImageView playImageButton;
-    public ImageView volImageButton;
-    public ImageView backwardImageButton;
-    public ImageView forwardImageButton;
-    public ImageView playlistImageButton;
     public Button playlistButton;
+    public StackPane stackpane;
     @FXML
     private BorderPane pane;
     @FXML
@@ -133,27 +124,9 @@ public class MediaFXMLController implements Initializable {
     /**
      * Initializes the controller class.
      */
-//    public File file;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        File file = new File("C:\\video.mp4");
-//        File file = new File("C:\\Users\\Pregiel\\Desktop\\Example Videos\\SampleVideo_1280x720_1mb.mp4");
-//        File file = new File("C:\\Users\\Pregiel\\Desktop\\video1.mp4");
-//        Media media = new Media(file.toURI().toString());
-//
-//        changeMediaPlayer(media);
-
-//        mediaView.setPreserveRatio(true);
-//        mediaView.fitWidthProperty().bind(mediaPane.widthProperty());
-//        mediaView.fitHeightProperty().bind(mediaPane.heightProperty());
-//        
-        pane.heightProperty().addListener((observable) -> {
-            mediaView.setFitHeight(pane.getHeight());
-        });
-
-        pane.widthProperty().addListener((observable) -> {
-            mediaView.setFitWidth(pane.getWidth());
-        });
 
         repeat = Boolean.parseBoolean(String.valueOf(Odtwarzacz.getConfig().get("repeat")));
 
@@ -161,35 +134,42 @@ public class MediaFXMLController implements Initializable {
             repeatTooglebutton.setSelected(true);
         }
 
+
 //        previewTimer = new Timer();
 //        previewTimer.schedule(new PreviewSend(), 0, 100);
 
 
-//        mediaView.setPreserveRatio(true);
-//        mediaView.fitWidthProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
-//        mediaView.fitHeightProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
-Glow glow = new Glow(1);
+        Glow glow = new Glow(1);
 
-        playButton.setOnMouseEntered(event -> playImageButton.setEffect(glow));
-        playButton.setOnMouseExited(event -> playImageButton.setEffect(null));
+        playButton.setOnMouseEntered(event -> playButton.setEffect(glow));
+        playButton.setOnMouseExited(event -> playButton.setEffect(null));
 
-        volButton.setOnMouseEntered(event -> volImageButton.setEffect(glow));
-        volButton.setOnMouseExited(event -> volImageButton.setEffect(null));
+        volButton.setOnMouseEntered(event -> volButton.setEffect(glow));
+        volButton.setOnMouseExited(event -> volButton.setEffect(null));
 
-        backwardButton.setOnMouseEntered(event -> backwardImageButton.setEffect(glow));
-        backwardButton.setOnMouseExited(event -> backwardImageButton.setEffect(null));
+        backwardButton.setOnMouseEntered(event -> backwardButton.setEffect(glow));
+        backwardButton.setOnMouseExited(event -> backwardButton.setEffect(null));
 
-        forwardButton.setOnMouseEntered(event -> forwardImageButton.setEffect(glow));
-        forwardButton.setOnMouseExited(event -> forwardImageButton.setEffect(null));
+        forwardButton.setOnMouseEntered(event -> forwardButton.setEffect(glow));
+        forwardButton.setOnMouseExited(event -> forwardButton.setEffect(null));
 
-        playlistButton.setOnMouseEntered(event -> playlistImageButton.setEffect(glow));
-        playlistButton.setOnMouseExited(event -> playlistImageButton.setEffect(null));
+        playlistButton.setOnMouseEntered(event -> playlistButton.setEffect(glow));
+        playlistButton.setOnMouseExited(event -> playlistButton.setEffect(null));
+
+    }
+
+    public void setScaling(Window root, Pane centerPane) {
+
+        timeSlider.setScalingPane(centerPane);
+
+        mediaView.setPreserveRatio(true);
+        mediaView.fitWidthProperty().bind(pane.widthProperty());
+        mediaView.fitHeightProperty().bind(pane.heightProperty());
     }
 
     public void changeFile(File file) {
 
         mediaPlayer.dispose();
-//        Media media = new Media(file.toURI().toString());
         changeMediaPlayer(file);
         mediaView.setMediaPlayer(mediaPlayer);
     }
@@ -201,19 +181,17 @@ Glow glow = new Glow(1);
 
         mp.setAutoPlay(true);
 
-        mp.currentTimeProperty().addListener((Observable observable) -> {
+        mp.currentTimeProperty().addListener((observable) -> {
             updateValues();
         });
 
         mp.setOnPlaying(() -> {
-//            System.out.println(mediaPlayer.getStatus() + " : onPlaying");
-            playImageButton.setImage(new Image(getClass().getResource(PAUSEIMAGE_PATH).toExternalForm()));
+            playButton.setText(ICON_PAUSE);
         });
 
         mp.setOnPaused(() -> {
-//            System.out.println(mediaPlayer.getStatus() + " : onPaused");
             if (!timeSlider.isChanging()) {
-                playImageButton.setImage(new Image(getClass().getResource(PLAYIMAGE_PATH).toExternalForm()));
+                playButton.setText(ICON_PLAY);
             }
         });
 
@@ -229,16 +207,12 @@ Glow glow = new Glow(1);
         mp.setCycleCount(repeat ? MediaPlayer.INDEFINITE : 1);
         mp.setOnEndOfMedia(() -> {
             updateValues();
-//            System.out.println(mediaPlayer.getStatus() + " : onEndOfMedia");
             if (!repeat) {
                 if (MainFXMLController.getPlaylist().getPlaylistIndex() == -1) {
-                    playImageButton.setImage(new Image(getClass().getResource(PLAYIMAGE_PATH).toExternalForm()));
+                    playButton.setText(ICON_PLAY);
                     atEndOfMedia = true;
                 } else {
-//                    nextPlaylistIndex();
-//                    MainFXMLController.getPlaylist().nextPlaylistIndex();
                     MainFXMLController.getPlaylist().playNext();
-//                    changeFile(new File(MainFXMLController.getPlaylist().getPlaylistList().get(playlistIndex - 1)));
                 }
             }
         });
@@ -249,7 +223,7 @@ Glow glow = new Glow(1);
             volSlider.setVolume(Double.parseDouble(Odtwarzacz.getConfig().getProperty("volume")));
         });
 
-        volSlider.getBackTrack().setScaleX(0);
+//        volSlider.getBackTrack().setScaleX(0);
 //        volButton.setOnMouseEntered((event) -> {
 //            if (volSlider.getCollapseOnRelease()) {
 //                volSlider.setCollapseOnRelease(false);
@@ -392,8 +366,6 @@ Glow glow = new Glow(1);
                     if (atEndOfMedia) {
                         mediaPlayer.seek(mediaPlayer.getStartTime());
                         atEndOfMedia = false;
-//                    mediaPlayer.play();
-//                    playButton.setText("||");
                     } else {
                         mediaPlayer.pause();
                     }

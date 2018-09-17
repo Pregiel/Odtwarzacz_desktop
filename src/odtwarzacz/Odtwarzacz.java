@@ -19,6 +19,11 @@ public class Odtwarzacz extends Application {
     private static final String CONFIGFILENAME = "config.properties";
     private static final String DEFAULTCONFIGFILENAME = "src/Resources/DefaultConfigFile.properties";
 
+    public static final int MEDIA_MIN_WIDTH = 500;
+    public static final int PLAYLIST_MIN_WIDTH = 300;
+    public static final int PLAYER_MIN_HEIGHT = 300;
+    public static final int PLAYER_MIN_WIDTH = MEDIA_MIN_WIDTH + PLAYLIST_MIN_WIDTH;
+
     private static final String THEMEFILE = "src/Resources/DefaultConfigFile.properties";
 
 
@@ -37,19 +42,28 @@ public class Odtwarzacz extends Application {
         root.setStyle(Theme.getStyleConst(Theme.MAIN_FXML));
 
         Scene scene = new Scene(root);
-//        scene.getStylesheets().add("odtwarzacz/styleSheet.css");
 
 
         stage.setScene(scene);
         stage.setWidth(Integer.valueOf(getConfig().getProperty("window.width")));
         stage.setHeight(Integer.valueOf(getConfig().getProperty("window.height")));
+
         stage.widthProperty().addListener((observable, oldValue, newValue) -> {
             getConfig().setProperty("window.width", String.valueOf(newValue.intValue()));
             getConfig().save();
         });
         stage.heightProperty().addListener((observable, oldValue, newValue) -> {
             getConfig().setProperty("window.height", String.valueOf(newValue.intValue()));
+            getConfig().save();
         });
+
+        if (Boolean.valueOf(getConfig().getProperty("playlist.visible", "false"))) {
+            stage.setMinWidth(PLAYER_MIN_WIDTH);
+        } else {
+            stage.setMinWidth(MEDIA_MIN_WIDTH);
+        }
+
+        stage.setMinHeight(PLAYER_MIN_HEIGHT);
         stage.show();
 
     }

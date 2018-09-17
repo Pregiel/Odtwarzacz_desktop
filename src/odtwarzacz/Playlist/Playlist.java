@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.MyLocale;
@@ -122,9 +123,11 @@ public class Playlist {
 
     public void toogle() {
         if (Odtwarzacz.getConfig().getProperty("playlist.visible").equals("true")) {
+            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.MEDIA_MIN_WIDTH);
             hide();
         } else {
             show();
+            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.PLAYER_MIN_WIDTH);
         }
     }
 

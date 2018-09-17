@@ -6,6 +6,7 @@
 package odtwarzacz;
 
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.stage.DirectoryChooser;
 import odtwarzacz.Connection.UsbConnection;
 import odtwarzacz.Playlist.Playlist;
@@ -167,6 +168,8 @@ public class MainFXMLController implements Initializable {
                 centerPane.getChildren().add(mediaPane);
                 centerPane.getChildren().add(connectionInfoLabel);
                 centerPane.getChildren().add(fileInfoLabel);
+
+                mediaControl.setScaling(centerPane.getScene().getWindow(), centerPane);
 
             }
         });

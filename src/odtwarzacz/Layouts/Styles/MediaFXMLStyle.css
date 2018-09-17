@@ -1,14 +1,28 @@
 @font-face {
 	font-family: 'Roboto';
-	src: url('Fonts/Roboto-Thin.ttf');
+	src: url('Fonts/Roboto-Bold.ttf');
 }
 
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Custom.ttf');
+}
+
+@font-face {
+	font-family: 'MediaIcons';
+	src: url('Fonts/MediaIcons.ttf');
+}
 
 * {
 	-color-background: #545454;
 	-color-background-highlight: #6d6d6d;
-	-color-text: #d6d6d6;
+	-color-text: #ffffff;
 	-color-text-highlight: #ffffff;
+
+	-color-icon: #ffffff;
+	-color-icon-play: #ffffff;
+
+	-text-size: 32px;
 }
 
 /*** slider ***/
@@ -31,5 +45,14 @@
 .button {
     -fx-background-color: rgba(0,0,0,0);
     -fx-padding: 0;
+}
 
+.button > .text {
+	-fx-font-size: 32px;
+    -fx-font-family: 'MediaIcons';
+	-fx-fill: -color-icon;
+}
+
+.play-button > .text {
+    -fx-fill: -color-icon;
 }

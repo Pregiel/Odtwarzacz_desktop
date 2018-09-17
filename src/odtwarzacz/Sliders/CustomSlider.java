@@ -10,7 +10,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 /**
- *
  * @author Pregiel
  */
 public abstract class CustomSlider {
@@ -18,6 +17,7 @@ public abstract class CustomSlider {
     private final Pane track;
     private final AnchorPane backTrack;
     private boolean isChanging = false;
+    public boolean block = false;
 
     public CustomSlider(AnchorPane slider, Pane sliderTrack) {
         backTrack = slider;
@@ -31,7 +31,6 @@ public abstract class CustomSlider {
         backTrack.setOnMouseDragged((event) -> {
             onMouseDragged(event);
         });
-
     }
 
     public Pane getTrack() {
@@ -45,7 +44,7 @@ public abstract class CustomSlider {
     public void setIsChanging(boolean isChanging) {
         this.isChanging = isChanging;
     }
-    
+
     public boolean isChanging() {
         return isChanging;
     }
@@ -59,7 +58,7 @@ public abstract class CustomSlider {
     public void setSliderPosition(double value) {
         AnchorPane.setRightAnchor(getTrack(), getBackTrack().getWidth() * (1 - value));
     }
-    
+
 
     public void setSliderPosition(MouseEvent event) {
         setSliderPosition(event.getX() / getBackTrack().getWidth());
