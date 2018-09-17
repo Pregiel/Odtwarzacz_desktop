@@ -1,10 +1,9 @@
-package odtwarzacz;
+package odtwarzacz.Utils;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import odtwarzacz.Connection.Connection;
 
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
 import java.util.ResourceBundle;

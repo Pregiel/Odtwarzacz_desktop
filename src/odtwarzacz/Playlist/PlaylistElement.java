@@ -17,13 +17,13 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import odtwarzacz.FileType;
+import odtwarzacz.Utils.FileType;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Metadata.Metadata;
 import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
 import odtwarzacz.Playlist.Queue.QueueElement;
-import odtwarzacz.Utils;
+import odtwarzacz.Utils.Utils;
 
 /**
  * @author Pregiel

@@ -8,13 +8,13 @@ package odtwarzacz;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
@@ -29,13 +29,12 @@ import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
 import odtwarzacz.Sliders.TimeSlider;
 import odtwarzacz.Sliders.VolumeSlider;
+import odtwarzacz.Utils.ExpandableTimeTask;
+import odtwarzacz.Utils.Utils;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static odtwarzacz.Layouts.Styles.Fonts.IconFont.ICON_PAUSE;
 import static odtwarzacz.Layouts.Styles.Fonts.IconFont.ICON_PLAY;
@@ -57,7 +56,7 @@ public class MediaFXMLController implements Initializable {
     @FXML
     private HBox controllers;
     @FXML
-    private Label timeLabel;
+    private Label timeLabel1, timeLabel2, volLabel;
     @FXML
     private MediaView mediaView;
     @FXML
@@ -70,9 +69,9 @@ public class MediaFXMLController implements Initializable {
     private boolean repeat;
 
     @FXML
-    public Button volButton;
+    public ToggleButton volButton;
     @FXML
-    private HBox volBox;
+    private AnchorPane volBox;
     @FXML
     private AnchorPane volBackTrack;
 
@@ -93,7 +92,7 @@ public class MediaFXMLController implements Initializable {
     private Button forwardButton;
 
     @FXML
-    private ToggleButton repeatTooglebutton;
+    private ToggleButton repeatToggleButton;
 
     private InfoLabel fileInfoLabel;
 
@@ -131,31 +130,12 @@ public class MediaFXMLController implements Initializable {
         repeat = Boolean.parseBoolean(String.valueOf(Odtwarzacz.getConfig().get("repeat")));
 
         if (repeat) {
-            repeatTooglebutton.setSelected(true);
+            repeatToggleButton.setSelected(true);
         }
 
 
 //        previewTimer = new Timer();
 //        previewTimer.schedule(new PreviewSend(), 0, 100);
-
-
-        Glow glow = new Glow(1);
-
-        playButton.setOnMouseEntered(event -> playButton.setEffect(glow));
-        playButton.setOnMouseExited(event -> playButton.setEffect(null));
-
-        volButton.setOnMouseEntered(event -> volButton.setEffect(glow));
-        volButton.setOnMouseExited(event -> volButton.setEffect(null));
-
-        backwardButton.setOnMouseEntered(event -> backwardButton.setEffect(glow));
-        backwardButton.setOnMouseExited(event -> backwardButton.setEffect(null));
-
-        forwardButton.setOnMouseEntered(event -> forwardButton.setEffect(glow));
-        forwardButton.setOnMouseExited(event -> forwardButton.setEffect(null));
-
-        playlistButton.setOnMouseEntered(event -> playlistButton.setEffect(glow));
-        playlistButton.setOnMouseExited(event -> playlistButton.setEffect(null));
-
     }
 
     public void setScaling(Window root, Pane centerPane) {
@@ -218,34 +198,14 @@ public class MediaFXMLController implements Initializable {
         });
 
         mediaView.setMediaPlayer(mp);
-        volSlider = new VolumeSlider(volBackTrack, volTrack, mp);
-        Platform.runLater(() -> {
-            volSlider.setVolume(Double.parseDouble(Odtwarzacz.getConfig().getProperty("volume")));
-        });
 
-//        volSlider.getBackTrack().setScaleX(0);
-//        volButton.setOnMouseEntered((event) -> {
-//            if (volSlider.getCollapseOnRelease()) {
-//                volSlider.setCollapseOnRelease(false);
-//            }
-//            volSlider.animateVolumeSliderExpand(event);
-//        });
-
-        volSlider.setConnection(connection);
-
-        volBox.setOnMouseExited((event) -> {
-            if (volSlider.isChanging()) {
-                volSlider.setCollapseOnRelease(true);
-            } else {
-                volSlider.animateVolumeSliderCollapse(event);
-            }
-        });
+        setupVolume(mp);
 
         timeSlider = new TimeSlider(timeBackTrack, timeTrack, mp);
 
         mediaPlayer = mp;
 
-        volSlider.setVolume(mediaPlayer.getVolume());
+//        volSlider.setVolume(mediaPlayer.getVolume());
 
         metadata = generateMetadata(file);
 
@@ -260,6 +220,47 @@ public class MediaFXMLController implements Initializable {
             public void run() {
                 fileInfoLabel.setInfoText(InfoLabel.FILE_OPEN, metadata.generateLabel());
             }
+        });
+
+    }
+
+    private ExpandableTimeTask volBoxDisapear;
+
+    private void setupVolume(MediaPlayer mp) {
+        volSlider = new VolumeSlider(volBackTrack, volTrack, mp, volLabel);
+        volSlider.setConnection(connection);
+
+        Platform.runLater(() -> {
+            volSlider.setVolume(Double.parseDouble(Odtwarzacz.getConfig().getProperty("volume")));
+            volSlider.setSliderPosition(mediaPlayer.getVolume());
+        });
+
+        Runnable disapear = () -> volBox.setVisible(false);
+
+        volBoxDisapear = new ExpandableTimeTask(disapear, 1000);
+
+        volButton.setOnMouseEntered((event) -> {
+            volBox.setVisible(true);
+            if (!volBoxDisapear.isFinished() && volBoxDisapear.isStarted()) {
+                volBoxDisapear.stop();
+            }
+        });
+
+        volButton.setOnMouseExited(event -> {
+            if (volBoxDisapear.isFinished() || !volBoxDisapear.isStarted()) {
+                volBoxDisapear.start();
+            } else {
+                volBoxDisapear.resume();
+            }
+        });
+
+        volBox.setOnMouseEntered(event -> {
+            volBoxDisapear.stop();
+
+        });
+
+        volBox.setOnMouseExited(event -> {
+            volBoxDisapear.resume();
         });
 
     }
@@ -305,8 +306,10 @@ public class MediaFXMLController implements Initializable {
     private void updateValues() {
         Platform.runLater(() -> {
             Duration currentTime = mediaPlayer.getCurrentTime();
-            String timeText = durationToTime(currentTime) + "/" + durationToTime(duration);
-            timeLabel.setText(timeText);
+//            String timeText = durationToTime(currentTime) + "/" + durationToTime(duration);
+//            timeLabel.setText(timeText);
+            timeLabel1.setText(durationToTime(currentTime));
+            timeLabel2.setText(durationToTime(duration));
 
 
             if (duration.greaterThan(Duration.ZERO) && !timeSlider.isChanging()) {
@@ -504,7 +507,7 @@ public class MediaFXMLController implements Initializable {
 
     @FXML
     private void repeatToggle(ActionEvent event) {
-        repeat = repeatTooglebutton.isSelected();
+        repeat = repeatToggleButton.isSelected();
 
         Odtwarzacz.getConfig().setProperty("repeat", String.valueOf(repeat));
         Odtwarzacz.getConfig().save();
@@ -516,7 +519,7 @@ public class MediaFXMLController implements Initializable {
     }
 
     public void repeatToggle() {
-        repeatTooglebutton.fire();
+        repeatToggleButton.fire();
     }
 
     public MediaView getMediaView() {

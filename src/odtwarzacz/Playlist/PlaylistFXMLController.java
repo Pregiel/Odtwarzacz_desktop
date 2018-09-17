@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
-import odtwarzacz.Utils;
+import odtwarzacz.Utils.Utils;
 
 import static odtwarzacz.MainFXMLController.getPlaylist;
 

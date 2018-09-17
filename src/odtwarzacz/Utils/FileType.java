@@ -1,4 +1,4 @@
-package odtwarzacz;
+package odtwarzacz.Utils;
 
 public enum FileType {
     NONE, AUDIO, VIDEO;

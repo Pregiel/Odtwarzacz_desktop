@@ -1,6 +1,6 @@
 @font-face {
 	font-family: 'Roboto';
-	src: url('Fonts/Roboto-Bold.ttf');
+	src: url('Fonts/Roboto-Medium.ttf');
 }
 
 @font-face {
@@ -22,6 +22,8 @@
 	-color-icon: #ffffff;
 	-color-icon-play: #ffffff;
 
+	-color-icon-off: #666666;
+
 	-text-size: 32px;
 }
 
@@ -41,10 +43,15 @@
 }
 
 /*** button ***/
-
-.button {
+/*** toggle-button ***/
+/*** volume-button ***/
+.button, .toggle-button{
     -fx-background-color: rgba(0,0,0,0);
-    -fx-padding: 0;
+    -fx-padding: 5 5 2 5;
+}
+
+.button:hover, .toggle-button:hover{
+    -fx-background-color: rgba(255,255,255,0.12);
 }
 
 .button > .text {
@@ -56,3 +63,39 @@
 .play-button > .text {
     -fx-fill: -color-icon;
 }
+
+.toggle-button > .text {
+	-fx-font-size: 32px;
+    -fx-font-family: 'MediaIcons';
+	-fx-fill: -color-icon-off;
+}
+
+.toggle-button:selected > .text {
+	-fx-fill: -color-icon;
+}
+
+.volume-button > .text {
+    -fx-fill: -color-icon;
+}
+
+/*** time-label ***/
+.time-label {
+	-fx-font-size: 14px;
+    -fx-font-family: 'Roboto Medium';
+    -fx-text-fill: #ffffff;
+}
+
+/*** volume-box ***/
+.volume-box {
+    -fx-background-color: -color-background;
+	-fx-border-color: -color-background-highlight;
+	-fx-border-width: 2;
+}
+
+/*** label ***/
+.label {
+	-fx-font-size: 14px;
+    -fx-font-family: 'Roboto Medium';
+    -fx-text-fill: -color-text;
+}
+

@@ -11,14 +11,13 @@ import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import odtwarzacz.ConfigProperties;
 import odtwarzacz.Connection.Connection;
-import odtwarzacz.MediaFXMLController;
 import odtwarzacz.Odtwarzacz;
 
 /**
@@ -31,13 +30,16 @@ public class VolumeSlider extends CustomSlider {
     private boolean isExpanded;
     private double mutedVolume = 0;
     private Connection connection;
+    private Label volLabel;
 
-    public VolumeSlider(AnchorPane slider, Pane track, MediaPlayer mediaPlayer) {
+    public VolumeSlider(AnchorPane slider, Pane track, MediaPlayer mediaPlayer, Label volLabel) {
         super(slider, track);
         this.collapseOnRelease = false;
         this.isExpanded = false;
         this.mediaPlayer = mediaPlayer;
         this.connection = null;
+        this.volLabel = volLabel;
+        setDirection(Direction.VERTICAL);
     }
 
     public void setConnection(Connection connection) {
@@ -90,7 +92,7 @@ public class VolumeSlider extends CustomSlider {
         setIsChanging(false);
         setVolume(event);
         if (collapseOnRelease) {
-            animateVolumeSliderCollapse(event);
+//            animateVolumeSliderCollapse(event);
             collapseOnRelease = false;
         }
 
@@ -108,18 +110,20 @@ public class VolumeSlider extends CustomSlider {
     public void setVolume(double volume) {
         setSliderPosition(volume);
         mediaPlayer.setVolume(volume);
+        volLabel.setText(String.valueOf(Math.round(volume * 100)) + "%");
+
         if (connection != null) {
             connection.sendMessage(Connection.VOLUME, volume);
         }
     }
 
     public void setVolume(MouseEvent event) {
-        if (event.getX() <= getBackTrack().getWidth() && event.getX() >= 0) {
-            setVolume(event.getX() / getBackTrack().getWidth());
-        } else if (event.getX() > getBackTrack().getWidth()) {
-            setVolume(1);
-        } else if (event.getX() < 0) {
+        if (event.getY() <= getBackTrack().getHeight() && event.getY() >= 0) {
+            setVolume(1 - (event.getY() / getBackTrack().getHeight()));
+        } else if (event.getY() > getBackTrack().getHeight()) {
             setVolume(0);
+        } else if (event.getY() < 0) {
+            setVolume(1);
         }
     }
 

@@ -9,7 +9,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import odtwarzacz.MainFXMLController;
-import odtwarzacz.MyLocale;
+import odtwarzacz.Utils.MyLocale;
 import odtwarzacz.Playlist.Playlist;
 
 import java.io.IOException;

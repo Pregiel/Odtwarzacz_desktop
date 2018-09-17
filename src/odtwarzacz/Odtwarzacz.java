@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import odtwarzacz.Utils.ConfigProperties;
+import odtwarzacz.Utils.Utils;
 
 /**
  * @author Pregiel

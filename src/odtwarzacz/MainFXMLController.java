@@ -6,7 +6,6 @@
 package odtwarzacz;
 
 import javafx.application.Platform;
-import javafx.scene.Node;
 import javafx.stage.DirectoryChooser;
 import odtwarzacz.Connection.UsbConnection;
 import odtwarzacz.Playlist.Playlist;
@@ -39,6 +38,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import odtwarzacz.Connection.BtConnection;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.Connection.WifiConnection;
+import odtwarzacz.Utils.Utils;
 
 /**
  * @author Pregiel

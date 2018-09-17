@@ -17,7 +17,7 @@ public abstract class CustomSlider {
     private final Pane track;
     private final AnchorPane backTrack;
     private boolean isChanging = false;
-    public boolean block = false;
+    private Direction direction = Direction.HORIZONTAL;
 
     public CustomSlider(AnchorPane slider, Pane sliderTrack) {
         backTrack = slider;
@@ -55,16 +55,37 @@ public abstract class CustomSlider {
 
     public abstract void onMouseDragged(MouseEvent event);
 
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
     public void setSliderPosition(double value) {
-        AnchorPane.setRightAnchor(getTrack(), getBackTrack().getWidth() * (1 - value));
+        switch (direction) {
+            case VERTICAL:
+                AnchorPane.setTopAnchor(getTrack(), getBackTrack().getPrefHeight() * (1 - value));
+                break;
+            default:
+                AnchorPane.setRightAnchor(getTrack(), getBackTrack().getWidth() * (1 - value));
+
+        }
     }
 
 
     public void setSliderPosition(MouseEvent event) {
-        setSliderPosition(event.getX() / getBackTrack().getWidth());
+        switch (direction) {
+            case VERTICAL:
+                setSliderPosition(event.getY() / getBackTrack().getHeight());
+                break;
+            default:
+                setSliderPosition(event.getX() / getBackTrack().getWidth());
+        }
     }
 
     public double getSliderPosition() {
+        switch (direction) {
+            case VERTICAL:
+                return track.getHeight() / backTrack.getHeight();
+        }
         return track.getWidth() / backTrack.getWidth();
     }
 

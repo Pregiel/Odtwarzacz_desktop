@@ -20,11 +20,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
-import odtwarzacz.MyLocale;
+import odtwarzacz.Utils.MyLocale;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.Queue;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
-import odtwarzacz.Utils;
+import odtwarzacz.Utils.Utils;
 
 import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
 
