@@ -263,6 +263,17 @@ public class MediaFXMLController implements Initializable {
             volBoxDisapear.resume();
         });
 
+        pane.setOnScroll(event -> {
+            volBox.setVisible(true);
+            if (volBoxDisapear.isFinished() || !volBoxDisapear.isStarted()) {
+                volBoxDisapear.start();
+            } else {
+                volBoxDisapear.resume();
+            }
+            System.out.println(volSlider.getSliderPosition());
+            volSlider.setVolume(volSlider.getSliderPosition() + Math.signum(event.getDeltaY()) * 0.02);
+        });
+
     }
 
     public Metadata generateMetadata(File file) {

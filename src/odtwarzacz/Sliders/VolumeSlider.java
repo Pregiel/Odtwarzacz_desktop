@@ -108,6 +108,12 @@ public class VolumeSlider extends CustomSlider {
     }
 
     public void setVolume(double volume) {
+        if (volume > 1.0) {
+            volume = 1.0;
+        } else if (volume < 0.0) {
+            volume = 0.0;
+        }
+
         setSliderPosition(volume);
         mediaPlayer.setVolume(volume);
         volLabel.setText(String.valueOf(Math.round(volume * 100)) + "%");
