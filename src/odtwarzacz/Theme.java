@@ -1,9 +1,5 @@
 package odtwarzacz;
 
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -52,7 +48,15 @@ public class Theme {
                         getStyle("-color-text-highlight", "menu.text_highlight.color"));
 
             case MEDIA_FXML:
-                return getStyles(getStyle("-fx-background-color", "player.background.color"));
+                return getStyles(getStyle("-color-background", "player.background.color"),
+                        getStyle("-color-text", "player.text.color"),
+                        getStyle("-color-icon", "player.icon.color"),
+                        getStyle("-color-icon-off", "player.icon.off.color"),
+                        getStyle("-color-volume-box-background", "player.volume.box.background.color"),
+                        getStyle("-color-volume-box-border", "player.volume.box.border.color"),
+                        getStyle("-color-volume-box-text", "player.volume.box.text.color"),
+                        getStyle("-color-volume-slider-background", "player.volume.slider.background.color"),
+                        getStyle("-color-volume-slider-foreground", "player.volume.slider.foreground.color"));
         }
         return "";
     }

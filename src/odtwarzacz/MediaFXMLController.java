@@ -15,15 +15,18 @@ import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
+import odtwarzacz.Layouts.Styles.Fonts.IconFont;
 import odtwarzacz.Metadata.Metadata;
 import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
@@ -51,6 +54,7 @@ public class MediaFXMLController implements Initializable {
 
     public Button playlistButton;
     public StackPane stackpane;
+    public Button fullscreenButton;
     @FXML
     private BorderPane pane;
     @FXML
@@ -133,6 +137,12 @@ public class MediaFXMLController implements Initializable {
             repeatToggleButton.setSelected(true);
         }
 
+        pane.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                fullscreened = false;
+                fullscreenButton.setText(IconFont.ICON_MAXIMIZE);
+            }
+        });
 
 //        previewTimer = new Timer();
 //        previewTimer.schedule(new PreviewSend(), 0, 100);
@@ -225,6 +235,7 @@ public class MediaFXMLController implements Initializable {
     }
 
     private ExpandableTimeTask volBoxDisapear;
+    private boolean waitForReleaseVolumeSlider = false;
 
     private void setupVolume(MediaPlayer mp) {
         volSlider = new VolumeSlider(volBackTrack, volTrack, mp, volLabel);
@@ -244,6 +255,7 @@ public class MediaFXMLController implements Initializable {
             if (!volBoxDisapear.isFinished() && volBoxDisapear.isStarted()) {
                 volBoxDisapear.stop();
             }
+            waitForReleaseVolumeSlider = false;
         });
 
         volButton.setOnMouseExited(event -> {
@@ -256,11 +268,22 @@ public class MediaFXMLController implements Initializable {
 
         volBox.setOnMouseEntered(event -> {
             volBoxDisapear.stop();
-
+            waitForReleaseVolumeSlider = false;
         });
 
         volBox.setOnMouseExited(event -> {
-            volBoxDisapear.resume();
+            if (event.isPrimaryButtonDown()) {
+                waitForReleaseVolumeSlider = true;
+            } else {
+                volBoxDisapear.resume();
+            }
+        });
+
+        pane.setOnMouseReleased(event -> {
+            if (waitForReleaseVolumeSlider) {
+                volBoxDisapear.resume();
+                waitForReleaseVolumeSlider = false;
+            }
         });
 
         pane.setOnScroll(event -> {
@@ -270,7 +293,6 @@ public class MediaFXMLController implements Initializable {
             } else {
                 volBoxDisapear.resume();
             }
-            System.out.println(volSlider.getSliderPosition());
             volSlider.setVolume(volSlider.getSliderPosition() + Math.signum(event.getDeltaY()) * 0.02);
         });
 
@@ -535,5 +557,20 @@ public class MediaFXMLController implements Initializable {
 
     public MediaView getMediaView() {
         return mediaView;
+    }
+
+
+    private boolean fullscreened = false;
+
+    public void fullscreenToggle(ActionEvent event) {
+        if (fullscreened) {
+            ((Stage) pane.getScene().getWindow()).setFullScreen(false);
+            fullscreened = false;
+            fullscreenButton.setText(IconFont.ICON_MAXIMIZE);
+        } else {
+            ((Stage) pane.getScene().getWindow()).setFullScreen(true);
+            fullscreened = true;
+            fullscreenButton.setText(IconFont.ICON_MINIMIZE);
+        }
     }
 }

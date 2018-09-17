@@ -13,18 +13,23 @@
 	src: url('Fonts/MediaIcons.ttf');
 }
 
-* {
-	-color-background: #545454;
-	-color-background-highlight: #6d6d6d;
+.root {
+	-color-background: #000000;
 	-color-text: #ffffff;
-	-color-text-highlight: #ffffff;
+
+	-color-volume-box-background: #545454;
+	-color-volume-box-border: #6d6d6d;
+	-color-volume-box-text: #d6d6d6;
+	-color-volume-slider-background: #565656;
+	-color-volume-slider-foreground: #ffffff;
 
 	-color-icon: #ffffff;
-	-color-icon-play: #ffffff;
-
 	-color-icon-off: #666666;
 
-	-text-size: 32px;
+}
+
+.background {
+    -fx-background-color: -color-background;
 }
 
 /*** slider ***/
@@ -60,10 +65,6 @@
 	-fx-fill: -color-icon;
 }
 
-.play-button > .text {
-    -fx-fill: -color-icon;
-}
-
 .toggle-button > .text {
 	-fx-font-size: 32px;
     -fx-font-family: 'MediaIcons';
@@ -78,24 +79,32 @@
     -fx-fill: -color-icon;
 }
 
-/*** time-label ***/
-.time-label {
-	-fx-font-size: 14px;
-    -fx-font-family: 'Roboto Medium';
-    -fx-text-fill: #ffffff;
-}
-
-/*** volume-box ***/
-.volume-box {
-    -fx-background-color: -color-background;
-	-fx-border-color: -color-background-highlight;
-	-fx-border-width: 2;
-}
-
 /*** label ***/
 .label {
 	-fx-font-size: 14px;
     -fx-font-family: 'Roboto Medium';
+    -fx-text-fill: -color-volume-box-text;
+}
+
+/*** time-label ***/
+.time-label {
     -fx-text-fill: -color-text;
 }
+
+/*** volume-box ***/
+.volume-box {
+    -fx-background-color: -color-volume-box-background;
+	-fx-border-color: -color-volume-box-border;
+	-fx-border-width: 2;
+}
+
+/*** volume-slider ***/
+.volume-slider-background {
+    -fx-background-color: -color-volume-slider-background;
+}
+
+.volume-slider-foreground {
+    -fx-background-color: -color-volume-slider-foreground;
+}
+
 

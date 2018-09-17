@@ -36,7 +36,7 @@ public class Odtwarzacz extends Application {
 
         configProp = new ConfigProperties(CONFIGFILENAME, DEFAULTCONFIGFILENAME);
 
-        new Theme(Theme.DARK_THEME);
+        new Theme(Theme.LIGHT_THEME);
 
         Utils.initResourceBundle();
         Parent root = FXMLLoader.load(getClass().getResource("Layouts/MainFXML.fxml"), Utils.getResourceBundle());
@@ -64,6 +64,8 @@ public class Odtwarzacz extends Application {
         } else {
             stage.setMinWidth(MEDIA_MIN_WIDTH);
         }
+
+        stage.setFullScreenExitHint("");
 
         stage.setMinHeight(PLAYER_MIN_HEIGHT);
         stage.show();

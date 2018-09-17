@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.media.MediaView?>
 
-<BorderPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="500.0" style="-fx-background-color: black;" stylesheets="@Styles/MediaFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MediaFXMLController">
+<BorderPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="500.0" styleClass="background" stylesheets="@Styles/MediaFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MediaFXMLController">
    <center>
       <StackPane BorderPane.alignment="CENTER">
          <children>
@@ -40,7 +40,7 @@
                   <HBox fx:id="controllers" alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
                      <children>
                         <Button fx:id="backwardButton" mnemonicParsing="false" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="6" />
-                        <Button fx:id="playButton" mnemonicParsing="false" onAction="#playPauseButton" styleClass="play-button" text="1" />
+                        <Button fx:id="playButton" mnemonicParsing="false" onAction="#playPauseButton" text="1" />
                         <Button fx:id="forwardButton" mnemonicParsing="false" onMouseDragged="#forwardButtonDrag" onMousePressed="#forwardButtonPressed" onMouseReleased="#forwardButtonReleased" text="5" />
                      </children>
                      <padding>
@@ -52,7 +52,8 @@
                   <HBox alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
                      <children>
                         <Button fx:id="playlistButton" mnemonicParsing="false" onAction="#showHidePlaylist" text="C" HBox.hgrow="NEVER" />
-                        <ToggleButton fx:id="repeatTooglebutton" mnemonicParsing="false" onAction="#repeatToggle" text="H" />
+                        <Button fx:id="fullscreenButton" mnemonicParsing="false" onAction="#fullscreenToggle" text="A" />
+                        <ToggleButton fx:id="repeatToggleButton" mnemonicParsing="false" onAction="#repeatToggle" text="H" />
                      </children>
                      <padding>
                         <Insets right="8.0" />
@@ -89,9 +90,9 @@
             </BorderPane>
             <AnchorPane fx:id="volBox" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="volume-box" translateX="20.0" translateY="-58.0" visible="false" StackPane.alignment="BOTTOM_LEFT">
                <children>
-                  <AnchorPane fx:id="volBackTrack" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="6.0" style="-fx-background-color: grey;" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
+                  <AnchorPane fx:id="volBackTrack" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="6.0" styleClass="volume-slider-background" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
                      <children>
-                        <Pane fx:id="volTrack" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        <Pane fx:id="volTrack" styleClass="volume-slider-foreground" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
                   <Label fx:id="volLabel" alignment="CENTER" text="68%" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
