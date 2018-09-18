@@ -11,6 +11,7 @@ public class Theme {
 
     public static final int MAIN_FXML = 1;
     public static final int MEDIA_FXML = 2;
+    public static final int PLAYLIST_FXML = 3;
 
     private static Theme instance;
 
@@ -42,23 +43,35 @@ public class Theme {
     public static String getStyleConst(int fxmlStyle) {
         switch (fxmlStyle) {
             case MAIN_FXML:
-                return getStyles(getStyle("-color-background", "menu.background.color"),
-                        getStyle("-color-background-highlight", "menu.background_highlight.color"),
-                        getStyle("-color-text", "menu.text.color"),
-                        getStyle("-color-text-highlight", "menu.text_highlight.color"));
+                return getStyles(getStyle("-menu-background-color", "menu.background.color"),
+                        getStyle("-menu-background-highlight-color", "menu.background.highlight.color"),
+                        getStyle("-menu-text-color", "menu.text.color"),
+                        getStyle("-menu-text-highlight-color", "menu.text.highlight.color"),
+                        getStyle("-playlist-background-color", "playlist.background.color"));
 
             case MEDIA_FXML:
-                return getStyles(getStyle("-color-background", "player.background.color"),
-                        getStyle("-color-text", "player.text.color"),
-                        getStyle("-color-icon", "player.icon.color"),
-                        getStyle("-color-icon-off", "player.icon.off.color"),
-                        getStyle("-color-volume-box-background", "player.volume.box.background.color"),
-                        getStyle("-color-volume-box-border", "player.volume.box.border.color"),
-                        getStyle("-color-volume-box-text", "player.volume.box.text.color"),
-                        getStyle("-color-volume-slider-background", "player.volume.slider.background.color"),
-                        getStyle("-color-volume-slider-foreground", "player.volume.slider.foreground.color"),
-                        getStyle("-color-icon-background", "player.icon.background.color"),
-                        getStyle("-color-icon-background-hover", "player.icon.background.hover.color"));
+                return getStyles(getStyle("-player-background-color", "player.background.color"),
+                        getStyle("-player-text-color", "player.text.color"),
+                        getStyle("-player-volume-box-background-color", "player.volume.box.background.color"),
+                        getStyle("-player-volume-box-border-color", "player.volume.box.border.color"),
+                        getStyle("-player-volume-box-text-color", "player.volume.box.text.color"),
+                        getStyle("-player-volume-slider-background-color", "player.volume.slider.background.color"),
+                        getStyle("-player-volume-slider-foreground-color", "player.volume.slider.foreground.color"),
+                        getStyle("-player-icon-color", "player.icon.color"),
+                        getStyle("-player-icon-off-color", "player.icon.off.color"),
+                        getStyle("-player-icon-background-color", "player.icon.background.color"),
+                        getStyle("-player-icon-background-hover-color", "player.icon.background.hover.color"),
+                        getStyle("-player-icon-background-pressed-color", "player.icon.background.pressed.color"));
+
+
+            case PLAYLIST_FXML:
+                return getStyles(getStyle("-playlist-background-color", "playlist.background.color"),
+                        getStyle("-playlist-text-color", "playlist.text.color"),
+                        getStyle("-playlist-search-background-color", "playlist.search.background.color"),
+                        getStyle("-playlist-button-color", "playlist.button.color"),
+                        getStyle("-playlist-button-background-color", "playlist.button.background.color"),
+                        getStyle("-playlist-button-background-hover-color", "playlist.button.background.hover.color"),
+                        getStyle("-playlist-button-background-pressed-color", "playlist.button.background.pressed.color"));
         }
         return "";
     }

@@ -6,6 +6,7 @@
 package odtwarzacz;
 
 import javafx.application.Platform;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import odtwarzacz.Connection.UsbConnection;
 import odtwarzacz.Playlist.Playlist;
@@ -22,14 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;

@@ -291,7 +291,7 @@ public abstract class Connection {
                 break;
 
             case RANDOM:
-                MainFXMLController.getPlaylist().randomToggle();
+                mediaController.randomToggle();
                 break;
 
             case DEVICE_NAME:

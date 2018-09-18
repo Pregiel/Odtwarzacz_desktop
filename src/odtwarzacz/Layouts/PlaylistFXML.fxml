@@ -4,14 +4,19 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistFXMLController">
+<BorderPane fx:id="root" minWidth="400.0" styleClass="background" stylesheets="@Styles/PlaylistFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistFXMLController">
    <center>
       <ScrollPane fx:id="playlistScroll" fitToWidth="true" hbarPolicy="NEVER">
          <content>
@@ -27,32 +32,52 @@
       <HBox BorderPane.alignment="CENTER">
          <children>
             <Button mnemonicParsing="false" onAction="#hide" text="&gt;" HBox.hgrow="NEVER" />
-            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="%player.playlist" HBox.hgrow="ALWAYS">
+            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="title-label" text="%player.playlist" HBox.hgrow="ALWAYS">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
-               <padding>
-                  <Insets bottom="12.0" />
-               </padding>
             </Label>
          </children>
       </HBox>
    </top>
    <padding>
-      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+      <Insets bottom="8.0" left="8.0" right="14.0" top="8.0" />
    </padding>
    <bottom>
-      <HBox spacing="6.0" BorderPane.alignment="CENTER">
+      <VBox>
          <children>
-            <Button mnemonicParsing="false" onAction="#add" text="%playlist.add" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#remove" text="%playlist.remove" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#play" text="%playlist.playall" />
-            <ToggleButton fx:id="randomTogglebutton" mnemonicParsing="false" onAction="#randomToggle" text="%playlist.random" />
-            <Button layoutX="102.0" layoutY="22.0" mnemonicParsing="false" onAction="#showQueue" text="%playlist.showQueue" />
+            <GridPane>
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#add" text="F" />
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#remove" text="G" GridPane.columnIndex="1" />
+                  <MenuButton alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" popupSide="TOP" text="D" GridPane.columnIndex="2">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Sort by" />
+                        <MenuItem mnemonicParsing="false" text="Group by" />
+                      <MenuItem mnemonicParsing="false" onAction="#showQueue" text="%playlist.showQueue" />
+                    </items>
+                  </MenuButton>
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="D" visible="false" GridPane.columnIndex="2" />
+                  <TextField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyTyped="#searchTyped" promptText="%playlist.search.prompt" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets left="4.0" />
+                     </GridPane.margin>
+                  </TextField>
+               </children>
+            </GridPane>
          </children>
-         <padding>
+         <BorderPane.margin>
             <Insets top="12.0" />
-         </padding>
-      </HBox>
+         </BorderPane.margin>
+      </VBox>
    </bottom>
 </BorderPane>

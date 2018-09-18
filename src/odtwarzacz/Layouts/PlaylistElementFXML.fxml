@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="pane" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="background" stylesheets="@Styles/playlist.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistElementFXMLController">
+<GridPane fx:id="pane" minHeight="-Infinity" styleClass="background" stylesheets="@Styles/playlist.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistElementFXMLController">
   <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" maxWidth="94.0" minWidth="10.0" prefWidth="49.0" />
+    <ColumnConstraints hgrow="NEVER" maxWidth="49.0" minWidth="49.0" prefWidth="49.0" />
     <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

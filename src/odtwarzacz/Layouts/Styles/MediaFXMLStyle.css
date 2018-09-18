@@ -13,26 +13,27 @@
 	src: url('Fonts/MediaIcons.ttf');
 }
 
-.root {
-	-color-background: #000000;
-	-color-text: #ffffff;
+*.const {
+	-player-background-color: #000000;
+	-player-text-color: #ffffff;
 
-	-color-volume-box-background: #545454;
-	-color-volume-box-border: #6d6d6d;
-	-color-volume-box-text: #d6d6d6;
-	-color-volume-slider-background: #565656;
-	-color-volume-slider-foreground: #ffffff;
+	-player-volume-box-background-color: #545454;
+	-player-volume-box-border-color: #6d6d6d;
+	-player-volume-box-text-color: #d6d6d6;
+	-player-volume-slider-background-color: #565656;
+	-player-volume-slider-foreground-color: #ffffff;
 
-	-color-icon: #ffffff;
-	-color-icon-off: #666666;
+	-player-icon-color: #ffffff;
+	-player-icon-off-color: #666666;
 
-	-color-icon-background: rgba(255,255,255,0);
-	-color-icon-background-hover: rgba(255,255,255,0.16);
+	-player-icon-background-color: rgba(255,255,255,0);
+	-player-icon-background-hover-color: rgba(255,255,255,0.16);
+	-player-icon-background-pressed-color: rgba(255,255,255,0.3);
 
 }
 
 .background {
-    -fx-background-color: -color-background;
+    -fx-background-color: -player-background-color;
 }
 
 /*** slider ***/
@@ -54,60 +55,60 @@
 /*** toggle-button ***/
 /*** volume-button ***/
 .button, .toggle-button{
-    -fx-background-color: -color-icon-background;
+    -fx-background-color: -player-icon-background-color;
     -fx-padding: 5 5 2 5;
 }
 
 .button:hover, .toggle-button:hover{
-    -fx-background-color: -color-icon-background-hover;
+    -fx-background-color: -player-icon-background-hover-color;
+}
+
+.button:pressed{
+    -fx-background-color: -player-icon-background-pressed-color;
 }
 
 .button > .text {
 	-fx-font-size: 32px;
     -fx-font-family: 'MediaIcons';
-	-fx-fill: -color-icon;
+	-fx-fill: -player-icon-color;
 }
 
 .toggle-button > .text {
 	-fx-font-size: 32px;
     -fx-font-family: 'MediaIcons';
-	-fx-fill: -color-icon-off;
+	-fx-fill: -player-icon-off-color;
 }
 
 .toggle-button:selected > .text {
-	-fx-fill: -color-icon;
-}
-
-.volume-button > .text {
-    -fx-fill: -color-icon;
+	-fx-fill: -player-icon-color;
 }
 
 /*** label ***/
 .label {
 	-fx-font-size: 14px;
     -fx-font-family: 'Roboto Medium';
-    -fx-text-fill: -color-volume-box-text;
+    -fx-text-fill: -player-volume-box-text-color;
 }
 
 /*** time-label ***/
 .time-label {
-    -fx-text-fill: -color-text;
+    -fx-text-fill: -player-text-color;
 }
 
 /*** volume-box ***/
 .volume-box {
-    -fx-background-color: -color-volume-box-background;
-	-fx-border-color: -color-volume-box-border;
+    -fx-background-color: -player-volume-box-background-color;
+	-fx-border-color: -player-volume-box-border-color;
 	-fx-border-width: 2;
 }
 
 /*** volume-slider ***/
 .volume-slider-background {
-    -fx-background-color: -color-volume-slider-background;
+    -fx-background-color: -player-volume-slider-background-color;
 }
 
 .volume-slider-foreground {
-    -fx-background-color: -color-volume-slider-foreground;
+    -fx-background-color: -player-volume-slider-foreground-color;
 }
 
 

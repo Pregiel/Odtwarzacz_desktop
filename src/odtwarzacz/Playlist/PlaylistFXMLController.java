@@ -14,14 +14,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
+import odtwarzacz.Theme;
 import odtwarzacz.Utils.Utils;
 
 import static odtwarzacz.MainFXMLController.getPlaylist;
@@ -33,6 +37,8 @@ import static odtwarzacz.MainFXMLController.getPlaylist;
  */
 public class PlaylistFXMLController implements Initializable {
 
+    public MenuBar bottomMenu;
+    public BorderPane root;
     @FXML
     private ScrollPane playlistScroll;
     @FXML
@@ -125,5 +131,9 @@ public class PlaylistFXMLController implements Initializable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void searchTyped(KeyEvent keyEvent) {
+
     }
 }

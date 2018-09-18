@@ -41,6 +41,7 @@ import java.util.*;
 
 import static odtwarzacz.Layouts.Styles.Fonts.IconFont.ICON_PAUSE;
 import static odtwarzacz.Layouts.Styles.Fonts.IconFont.ICON_PLAY;
+import static odtwarzacz.MainFXMLController.getPlaylist;
 
 /**
  * FXML Controller class
@@ -55,6 +56,7 @@ public class MediaFXMLController implements Initializable {
     public Button playlistButton;
     public StackPane stackpane;
     public Button fullscreenButton;
+    public ToggleButton randomToggleButton;
     @FXML
     private BorderPane pane;
     @FXML
@@ -70,10 +72,10 @@ public class MediaFXMLController implements Initializable {
 
     private boolean atEndOfMedia = false;
     private Duration duration;
-    private boolean repeat;
+    private boolean repeat, random;
 
     @FXML
-    private ToggleButton volButton;
+    private Button volButton;
     @FXML
     private AnchorPane volBox;
     @FXML
@@ -135,6 +137,12 @@ public class MediaFXMLController implements Initializable {
 
         if (repeat) {
             repeatToggleButton.setSelected(true);
+        }
+
+        random = Boolean.parseBoolean(String.valueOf(Odtwarzacz.getConfig().get("random")));
+
+        if (random) {
+            randomToggleButton.setSelected(true);
         }
 
         pane.setOnKeyPressed(event -> {
@@ -578,5 +586,22 @@ public class MediaFXMLController implements Initializable {
             fullscreened = true;
             fullscreenButton.setText(IconFont.ICON_MINIMIZE);
         }
+    }
+
+    public void randomToggle(ActionEvent event) {
+        random = randomToggleButton.isSelected();
+
+        Odtwarzacz.getConfig().setProperty("random", String.valueOf(random));
+        Odtwarzacz.getConfig().save();
+
+        getPlaylist().setRandom(randomToggleButton.isSelected());
+
+        if (connection != null) {
+            connection.sendMessage(randomToggleButton.isSelected() ? Connection.RANDOM_ON : Connection.RANDOM_OFF);
+        }
+    }
+
+    public void randomToggle() {
+        randomToggleButton.fire();
     }
 }

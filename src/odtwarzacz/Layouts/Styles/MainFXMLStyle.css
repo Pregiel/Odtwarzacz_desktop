@@ -8,11 +8,12 @@
 	src: url('Fonts/Roboto-Light.ttf');
 }
 
-.root {
-	-color-background: #545454;
-	-color-background-highlight: #6d6d6d;
-	-color-text: #d6d6d6;
-	-color-text-highlight: #ffffff;
+*.const {
+	-menu-background-color: #545454;
+	-menu-background-highlight-color: #6d6d6d;
+	-menu-text-color: #d6d6d6;
+	-menu-text-highlight-color: #ffffff;
+	-playlist-background-color: #545454;
 }
 
 .info-label {
@@ -35,40 +36,40 @@
 /*** menu-bar ***/
  
 .menu-bar{
-    -fx-background-color: -color-background;
+    -fx-background-color: -menu-background-color;
 }
 
 .menu-bar > .container > .menu-button {
-    -fx-background-color: -color-background;
+    -fx-background-color: -menu-background-color;
 }
 
 .menu-bar > .container > .menu-button > .label {
 	-fx-font-family: 'Roboto Light';
-	-fx-text-fill: -color-text;
+	-fx-text-fill: -menu-text-color;
 	-fx-font-size: 24px;
 }
 
 .menu-bar > .container > .menu-button:hover,
 .menu-bar > .container > .menu-button:focused,
 .menu-bar > .container > .menu-button:showing {
-	-fx-background-color: -color-background-highlight;
+	-fx-background-color: -menu-background-highlight-color;
 }
 
 .menu-bar > .container > .menu-button:hover > .label,
 .menu-bar > .container > .menu-button:focused > .label,
 .menu-bar > .container > .menu-button:showing > .label {
-    -fx-text-fill: -color-text-highlight;
+    -fx-text-fill: -menu-text-highlight-color;
 }
 
 /*** menu-item ***/
 
 .menu-item {
-	-fx-background-color: -color-background;
+	-fx-background-color: -menu-background-color;
 }
  
 .menu-item .label {
 	-fx-font-family: 'Roboto Light';
-    -fx-text-fill: -color-text;
+    -fx-text-fill: -menu-text-color;
 	-fx-font-size: 15px;
 }
 
@@ -83,15 +84,24 @@
    
 .menu-item:focused,
 .menu-item:hovered {
-    -fx-background-color: -color-background-highlight; 
+    -fx-background-color: -menu-background-highlight-color;
 }
 
 .menu-item:focused .label,
 .menu-item:hovered .label {
-    -fx-text-fill: -color-text-highlight;
+    -fx-text-fill: -menu-text-highlight-color;
 }
 
 
 .context-menu {
-    -fx-background-color: -color-background; 
+    -fx-background-color: -menu-background-color;
+}
+
+.split-pane *.split-pane-divider {
+    -fx-background-color: -playlist-background-color;
+}
+
+
+.split-pane {
+    -fx-padding: 0;
 }

@@ -1,0 +1,78 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Medium.ttf');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+	font-family: 'MediaIcons';
+	src: url('Fonts/MediaIcons.ttf');
+}
+
+* {
+    -playlist-background-color: #545454;
+   	-playlist-text-color: #d6d6d6;
+   	-playlist-search-background-color: #6d6d6d;
+   	-playlist-button-color: #d6d6d6;
+   	-playlist-button-background-color: #545454;
+   	-playlist-button-background-hover-color: #6d6d6d;
+   	-playlist-button-background-pressed-color: #969696;
+}
+
+.background {
+	-fx-background-color: -playlist-background-color;
+}
+
+.text-field {
+    -fx-background-color: -playlist-search-background-color;
+	-fx-font-size: 14px;
+    -fx-font-family: 'Roboto Medium';
+    -fx-text-fill: -playlist-text-color;
+}
+
+/*** button ***/
+/*** menu-button ***/
+.button, .menu-button {
+    -fx-background-color: -playlist-button-background-color;
+    -fx-padding: 5 5 2 5;
+}
+
+.button:hover, .menu-button:hover {
+    -fx-background-color: -playlist-button-background-hover-color;
+}
+
+.button:pressed, .menu-button:pressed {
+    -fx-background-color: -playlist-button-background-pressed-color;
+}
+
+.button > .text {
+	-fx-font-size: 32px;
+    -fx-font-family: 'MediaIcons';
+	-fx-fill: -playlist-button-color;
+}
+
+.menu-button > .label {
+	-fx-font-size: 32px;
+    -fx-font-family: 'MediaIcons';
+	-fx-text-fill: -playlist-button-color;
+	-fx-padding: 0;
+}
+
+.menu-button > .arrow-button {
+    -fx-padding: 0;
+}
+
+.menu-button > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+.title-label {
+	-fx-font-size: 18px;
+    -fx-font-family: 'Roboto Bold';
+    -fx-text-fill: -playlist-text-color;
+}
+

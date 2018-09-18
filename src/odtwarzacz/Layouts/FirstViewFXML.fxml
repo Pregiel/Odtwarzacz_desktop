@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.FirstViewFXMLController">
+<BorderPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.FirstViewFXMLController">
    <center>
-      <VBox spacing="8.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" spacing="8.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
@@ -21,7 +21,7 @@
                   <Insets bottom="8.0" />
                </VBox.margin>
             </Label>
-            <VBox fx:id="recentFiles" alignment="CENTER_LEFT" spacing="8.0" styleClass="recent-pane" stylesheets="@../styleSheet.css" />
+            <VBox fx:id="recentFiles" alignment="CENTER_LEFT" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="100.0" spacing="8.0" styleClass="recent-pane" stylesheets="@../styleSheet.css" />
          </children>
          <padding>
             <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />

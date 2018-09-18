@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
@@ -33,9 +34,9 @@ public class VolumeSlider extends CustomSlider {
     private double mutedVolume = 0;
     private Connection connection;
     private Label volLabel;
-    private ToggleButton volButton;
+    private Button volButton;
 
-    public VolumeSlider(AnchorPane slider, Pane track, MediaPlayer mediaPlayer, Label volLabel, ToggleButton volButton) {
+    public VolumeSlider(AnchorPane slider, Pane track, MediaPlayer mediaPlayer, Label volLabel, Button volButton) {
         super(slider, track);
         this.collapseOnRelease = false;
         this.isExpanded = false;

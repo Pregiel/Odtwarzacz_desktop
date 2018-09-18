@@ -20,6 +20,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
+import odtwarzacz.Theme;
 import odtwarzacz.Utils.MyLocale;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.Queue;
@@ -86,7 +87,9 @@ public class Playlist {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/PlaylistFXML.fxml"), resourceBundle);
 
-        this.pane = loader.load();
+        pane = loader.load();
+        pane.setStyle(Theme.getStyleConst(Theme.PLAYLIST_FXML));
+
         playlistFXMLController = loader.getController();
     }
 
