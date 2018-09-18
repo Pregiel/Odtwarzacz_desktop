@@ -13,10 +13,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" minWidth="400.0" styleClass="background" stylesheets="@Styles/PlaylistFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistFXMLController">
+<BorderPane minWidth="400.0" styleClass="background" stylesheets="@Styles/PlaylistFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistFXMLController">
    <center>
       <ScrollPane fx:id="playlistScroll" fitToWidth="true" hbarPolicy="NEVER">
          <content>
@@ -67,11 +68,15 @@
                     </items>
                   </MenuButton>
                   <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="D" visible="false" GridPane.columnIndex="2" />
-                  <TextField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyTyped="#searchTyped" promptText="%playlist.search.prompt" GridPane.columnIndex="3">
+                  <StackPane GridPane.columnIndex="3">
                      <GridPane.margin>
                         <Insets left="4.0" />
                      </GridPane.margin>
-                  </TextField>
+                     <children>
+                        <TextField fx:id="searchBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyTyped="#searchTyped" promptText="%playlist.search.prompt" />
+                        <Button fx:id="clearSearchBoxButton" alignment="CENTER" mnemonicParsing="false" onAction="#clearSearchBox" styleClass="search-clear" text="L" visible="false" StackPane.alignment="CENTER_RIGHT" />
+                     </children>
+                  </StackPane>
                </children>
             </GridPane>
          </children>

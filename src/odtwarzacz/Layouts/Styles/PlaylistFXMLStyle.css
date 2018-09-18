@@ -16,6 +16,8 @@
 * {
     -playlist-background-color: #545454;
    	-playlist-text-color: #d6d6d6;
+   	-playlist-text-hover-color: #efefef;
+   	-playlist-text-pressed-color: #ffffff;
    	-playlist-search-background-color: #6d6d6d;
    	-playlist-button-color: #d6d6d6;
    	-playlist-button-background-color: #545454;
@@ -76,3 +78,18 @@
     -fx-text-fill: -playlist-text-color;
 }
 
+.search-clear, .search-clear:hover, .search-clear:pressed {
+    -fx-background-color: transparent;
+}
+
+.search-clear > .text {
+	-fx-font-size: 18px;
+}
+
+.search-clear:hover > .text {
+    -fx-fill: -playlist-text-hover-color;
+}
+
+.search-clear:pressed > .text {
+    -fx-fill: -playlist-text-pressed-color;
+}

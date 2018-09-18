@@ -67,6 +67,8 @@ public class Theme {
             case PLAYLIST_FXML:
                 return getStyles(getStyle("-playlist-background-color", "playlist.background.color"),
                         getStyle("-playlist-text-color", "playlist.text.color"),
+                        getStyle("-playlist-text-hover-color", "playlist.text.hover.color"),
+                        getStyle("-playlist-text-pressed-color", "playlist.text.pressed.color"),
                         getStyle("-playlist-search-background-color", "playlist.search.background.color"),
                         getStyle("-playlist-button-color", "playlist.button.color"),
                         getStyle("-playlist-button-background-color", "playlist.button.background.color"),

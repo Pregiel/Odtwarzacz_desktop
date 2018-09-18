@@ -8,15 +8,15 @@ package odtwarzacz.Playlist;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -26,6 +26,7 @@ import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
 import odtwarzacz.Theme;
+import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Utils.Utils;
 
 import static odtwarzacz.MainFXMLController.getPlaylist;
@@ -37,8 +38,8 @@ import static odtwarzacz.MainFXMLController.getPlaylist;
  */
 public class PlaylistFXMLController implements Initializable {
 
-    public MenuBar bottomMenu;
-    public BorderPane root;
+    public TextField searchBox;
+    public Button clearSearchBoxButton;
     @FXML
     private ScrollPane playlistScroll;
     @FXML
@@ -49,6 +50,8 @@ public class PlaylistFXMLController implements Initializable {
     public ToggleButton getRandomTogglebutton() {
         return randomTogglebutton;
     }
+
+    private ExpandableTimeTask searchTask;
 
     /**
      * Initializes the controller class.
@@ -70,6 +73,34 @@ public class PlaylistFXMLController implements Initializable {
         if (getPlaylist().isRandom()) {
             randomTogglebutton.setSelected(true);
         }
+
+        searchTask = new ExpandableTimeTask(new Runnable() {
+            @Override
+            public void run() {
+                if (searchBox.getText().equals("")) {
+                    for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
+                        playlistElement.show();
+                    }
+                } else {
+                    String searchText = searchBox.getText();
+                    for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
+                        if (!playlistElement.getTitleLabel().getText().toLowerCase().contains(searchText.toLowerCase())) {
+                            playlistElement.hide();
+                        } else {
+                            playlistElement.show();
+                        }
+                    }
+                }
+            }
+        }, 200);
+
+        searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("")) {
+                clearSearchBoxButton.setVisible(false);
+            } else {
+                clearSearchBoxButton.setVisible(true);
+            }
+        });
     }    
 
     @FXML
@@ -134,6 +165,15 @@ public class PlaylistFXMLController implements Initializable {
     }
 
     public void searchTyped(KeyEvent keyEvent) {
+        if (!searchTask.isStarted()) {
+            searchTask.start();
+        } else {
+            searchTask.resume();
+        }
+    }
 
+    public void clearSearchBox(ActionEvent event) {
+        searchBox.setText("");
+        searchTyped(null);
     }
 }

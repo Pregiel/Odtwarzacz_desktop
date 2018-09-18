@@ -147,6 +147,16 @@ public class PlaylistElement {
         queueRemoveBtn.setDisable(true);
     }
 
+    public void hide() {
+        pane.setVisible(false);
+        pane.setManaged(false);
+    }
+
+    public void show() {
+        pane.setVisible(true);
+        pane.setManaged(true);
+    }
+
     public void setQueueLabel() {
         queueIndexLabel.setTooltip(null);
 
