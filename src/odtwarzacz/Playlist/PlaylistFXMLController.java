@@ -74,21 +74,18 @@ public class PlaylistFXMLController implements Initializable {
             randomTogglebutton.setSelected(true);
         }
 
-        searchTask = new ExpandableTimeTask(new Runnable() {
-            @Override
-            public void run() {
-                if (searchBox.getText().equals("")) {
-                    for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
+        searchTask = new ExpandableTimeTask(() -> {
+            if (searchBox.getText().equals("")) {
+                for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
+                    playlistElement.show();
+                }
+            } else {
+                String searchText = searchBox.getText();
+                for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
+                    if (!playlistElement.getTitleLabel().getText().toLowerCase().contains(searchText.toLowerCase())) {
+                        playlistElement.hide();
+                    } else {
                         playlistElement.show();
-                    }
-                } else {
-                    String searchText = searchBox.getText();
-                    for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
-                        if (!playlistElement.getTitleLabel().getText().toLowerCase().contains(searchText.toLowerCase())) {
-                            playlistElement.hide();
-                        } else {
-                            playlistElement.show();
-                        }
                     }
                 }
             }

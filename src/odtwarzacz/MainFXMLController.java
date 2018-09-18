@@ -148,6 +148,7 @@ public class MainFXMLController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/MediaFXML.fxml"), Utils.getResourceBundle());
         Pane mediaPane = loader.load();
         mediaPane.setStyle(Theme.getStyleConst(Theme.MEDIA_FXML));
+        Theme.getInstance().setMediaNode(mediaPane);
 
         mediaControl = loader.getController();
 //                mediaControl.setConnectionInfo(connectionInfoLabel);
@@ -359,4 +360,12 @@ public class MainFXMLController implements Initializable {
 
     }
 
+    public void setDarkTheme(ActionEvent event) {
+        Theme.getInstance().changeResourceBundle(Theme.DARK_THEME);
+    }
+
+    public void setLightTheme(ActionEvent event) {
+        Theme.getInstance().changeResourceBundle(Theme.LIGHT_THEME);
+
+    }
 }

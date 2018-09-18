@@ -1,5 +1,7 @@
 package odtwarzacz;
 
+import javafx.scene.Node;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -15,6 +17,8 @@ public class Theme {
 
     private static Theme instance;
 
+    private Node MainNode, MediaNode, PlayListNode;
+
     public Theme(String theme) {
         resourceBundle = ResourceBundle.getBundle("Resources.Theme", new Locale(theme));
         instance = this;
@@ -22,6 +26,28 @@ public class Theme {
 
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void changeResourceBundle(String theme) {
+        resourceBundle = ResourceBundle.getBundle("Resources.Theme", new Locale(theme));
+        if (MainNode != null)
+            MainNode.setStyle(getStyleConst(MAIN_FXML));
+        if (MediaNode != null)
+            MediaNode.setStyle(getStyleConst(MEDIA_FXML));
+        if (PlayListNode != null)
+            PlayListNode.setStyle(getStyleConst(PLAYLIST_FXML));
+    }
+
+    public void setMainNode(Node mainNode) {
+        MainNode = mainNode;
+    }
+
+    public void setMediaNode(Node mediaNode) {
+        MediaNode = mediaNode;
+    }
+
+    public void setPlayListNode(Node playListNode) {
+        PlayListNode = playListNode;
     }
 
     public static Theme getInstance() {

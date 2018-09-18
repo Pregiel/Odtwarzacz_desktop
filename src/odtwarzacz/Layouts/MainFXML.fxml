@@ -42,6 +42,12 @@
                 <Menu mnemonicParsing="false" text="%menu.view">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#showHidePlaylist" text="%menu.view.showhideplaylist" />
+                  <Menu mnemonicParsing="false" text="%menu.theme">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#setDarkTheme" text="%menu.theme.dark" />
+                        <MenuItem mnemonicParsing="false" onAction="#setLightTheme" text="%menu.theme.light" />
+                    </items>
+                  </Menu>
                     </items>
                 </Menu>
             <Menu mnemonicParsing="false" text="Send message">

@@ -89,6 +89,7 @@ public class Playlist {
 
         pane = loader.load();
         pane.setStyle(Theme.getStyleConst(Theme.PLAYLIST_FXML));
+        Theme.getInstance().setPlayListNode(pane);
 
         playlistFXMLController = loader.getController();
     }

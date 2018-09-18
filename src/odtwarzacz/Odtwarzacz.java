@@ -31,17 +31,20 @@ public class Odtwarzacz extends Application {
 
     private static ConfigProperties configProp;
 
+
+
     @Override
     public void start(Stage stage) throws Exception {
 
         configProp = new ConfigProperties(CONFIGFILENAME, DEFAULTCONFIGFILENAME);
 
-        new Theme(Theme.DARK_THEME);
+        new Theme(Theme.LIGHT_THEME);
 
         Utils.initResourceBundle();
         Parent root = FXMLLoader.load(getClass().getResource("Layouts/MainFXML.fxml"), Utils.getResourceBundle());
 
         root.setStyle(Theme.getStyleConst(Theme.MAIN_FXML));
+        Theme.getInstance().setMainNode(root);
 
         Scene scene = new Scene(root);
 

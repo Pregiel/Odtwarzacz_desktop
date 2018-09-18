@@ -75,7 +75,7 @@
 
 .menu-item .left-container,
 .menu-item .right-container {
-	-fx-color: #000000;
+	-fx-color: -menu-text-color;
 }
 
 .menu-item .label:disabled {

@@ -13,7 +13,7 @@
 	src: url('Fonts/MediaIcons.ttf');
 }
 
-* {
+*.const {
     -playlist-background-color: #545454;
    	-playlist-text-color: #d6d6d6;
    	-playlist-text-hover-color: #efefef;
