@@ -1,0 +1,99 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Medium.ttf');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+	font-family: 'MediaIcons';
+	src: url('Fonts/MediaIcons.ttf');
+}
+
+* {
+    -playlist-element-background-color-1: #3a3a3a;
+    -playlist-element-background-color-2: #3f3f3f;
+    -playlist-element-background-hover-color-1: #4a4a4a;
+    -playlist-element-background-hover-color-2: #4f4f4f;
+    -playlist-element-background-selected-color: #aaaaaa;
+    -playlist-element-background-selected-hover-color: #c6c6c6;
+   	-playlist-element-text-color: #d6d6d6;
+   	-playlist-element-selected-text-color: #323232;
+   	-playlist-element-playing-text-color: #ee0022;
+   	-playlist-element-notfound-text-color: #717171;
+    -playlist-element-button-background-color: transparent;
+    -playlist-element-button-background-hover-color: #6d6d6d;
+    -playlist-element-button-background-pressed-color: #969696;
+
+}
+
+.background {
+    -fx-background-color: -playlist-element-background-color-1;
+}
+
+.background-alter {
+    -fx-background-color: -playlist-element-background-color-2;
+}
+
+.background:hover {
+    -fx-background-color: -playlist-element-background-hover-color-1;
+}
+
+.background-alter:hover {
+    -fx-background-color: -playlist-element-background-hover-color-2;
+}
+
+.background-selected {
+    -fx-background-color: -playlist-element-background-selected-color;
+}
+
+.background-selected:hover {
+    -fx-background-color:  -playlist-element-background-selected-hover-color;
+}
+
+.title {
+    -fx-text-fill: -playlist-element-text-color;
+	-fx-font-size: 12px;
+    -fx-font-family: 'Roboto Medium';
+}
+
+.background-selected > .title {
+    -fx-text-fill: -playlist-element-selected-text-color;
+}
+
+.title-playing {
+    -fx-text-fill: -playlist-element-playing-text-color;
+    -fx-font-family: 'Roboto Bold';
+}
+
+.background-selected > .title-playing {
+    -fx-text-fill: -playlist-element-playing-text-color;
+
+}
+
+.title-notfound {
+    -fx-text-fill: -playlist-element-notfound-text-color;
+}
+
+.button {
+    -fx-background-color: -playlist-element-button-background-color;
+    -fx-padding: 5 5 2 5;
+}
+
+.button:hover, .menu-button:hover {
+    -fx-background-color: -playlist-element-button-background-hover-color;
+}
+
+.button:pressed, .menu-button:pressed {
+    -fx-background-color: -playlist-element-button-background-pressed-color;
+}
+
+.button > .text {
+    -fx-font-size: 12px;
+    -fx-font-family: 'MediaIcons';
+    -fx-fill: -playlist-element-text-color;
+}
+

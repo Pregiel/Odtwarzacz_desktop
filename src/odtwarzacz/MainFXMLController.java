@@ -84,9 +84,22 @@ public class MainFXMLController implements Initializable {
 
             playlist.setSplitPane(splitPane);
 
+            double dividerPosition = Double.parseDouble(Odtwarzacz.getConfig().getProperty("playlist.divider"));
+            double windowWidth = Double.parseDouble(Odtwarzacz.getConfig().getProperty("window.width"));
+
             if (Odtwarzacz.getConfig().getProperty("playlist.visible").equals("true")) {
                 playlist.show();
             }
+
+            Platform.runLater(() -> {
+                splitPane.setDividerPosition(0, 1 - (dividerPosition / windowWidth));
+            });
+
+
+            splitPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+                double dividerPosition2 = Double.parseDouble(Odtwarzacz.getConfig().getProperty("playlist.divider"));
+                splitPane.setDividerPosition(0, 1 - (dividerPosition2 / (double) newValue));
+            });
 
             refreshRecentFiles();
 //            pane.setCenter(mediaPane);

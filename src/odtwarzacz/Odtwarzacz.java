@@ -21,7 +21,7 @@ public class Odtwarzacz extends Application {
     private static final String CONFIGFILENAME = "config.properties";
     private static final String DEFAULTCONFIGFILENAME = "src/Resources/DefaultConfigFile.properties";
 
-    public static final int MEDIA_MIN_WIDTH = 500;
+    public static final int MEDIA_MIN_WIDTH = 420;
     public static final int PLAYLIST_MIN_WIDTH = 300;
     public static final int PLAYER_MIN_HEIGHT = 300;
     public static final int PLAYER_MIN_WIDTH = MEDIA_MIN_WIDTH + PLAYLIST_MIN_WIDTH;

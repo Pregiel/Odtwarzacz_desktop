@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.media.MediaView?>
 
-<BorderPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" styleClass="background" stylesheets="@Styles/MediaFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MediaFXMLController">
+<BorderPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="420.0" prefHeight="200.0" prefWidth="600.0" styleClass="background" stylesheets="@Styles/MediaFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MediaFXMLController">
    <center>
       <SplitPane styleClass="background" BorderPane.alignment="CENTER">
          <items>
@@ -68,7 +68,7 @@
                            <padding>
                               <Insets left="24.0" />
                            </padding>
-                           <Button fx:id="volButton" mnemonicParsing="false" onAction="#muteButton" styleClass="volume-button" text="8">
+                           <Button fx:id="volButton" mnemonicParsing="false" onAction="#muteButton" styleClass="volume-button" text="8" wrapText="true">
                               <HBox.margin>
                                  <Insets />
                               </HBox.margin>
@@ -79,15 +79,15 @@
                         </HBox>
                         <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <ToggleButton fx:id="repeatToggleButton" mnemonicParsing="false" onAction="#repeatToggleButton" text="H" />
-                              <ToggleButton fx:id="randomToggleButton" mnemonicParsing="false" onAction="#randomToggleButton" text="I" />
+                              <ToggleButton fx:id="repeatToggleButton" mnemonicParsing="false" onAction="#repeatToggleButton" text="H" wrapText="true" />
+                              <ToggleButton fx:id="randomToggleButton" mnemonicParsing="false" onAction="#randomToggleButton" text="I" wrapText="true" />
                            </children>
                         </HBox>
                         <HBox fx:id="controllers" alignment="CENTER" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <children>
-                              <Button fx:id="backwardButton" mnemonicParsing="false" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="6" />
-                              <Button fx:id="playButton" mnemonicParsing="false" onAction="#playPauseButton" text="1" />
-                              <Button fx:id="forwardButton" mnemonicParsing="false" onMouseDragged="#forwardButtonDrag" onMousePressed="#forwardButtonPressed" onMouseReleased="#forwardButtonReleased" text="5" />
+                              <Button fx:id="backwardButton" mnemonicParsing="false" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="6" wrapText="true" />
+                              <Button fx:id="playButton" mnemonicParsing="false" onAction="#playPauseButton" text="1" wrapText="true" />
+                              <Button fx:id="forwardButton" mnemonicParsing="false" onMouseDragged="#forwardButtonDrag" onMousePressed="#forwardButtonPressed" onMouseReleased="#forwardButtonReleased" text="5" wrapText="true" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -95,8 +95,8 @@
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                            <children>
-                              <Button fx:id="playlistButton" mnemonicParsing="false" onAction="#showHidePlaylist" text="C" HBox.hgrow="NEVER" />
-                              <Button fx:id="fullscreenButton" mnemonicParsing="false" onAction="#fullscreenToggle" text="A" />
+                              <Button fx:id="playlistButton" mnemonicParsing="false" onAction="#showHidePlaylist" text="C" wrapText="true" HBox.hgrow="NEVER" />
+                              <Button fx:id="fullscreenButton" mnemonicParsing="false" onAction="#fullscreenToggle" text="A" wrapText="true" />
                            </children>
                            <padding>
                               <Insets right="24.0" />

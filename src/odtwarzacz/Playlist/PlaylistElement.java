@@ -137,7 +137,25 @@ public class PlaylistElement {
 
         });
 
+        if (index % 2 == 0) {
+            pane.getStyleClass().clear();
+            pane.getStyleClass().add("background");
+        } else {
+            pane.getStyleClass().clear();
+            pane.getStyleClass().add("background-alter");
+        }
 
+
+    }
+
+    public void setStyle(int value) {
+        if (value == 1) {
+            pane.getStyleClass().clear();
+            pane.getStyleClass().add("background");
+        } else {
+            pane.getStyleClass().clear();
+            pane.getStyleClass().add("background-alter");
+        }
     }
 
     public void removeFromQueue() {
@@ -147,12 +165,20 @@ public class PlaylistElement {
         queueRemoveBtn.setDisable(true);
     }
 
+    private boolean hidden = false;
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
     public void hide() {
+        hidden = true;
         pane.setVisible(false);
         pane.setManaged(false);
     }
 
     public void show() {
+        hidden = false;
         pane.setVisible(true);
         pane.setManaged(true);
     }

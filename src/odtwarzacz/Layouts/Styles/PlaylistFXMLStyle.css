@@ -13,7 +13,7 @@
 	src: url('Fonts/MediaIcons.ttf');
 }
 
-*.const {
+* {
     -playlist-background-color: #545454;
    	-playlist-text-color: #d6d6d6;
    	-playlist-text-hover-color: #efefef;
@@ -23,6 +23,7 @@
    	-playlist-button-background-color: #545454;
    	-playlist-button-background-hover-color: #6d6d6d;
    	-playlist-button-background-pressed-color: #969696;
+    -playlist-box-background-color: #3a3a3a;
 }
 
 .background {
@@ -92,4 +93,15 @@
 
 .search-clear:pressed > .text {
     -fx-fill: -playlist-text-pressed-color;
+}
+
+.scroll-pane, .scroll-pane > .viewport{
+    -fx-background-color: -playlist-box-background-color;
+}
+
+.search-icon {
+	-fx-font-size: 28px;
+    -fx-font-family: 'MediaIcons';
+	-fx-text-fill: -playlist-button-color;
+
 }

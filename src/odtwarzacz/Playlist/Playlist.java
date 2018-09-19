@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Theme;
+import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Utils.MyLocale;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.Queue;
@@ -76,7 +77,7 @@ public class Playlist {
     }
 
     public void refreshQueueView() {
-        if (queueFXMLController !=  null) {
+        if (queueFXMLController != null) {
             queueFXMLController.loadQueue();
         }
     }
@@ -94,7 +95,6 @@ public class Playlist {
         playlistFXMLController = loader.getController();
     }
 
-
     public void setPlaylistPane(VBox playlistPane) {
         this.playlistPane = playlistPane;
 
@@ -110,19 +110,41 @@ public class Playlist {
         Odtwarzacz.getConfig().save();
     }
 
+    private double dividerPosition1;
+
+    public double getDividerPosition() {
+        return dividerPosition1;
+    }
+
     public void show() {
         splitPane.getItems().add(1, getScrollPane());
 
-        splitPane.setDividerPositions(Double.valueOf(Odtwarzacz.getConfig().getProperty("playlist.divider")));
+        ExpandableTimeTask saveDividerPositionTast = new ExpandableTimeTask(new Runnable() {
+            @Override
+            public void run() {
+                Odtwarzacz.getConfig().setProperty("playlist.divider", String.valueOf(pane.getWidth()));
+                Odtwarzacz.getConfig().save();
+            }
+        }, 400);
+
+        double dividerPosition = Double.parseDouble(Odtwarzacz.getConfig().getProperty("playlist.divider"));
+        double windowWidth = Double.parseDouble(Odtwarzacz.getConfig().getProperty("window.width"));
+
+        splitPane.setDividerPosition(0, 1 - (dividerPosition / windowWidth));
+        System.out.println(dividerPosition + " " + windowWidth);
+
+        splitPane.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue) -> {
+            if (saveDividerPositionTast.isStarted() && !saveDividerPositionTast.isFinished()) {
+                saveDividerPositionTast.resume();
+            } else {
+                saveDividerPositionTast.start();
+            }
+        });
+
+
 
         Odtwarzacz.getConfig().setProperty("playlist.visible", "true");
         Odtwarzacz.getConfig().save();
-
-//        splitPane.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue) -> {
-//            Odtwarzacz.getConfig().setProperty("playlist.divider", String.valueOf(newValue));
-//            System.out.println(newValue);
-//            Odtwarzacz.getConfig().save();
-//        });
     }
 
     public void toogle() {

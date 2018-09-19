@@ -55,7 +55,7 @@ public class PlaylistFXMLController implements Initializable {
         // TODO
         getPlaylist().setPlaylistPane(playlistPane);
         getPlaylist().loadPlaylist();
-        
+
         playlistScroll.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.A && event.isControlDown()) {
                 getPlaylist().selectAll();
@@ -80,6 +80,18 @@ public class PlaylistFXMLController implements Initializable {
                     }
                 }
             }
+            int i = 0;
+            for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
+                if (!playlistElement.isHidden()) {
+                    if (i % 2 == 0) {
+                        playlistElement.setStyle(2);
+                    } else {
+                        playlistElement.setStyle(1);
+                    }
+                    i++;
+                }
+
+            }
         }, 200);
 
         searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -89,7 +101,7 @@ public class PlaylistFXMLController implements Initializable {
                 clearSearchBoxButton.setVisible(true);
             }
         });
-    }    
+    }
 
     @FXML
     private void add(ActionEvent event) {
