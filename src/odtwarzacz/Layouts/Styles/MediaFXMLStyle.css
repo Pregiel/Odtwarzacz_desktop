@@ -84,15 +84,15 @@
 }
 
 /*** label ***/
-.label {
+.label > .text {
 	-fx-font-size: 14px;
     -fx-font-family: 'Roboto Medium';
-    -fx-text-fill: -player-volume-box-text-color;
+    -fx-fill: -player-volume-box-text-color;
 }
 
 /*** time-label ***/
-.time-label {
-    -fx-text-fill: -player-text-color;
+.time-label > .text {
+    -fx-fill: -player-text-color;
 }
 
 /*** volume-box ***/

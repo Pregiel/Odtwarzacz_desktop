@@ -1,0 +1,11 @@
+@font-face {
+	font-family: 'MediaIcons';
+	src: url('Fonts/MediaIcons.ttf');
+}
+
+.context-menu-icon > .text {
+	-fx-font-size: 16px;
+    -fx-font-family: 'MediaIcons';
+}
+
+

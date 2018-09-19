@@ -355,8 +355,4 @@ public class Playlist {
 
         return stringBuilder.toString();
     }
-
-    public void randomToggle() {
-        playlistFXMLController.getRandomTogglebutton().fire();
-    }
 }

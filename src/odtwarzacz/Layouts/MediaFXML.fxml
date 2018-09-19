@@ -2,7 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.CustomMenuItem?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -16,99 +20,183 @@
 
 <BorderPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" styleClass="background" stylesheets="@Styles/MediaFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MediaFXMLController">
    <center>
-      <StackPane BorderPane.alignment="CENTER">
-         <children>
-            <Label>
-               <graphic>
-                  <MediaView fx:id="mediaView" />
-               </graphic>
-            </Label>
-            <GridPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" StackPane.alignment="BOTTOM_CENTER">
-               <StackPane.margin>
-                  <Insets />
-               </StackPane.margin>
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="58.0" minHeight="58.0" prefHeight="58.0" vgrow="SOMETIMES" />
-               </rowConstraints>
+      <SplitPane styleClass="background" BorderPane.alignment="CENTER">
+         <items>
+            <StackPane>
                <children>
-                  <AnchorPane GridPane.columnSpan="2147483647">
+                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                     <graphic>
+                        <MediaView fx:id="mediaView" />
+                     </graphic>
+                  </Label>
+                  <GridPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" StackPane.alignment="BOTTOM_CENTER">
+                     <StackPane.margin>
+                        <Insets />
+                     </StackPane.margin>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="58.0" minHeight="58.0" prefHeight="58.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
-                        <AnchorPane fx:id="timeBackTrack" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="8.0" style="-fx-background-color: grey;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="22.0">
+                        <AnchorPane GridPane.columnSpan="2147483647">
                            <children>
-                              <Pane fx:id="timeTrack" style="-fx-background-color: red;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <AnchorPane fx:id="timeBackTrack" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="8.0" style="-fx-background-color: grey;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="22.0">
+                                 <children>
+                                    <Pane fx:id="timeTrack" style="-fx-background-color: red;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                              <Label fx:id="timeLabel1" styleClass="time-label" text="00:00" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <padding>
+                                    <Insets left="6.0" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="timeLabel2" layoutX="10.0" layoutY="10.0" styleClass="time-label" text="00:00" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <padding>
+                                    <Insets right="6.0" />
+                                 </padding>
+                              </Label>
                            </children>
                         </AnchorPane>
-                        <Label fx:id="timeLabel1" styleClass="time-label" text="00:00" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.rowIndex="1">
                            <padding>
-                              <Insets left="6.0" />
+                              <Insets left="24.0" />
                            </padding>
-                        </Label>
-                        <Label fx:id="timeLabel2" layoutX="10.0" layoutY="10.0" styleClass="time-label" text="00:00" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <Button fx:id="volButton" mnemonicParsing="false" onAction="#muteButton" styleClass="volume-button" text="8">
+                              <HBox.margin>
+                                 <Insets />
+                              </HBox.margin>
+                           </Button>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </HBox>
+                        <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <children>
+                              <ToggleButton fx:id="repeatToggleButton" mnemonicParsing="false" onAction="#repeatToggleButton" text="H" />
+                              <ToggleButton fx:id="randomToggleButton" mnemonicParsing="false" onAction="#randomToggleButton" text="I" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="controllers" alignment="CENTER" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <children>
+                              <Button fx:id="backwardButton" mnemonicParsing="false" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="6" />
+                              <Button fx:id="playButton" mnemonicParsing="false" onAction="#playPauseButton" text="1" />
+                              <Button fx:id="forwardButton" mnemonicParsing="false" onMouseDragged="#forwardButtonDrag" onMousePressed="#forwardButtonPressed" onMouseReleased="#forwardButtonReleased" text="5" />
+                           </children>
                            <padding>
-                              <Insets right="6.0" />
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
-                        </Label>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                           <children>
+                              <Button fx:id="playlistButton" mnemonicParsing="false" onAction="#showHidePlaylist" text="C" HBox.hgrow="NEVER" />
+                              <Button fx:id="fullscreenButton" mnemonicParsing="false" onAction="#fullscreenToggle" text="A" />
+                           </children>
+                           <padding>
+                              <Insets right="24.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </GridPane>
+                  <AnchorPane fx:id="volBox" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="volume-box" translateX="20.0" translateY="-58.0" visible="false" StackPane.alignment="BOTTOM_LEFT">
+                     <children>
+                        <AnchorPane fx:id="volBackTrack" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="6.0" styleClass="volume-slider-background" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
+                           <children>
+                              <Pane fx:id="volTrack" styleClass="volume-slider-foreground" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                        <Label fx:id="volLabel" alignment="CENTER" text="68%" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.rowIndex="1">
-                     <padding>
-                        <Insets left="24.0" />
-                     </padding>
-                     <Button fx:id="volButton" mnemonicParsing="false" onAction="#muteButton" styleClass="volume-button" text="8">
-                        <HBox.margin>
-                           <Insets />
-                        </HBox.margin>
-                     </Button>
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </HBox>
-                  <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <children>
-                        <ToggleButton fx:id="repeatToggleButton" mnemonicParsing="false" onAction="#repeatToggle" text="H" />
-                        <ToggleButton fx:id="randomToggleButton" mnemonicParsing="false" onAction="#randomToggle" text="I" />
-                     </children>
-                  </HBox>
-                  <HBox fx:id="controllers" alignment="CENTER" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                     <children>
-                        <Button fx:id="backwardButton" mnemonicParsing="false" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="6" />
-                        <Button fx:id="playButton" mnemonicParsing="false" onAction="#playPauseButton" text="1" />
-                        <Button fx:id="forwardButton" mnemonicParsing="false" onMouseDragged="#forwardButtonDrag" onMousePressed="#forwardButtonPressed" onMouseReleased="#forwardButtonReleased" text="5" />
-                     </children>
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </HBox>
-                  <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
-                     <children>
-                        <Button fx:id="playlistButton" mnemonicParsing="false" onAction="#showHidePlaylist" text="C" HBox.hgrow="NEVER" />
-                        <Button fx:id="fullscreenButton" mnemonicParsing="false" onAction="#fullscreenToggle" text="A" />
-                     </children>
-                     <padding>
-                        <Insets right="24.0" />
-                     </padding>
-                  </HBox>
                </children>
-            </GridPane>
-            <AnchorPane fx:id="volBox" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="volume-box" translateX="20.0" translateY="-58.0" visible="false" StackPane.alignment="BOTTOM_LEFT">
-               <children>
-                  <AnchorPane fx:id="volBackTrack" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="6.0" styleClass="volume-slider-background" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
-                     <children>
-                        <Pane fx:id="volTrack" styleClass="volume-slider-foreground" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
-                  <Label fx:id="volLabel" alignment="CENTER" text="68%" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-               </children>
-            </AnchorPane>
-         </children>
-      </StackPane>
+            </StackPane>
+         </items>
+         <contextMenu>
+            <ContextMenu>
+              <items>
+                  <CustomMenuItem mnemonicParsing="false" onAction="#playPauseButton">
+                     <content>
+                        <Label text="%player.playpause">
+                           <graphic>
+                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="20.0" styleClass="context-menu-icon" stylesheets="@Styles/ContextMenuStyle.css" text="1" />
+                           </graphic>
+                        </Label>
+                     </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem mnemonicParsing="false" onAction="#playPauseButton">
+                     <content>
+                        <Label text="%player.next">
+                           <graphic>
+                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="20.0" styleClass="context-menu-icon" stylesheets="@Styles/ContextMenuStyle.css" text="5" />
+                           </graphic>
+                        </Label>
+                     </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem mnemonicParsing="false" onAction="#playPauseButton">
+                     <content>
+                        <Label text="%player.previous">
+                           <graphic>
+                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="20.0" styleClass="context-menu-icon" stylesheets="@Styles/ContextMenuStyle.css" text="6" />
+                           </graphic>
+                        </Label>
+                     </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem mnemonicParsing="false" onAction="#muteButton">
+                     <content>
+                        <Label text="%player.muteunmute">
+                           <graphic>
+                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="20.0" styleClass="context-menu-icon" stylesheets="@Styles/ContextMenuStyle.css" text="9" />
+                           </graphic>
+                        </Label>
+                     </content>
+                  </CustomMenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CustomMenuItem mnemonicParsing="false" onAction="#randomToggle">
+                     <content>
+                        <Label text="%player.random">
+                           <graphic>
+                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="20.0" styleClass="context-menu-icon" stylesheets="@Styles/ContextMenuStyle.css" text="I" />
+                           </graphic>
+                        </Label>
+                     </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem mnemonicParsing="false" onAction="#repeatToggle">
+                     <content>
+                        <Label text="%player.repeat">
+                           <graphic>
+                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="20.0" styleClass="context-menu-icon" stylesheets="@Styles/ContextMenuStyle.css" text="H" />
+                           </graphic>
+                        </Label>
+                     </content>
+                  </CustomMenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CustomMenuItem mnemonicParsing="false" onAction="#fullscreenToggle">
+                     <content>
+                        <Label text="%player.fullscreen">
+                           <graphic>
+                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="20.0" styleClass="context-menu-icon" stylesheets="@Styles/ContextMenuStyle.css" text="A" />
+                           </graphic>
+                        </Label>
+                     </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem mnemonicParsing="false" onAction="#showHidePlaylist">
+                     <content>
+                        <Label text="%player.showhideplaylist">
+                           <graphic>
+                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="20.0" styleClass="context-menu-icon" stylesheets="@Styles/ContextMenuStyle.css" text="C" />
+                           </graphic>
+                        </Label>
+                     </content>
+                  </CustomMenuItem>
+              </items>
+            </ContextMenu>
+         </contextMenu>
+      </SplitPane>
    </center>
 </BorderPane>

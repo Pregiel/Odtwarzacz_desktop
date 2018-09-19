@@ -75,8 +75,10 @@
 
 .menu-item .left-container,
 .menu-item .right-container {
-	-fx-color: -menu-text-color;
+	-fx-mark-color: -menu-text-color;
 }
+
+
 
 .menu-item .label:disabled {
     -fx-opacity: 1.0;

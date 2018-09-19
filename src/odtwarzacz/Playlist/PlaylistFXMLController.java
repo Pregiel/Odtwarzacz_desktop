@@ -44,12 +44,6 @@ public class PlaylistFXMLController implements Initializable {
     private ScrollPane playlistScroll;
     @FXML
     private VBox playlistPane;
-    @FXML
-    private ToggleButton randomTogglebutton;
-
-    public ToggleButton getRandomTogglebutton() {
-        return randomTogglebutton;
-    }
 
     private ExpandableTimeTask searchTask;
 
@@ -70,9 +64,6 @@ public class PlaylistFXMLController implements Initializable {
             }
         });
 
-        if (getPlaylist().isRandom()) {
-            randomTogglebutton.setSelected(true);
-        }
 
         searchTask = new ExpandableTimeTask(() -> {
             if (searchBox.getText().equals("")) {
@@ -118,12 +109,6 @@ public class PlaylistFXMLController implements Initializable {
     @FXML
     private void play(ActionEvent event) {
         getPlaylist().playAll();
-    }
-
-    @FXML
-    private void randomToggle(ActionEvent event) {
-        getPlaylist().setRandom(randomTogglebutton.isSelected());
-        Connection.getInstance().sendMessage(randomTogglebutton.isSelected() ? Connection.RANDOM_ON : Connection.RANDOM_OFF);
     }
 
     private Parent queueRoot;

@@ -553,7 +553,7 @@ public class MediaFXMLController implements Initializable {
     }
 
     @FXML
-    private void repeatToggle(ActionEvent event) {
+    private void repeatToggleButton(ActionEvent event) {
         repeat = repeatToggleButton.isSelected();
 
         Odtwarzacz.getConfig().setProperty("repeat", String.valueOf(repeat));
@@ -588,7 +588,7 @@ public class MediaFXMLController implements Initializable {
         }
     }
 
-    public void randomToggle(ActionEvent event) {
+    public void randomToggleButton(ActionEvent event) {
         random = randomToggleButton.isSelected();
 
         Odtwarzacz.getConfig().setProperty("random", String.valueOf(random));
