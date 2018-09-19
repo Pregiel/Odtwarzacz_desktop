@@ -38,7 +38,7 @@ public class Odtwarzacz extends Application {
 
         configProp = new ConfigProperties(CONFIGFILENAME, DEFAULTCONFIGFILENAME);
 
-        new Theme(Theme.LIGHT_THEME);
+        new Theme(configProp.getProperty("theme"));
 
         Utils.initResourceBundle();
         Parent root = FXMLLoader.load(getClass().getResource("Layouts/MainFXML.fxml"), Utils.getResourceBundle());

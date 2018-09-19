@@ -28,7 +28,10 @@ public class Theme {
         return resourceBundle;
     }
 
-    public void changeResourceBundle(String theme) {
+    public void changeTheme(String theme) {
+        Odtwarzacz.getConfig().setProperty("theme", theme);
+        Odtwarzacz.getConfig().save();
+
         resourceBundle = ResourceBundle.getBundle("Resources.Theme", new Locale(theme));
         if (MainNode != null)
             MainNode.setStyle(getStyleConst(MAIN_FXML));

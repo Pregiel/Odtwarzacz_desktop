@@ -361,11 +361,11 @@ public class MainFXMLController implements Initializable {
     }
 
     public void setDarkTheme(ActionEvent event) {
-        Theme.getInstance().changeResourceBundle(Theme.DARK_THEME);
+        Theme.getInstance().changeTheme(Theme.DARK_THEME);
     }
 
     public void setLightTheme(ActionEvent event) {
-        Theme.getInstance().changeResourceBundle(Theme.LIGHT_THEME);
+        Theme.getInstance().changeTheme(Theme.LIGHT_THEME);
 
     }
 }
