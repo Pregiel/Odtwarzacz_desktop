@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import odtwarzacz.Playlist.Playlist;
 import odtwarzacz.Utils.ConfigProperties;
 import odtwarzacz.Utils.Utils;
 
@@ -26,8 +27,6 @@ public class Odtwarzacz extends Application {
     public static final int PLAYER_MIN_HEIGHT = 300;
     public static final int PLAYER_MIN_WIDTH = MEDIA_MIN_WIDTH + PLAYLIST_MIN_WIDTH;
 
-    private static final String THEMEFILE = "src/Resources/DefaultConfigFile.properties";
-
 
     private static ConfigProperties configProp;
 
@@ -41,7 +40,8 @@ public class Odtwarzacz extends Application {
         new Theme(configProp.getProperty("theme"));
 
         Utils.initResourceBundle();
-        Parent root = FXMLLoader.load(getClass().getResource("Layouts/MainFXML.fxml"), Utils.getResourceBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/MainFXML.fxml"), Utils.getResourceBundle());
+        Parent root = loader.load();
 
         root.setStyle(Theme.getStyleConst(Theme.MAIN_FXML));
         Theme.getInstance().setMainNode(root);
@@ -71,7 +71,14 @@ public class Odtwarzacz extends Application {
         stage.setFullScreenExitHint("");
 
         stage.setMinHeight(PLAYER_MIN_HEIGHT);
+
+        stage.setOnCloseRequest(event -> {
+            MainFXMLController.getPlaylist().getPlaylistWindow().close();
+        });
+
         stage.show();
+
+
 
     }
 

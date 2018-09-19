@@ -170,4 +170,8 @@ public class PlaylistFXMLController implements Initializable {
         searchBox.setText("");
         searchTyped(null);
     }
+
+    public void undock(ActionEvent event) {
+        getPlaylist().showUndock();
+    }
 }

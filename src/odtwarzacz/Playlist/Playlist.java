@@ -13,7 +13,9 @@ import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -100,12 +102,12 @@ public class Playlist {
 
     }
 
-    public BorderPane getScrollPane() {
+    public BorderPane getPane() {
         return pane;
     }
 
     public void hide() {
-        splitPane.getItems().remove(getScrollPane());
+        splitPane.getItems().remove(getPane());
         Odtwarzacz.getConfig().setProperty("playlist.visible", "false");
         Odtwarzacz.getConfig().save();
     }
@@ -117,7 +119,12 @@ public class Playlist {
     }
 
     public void show() {
-        splitPane.getItems().add(1, getScrollPane());
+        if (playlistWindow != null) {
+            playlistWindow.close();
+            playlistWindow = null;
+        }
+
+        splitPane.getItems().add(1, getPane());
 
         ExpandableTimeTask saveDividerPositionTast = new ExpandableTimeTask(new Runnable() {
             @Override
@@ -145,6 +152,35 @@ public class Playlist {
 
         Odtwarzacz.getConfig().setProperty("playlist.visible", "true");
         Odtwarzacz.getConfig().save();
+    }
+
+    private Stage playlistWindow;
+
+    public Stage getPlaylistWindow() {
+        return playlistWindow;
+    }
+
+    public void showUndock() {
+        hide();
+        if (playlistWindow != null) {
+            playlistWindow.close();
+        }
+
+        AnchorPane pane = new AnchorPane();
+        pane.getChildren().add(getPane());
+
+        AnchorPane.setTopAnchor(getPane(), 0.0);
+        AnchorPane.setRightAnchor(getPane(), 0.0);
+        AnchorPane.setLeftAnchor(getPane(), 0.0);
+        AnchorPane.setBottomAnchor(getPane(), 0.0);
+
+        playlistWindow = new Stage();
+        playlistWindow.setTitle(Utils.getString("player.playlist"));
+        playlistWindow.setScene(new Scene(pane, 400, 600));
+        playlistWindow.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH);
+        playlistWindow.setMinHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
+        playlistWindow.show();
+
     }
 
     public void toogle() {

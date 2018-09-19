@@ -27,6 +27,8 @@
     -playlist-element-button-background-color: transparent;
     -playlist-element-button-background-hover-color: #6d6d6d;
     -playlist-element-button-background-pressed-color: #969696;
+    -playlist-element-checkbox-background-color: #6d6d6d;
+    -playlist-element-checkbox-mark-color: #ffffff;
 
 }
 
@@ -97,3 +99,17 @@
     -fx-fill: -playlist-element-text-color;
 }
 
+
+.check-box .box {
+    -fx-background-color: transparent;
+    -fx-border-color: -playlist-element-checkbox-background-color;
+    -fx-border-radius: 1px;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: -playlist-element-checkbox-mark-color;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -playlist-element-checkbox-background-color;
+}

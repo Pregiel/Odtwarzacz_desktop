@@ -197,7 +197,7 @@ public class PlaylistElement {
         StringBuilder stringBuilder = new StringBuilder();
         if (queueIndexes.size() == 0) {
         } else if (queueIndexes.size() == 1) {
-            stringBuilder.append(queueIndexes.get(0).toString());
+            stringBuilder.append("[").append(queueIndexes.get(0).toString()).append("]");
         } else if (queueIndexes.size() < 4) {
             String prefix = "[";
             for (int ii : queueIndexes) {
