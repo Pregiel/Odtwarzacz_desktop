@@ -76,13 +76,15 @@ public class MainFXMLController implements Initializable {
 
         try {
 //            refreshScene();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/FirstViewFXML.fxml"), Utils.getResourceBundle());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/FirstViewFXML.fxml"), Utils.getTranslationsBundle());
             lastPickedPane = loader.load();
 
             playlist = new Playlist(this);
             playlist.makePlaylistPane();
 
             playlist.setSplitPane(splitPane);
+
+
 
             double dividerPosition = Double.parseDouble(Odtwarzacz.getConfig().getProperty("playlist.divider"));
             double windowWidth = Double.parseDouble(Odtwarzacz.getConfig().getProperty("window.width"));
@@ -158,7 +160,7 @@ public class MainFXMLController implements Initializable {
     }
 
     private void refreshScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/MediaFXML.fxml"), Utils.getResourceBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/MediaFXML.fxml"), Utils.getTranslationsBundle());
         Pane mediaPane = loader.load();
         mediaPane.setStyle(Theme.getStyleConst(Theme.MEDIA_FXML));
         Theme.getInstance().setMediaNode(mediaPane);

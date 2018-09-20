@@ -5,6 +5,10 @@
  */
 package odtwarzacz.Playlist;
 
+import odtwarzacz.MainFXMLController;
+import odtwarzacz.Odtwarzacz;
+import odtwarzacz.Utils.Utils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Pregiel
  */
 public final class PlaylistProperties extends Properties {
@@ -26,17 +29,63 @@ public final class PlaylistProperties extends Properties {
     private static final String PROPERTY_NAME = "playlist";
     private File playlistFile;
 
-    public PlaylistProperties(String playlistFileName) {
+    public PlaylistProperties(String playlistFileName, String playlistName) {
         super();
         playlistFile = new File(playlistFileName);
         try {
             if (playlistFile.exists()) {
-                load(playlistFile);
-                save();
+                if (!playlistName.equals("")) {
+                    int i = 1;
+                    while (playlistFile.exists() && i < 100) {
+                        playlistFileName = Playlist.PLAYLIST_FOLDER + "/" + playlistName + "_" + i + ".playlist";
+                        playlistFile = new File(playlistFileName);
+                        i++;
+                    }
+                    setPlaylistName(playlistName);
+                } else {
+                    load(playlistFile);
+                }
+            } else {
+                if (playlistName.replaceAll(" ", "").equals("")) {
+                    setPlaylistName(Utils.getTranslationsBundle().getString("player.playlist"));
+                } else {
+                    setPlaylistName(playlistName);
+                }
             }
+            if (getProperty("playlist.name") == null) {
+                setProperty("playlist.name", Utils.getTranslationsBundle().getString("player.playlist"));
+            }
+
+            if (getProperty("playlist.id") == null) {
+                setProperty("playlist.id", String.valueOf(Playlist.getPlaylistLastId()));
+            }
+
+            save();
         } catch (IOException ex) {
             Logger.getLogger(PlaylistProperties.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public PlaylistProperties(String playlistFileName) {
+        this(playlistFileName, "");
+    }
+
+    public String getPlaylistName() {
+        return getProperty("playlist.name", Utils.getTranslationsBundle().getString("player.playlist"));
+    }
+
+
+    public int getPlaylistId() {
+        String id = getProperty("playlist.id");
+        if (id == null) {
+            return -1;
+        }
+        return Integer.parseInt(id);
+    }
+
+    public void setPlaylistName(String name) {
+        setProperty("playlist.name", name);
+        save();
     }
 
     public void load(File file) throws IOException {

@@ -28,15 +28,15 @@
    <top>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <ComboBox fx:id="playlistComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="playlista" HBox.hgrow="ALWAYS" />
+            <ComboBox fx:id="playlistComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="%player.playlist" HBox.hgrow="ALWAYS" />
             <MenuButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="smaller-button" text="E">
               <items>
-                <MenuItem mnemonicParsing="false" text="%playlist.newplaylist" />
+                <MenuItem mnemonicParsing="false" onAction="#newPlaylist" text="%playlist.newplaylist" />
                 <MenuItem mnemonicParsing="false" text="%playlist.closeplaylist" />
-                  <MenuItem mnemonicParsing="false" text="%playlist.renameplaylist" />
+                  <MenuItem mnemonicParsing="false" onAction="#renamePlaylist" text="%playlist.renameplaylist" />
               </items>
             </MenuButton>
-            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#undock" styleClass="smaller-button" text="F" />
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#undock" styleClass="smaller-button" text="O" />
          </children>
          <BorderPane.margin>
             <Insets bottom="8.0" />

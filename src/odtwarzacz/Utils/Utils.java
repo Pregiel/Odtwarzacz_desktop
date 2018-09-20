@@ -45,19 +45,19 @@ public class Utils {
         return file.substring(file.lastIndexOf(".") + 1);
     }
 
-    private static ResourceBundle resourceBundle;
+    private static ResourceBundle translationsBundle;
 
-    public static ResourceBundle getResourceBundle() {
-        return resourceBundle;
+    public static ResourceBundle getTranslationsBundle() {
+        return translationsBundle;
     }
 
-    public static void initResourceBundle() {
-        resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
+    public static void initTranslationsBundle() {
+        translationsBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
                 ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
     }
 
     public static String getString(String key) {
-        return resourceBundle.getString(key);
+        return translationsBundle.getString(key);
     }
 
     public static float[] rgbToHsb(String rgb) {

@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import odtwarzacz.Playlist.Playlist;
 import odtwarzacz.Utils.ConfigProperties;
 import odtwarzacz.Utils.Utils;
 
@@ -39,8 +38,8 @@ public class Odtwarzacz extends Application {
 
         new Theme(configProp.getProperty("theme"));
 
-        Utils.initResourceBundle();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/MainFXML.fxml"), Utils.getResourceBundle());
+        Utils.initTranslationsBundle();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/MainFXML.fxml"), Utils.getTranslationsBundle());
         Parent root = loader.load();
 
         root.setStyle(Theme.getStyleConst(Theme.MAIN_FXML));

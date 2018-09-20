@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Theme;
@@ -37,7 +38,8 @@ import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
  */
 public class Playlist {
 
-    private static final String DEFAULT_PLAYLIST = "playlist.properties";
+    private static final String DEFAULT_PLAYLIST = "src/Playlists/default_playlist.playlist";
+    public static final String PLAYLIST_FOLDER = "src/Playlists";
 
     private BorderPane pane;
     private SplitPane splitPane;
@@ -45,7 +47,6 @@ public class Playlist {
     private List<String> playlistList;
     private List<PlaylistElement> playlistElementList;
     private VBox playlistPane;
-    private PlaylistFXMLController playlistFXMLController;
 
     private Queue queue;
 
@@ -57,17 +58,128 @@ public class Playlist {
 
     private QueueFXMLController queueFXMLController;
 
+    private PlaylistFXMLController playlistFXMLController;
+
     public Playlist(MainFXMLController mainController) {
-        this.playlistProperties = new PlaylistProperties(DEFAULT_PLAYLIST);
         this.mainController = mainController;
         playlistElementList = new ArrayList<>();
+        playlistFilesList = new ArrayList<>();
         queue = new Queue();
+
 
         this.random = Boolean.parseBoolean(String.valueOf(Odtwarzacz.getConfig().get("random")));
 
+        loadPlaylistFiles();
 
-        loadPlaylistList();
+        File lastUsedFile = new File(Odtwarzacz.getConfig().getProperty("playlist.lastused"));
 
+        if (lastUsedFile.exists() && lastUsedFile.isFile()) {
+            loadPlaylistList(lastUsedFile.getAbsolutePath());
+        } else {
+            loadPlaylistList((playlistFilesList.size() > 0) ? playlistFilesList.get(0) : DEFAULT_PLAYLIST);
+        }
+
+
+    }
+
+    private List<String> playlistFilesList;
+
+    public List<String> getPlaylistFilesList() {
+        return playlistFilesList;
+    }
+
+    public List<String> loadPlaylistFiles() {
+        playlistFilesList.clear();
+
+        File[] files = new File(PLAYLIST_FOLDER).listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    if (Utils.getExtension(file.getName()).equals("playlist")) {
+                        playlistFilesList.add(file.getAbsolutePath());
+                    }
+                }
+            }
+        }
+        sortPlaylistFiles();
+        return playlistFilesList;
+    }
+
+    private class SortClass {
+        private String file;
+        private int id, sort_id;
+
+        public SortClass(String file, int id, int sort_id) {
+            this.file = file;
+            this.id = id;
+            this.sort_id = sort_id;
+        }
+
+        public String getFile() {
+            return file;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public int getSort_id() {
+            return sort_id;
+        }
+    }
+
+    public void sortPlaylistFiles() {
+        if (playlistFilesList.size() > 1) {
+            List<SortClass> list = new ArrayList<>();
+
+            int index = 1;
+            for (String s : playlistFilesList) {
+                list.add(new SortClass(s, index, new PlaylistProperties(s).getPlaylistId()));
+                index++;
+            }
+
+            for (int i = 0; i < list.size(); i++) {
+                for (int ii = i+1; ii < list.size(); ii++) {
+                    if (list.get(i).getSort_id() > list.get(ii).getSort_id()) {
+                        Collections.swap(list, i, ii);
+                    }
+                }
+            }
+
+            playlistFilesList.clear();
+            for (SortClass sortClass : list) {
+                playlistFilesList.add(sortClass.getFile());
+            }
+
+        }
+    }
+
+    public static int getPlaylistLastId() {
+        List<String> list = new ArrayList<>();
+        File[] files = new File(PLAYLIST_FOLDER).listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    if (Utils.getExtension(file.getName()).equals("playlist")) {
+                        list.add(file.getAbsolutePath());
+                    }
+                }
+            }
+        }
+        return list.size();
+    }
+
+
+    public List<String> getPlaylistNames() {
+        List<String> results = new ArrayList<>();
+
+        for (String s : playlistFilesList) {
+            results.add(new PlaylistProperties(s).getPlaylistName());
+        }
+
+        return results;
     }
 
     public Queue getQueue() {
@@ -91,10 +203,9 @@ public class Playlist {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/PlaylistFXML.fxml"), resourceBundle);
 
         pane = loader.load();
+        playlistFXMLController = loader.getController();
         pane.setStyle(Theme.getStyleConst(Theme.PLAYLIST_FXML));
         Theme.getInstance().setPlayListNode(pane);
-
-        playlistFXMLController = loader.getController();
     }
 
     public void setPlaylistPane(VBox playlistPane) {
@@ -110,12 +221,6 @@ public class Playlist {
         splitPane.getItems().remove(getPane());
         Odtwarzacz.getConfig().setProperty("playlist.visible", "false");
         Odtwarzacz.getConfig().save();
-    }
-
-    private double dividerPosition1;
-
-    public double getDividerPosition() {
-        return dividerPosition1;
     }
 
     public void show() {
@@ -195,9 +300,20 @@ public class Playlist {
         }
     }
 
+    public void setPlaylistName(String name) {
+        playlistProperties.setPlaylistName(name);
+        playlistFXMLController.reloadCombobox();
+    }
+
+    public String getPlaylistName() {
+        return playlistProperties.getPlaylistName();
+    }
+
     public void setSplitPane(SplitPane splitPane) {
         this.splitPane = splitPane;
     }
+
+    private Thread loadPlaylistThread;
 
     public void loadPlaylist() {
         playlistPane.getChildren().clear();
@@ -206,27 +322,44 @@ public class Playlist {
                 ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
         Theme.getInstance().clearPlayListElementNode();
 
-        int i = 1;
-        for (String s : playlistList) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/PlaylistElementFXML.fxml"), resourceBundle);
+        loadPlaylistThread = new Thread(() -> {
+            int i = 1;
+            List<PlaylistElement> playlistElements = new ArrayList<>();
+            for (String s : playlistList) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/PlaylistElementFXML.fxml"), resourceBundle);
 
-                PlaylistElement element = new PlaylistElement(i++, s, loader.load());
-                playlistElementList.add(element);
+                    PlaylistElement element = new PlaylistElement(i++, s, loader.load());
+                    playlistElementList.add(element);
+                    playlistElements.add(element);
 
-                playlistPane.getChildren().add(element.getPane());
-            } catch (IOException ex) {
-                Logger.getLogger(Playlist.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Playlist.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        }
 
-        if (mainController.getConnection() != null) {
-            mainController.getConnection().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
-        }
+            Platform.runLater(() -> {
+                for (PlaylistElement playlistElement : playlistElements) {
+                    playlistPane.getChildren().add(playlistElement.getPane());
+
+                }
+            });
+
+            if (mainController.getConnection() != null) {
+                mainController.getConnection().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+            }
+
+        });
+        loadPlaylistThread.start();
+
     }
 
-    public void loadPlaylistList() {
+    public void loadPlaylistList(String playlistPath) {
+        this.playlistProperties = new PlaylistProperties(playlistPath);
         this.playlistList = playlistProperties.getArray();
+
+        Odtwarzacz.getConfig().setProperty("playlist.lastused", playlistPath);
+        Odtwarzacz.getConfig().save();
     }
 
     public PlaylistProperties getPlaylistProperties() {
@@ -239,7 +372,7 @@ public class Playlist {
             ButtonType cancelButton = new ButtonType(Utils.getString("dialog.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    Utils.getString("playlist.alreadyAdded"),
+                    String.format(Utils.getString("playlist.alreadyAdded"), file.getName()),
                     addButton,
                     cancelButton);
             alert.setTitle(Utils.getString("playlist.alreadyAdded.title"));
@@ -254,15 +387,48 @@ public class Playlist {
         }
         playlistList.add(file.getAbsolutePath());
         save();
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                loadPlaylist();
-            }
-        });
-
     }
 
+    public void renamePlaylist() {
+        TextInputDialog dialog = new TextInputDialog(Utils.getString("player.playlist"));
+        dialog.setTitle(Utils.getString("dialog.renameplaylist"));
+        dialog.setHeaderText(null);
+        dialog.setContentText(Utils.getString("dialog.entername"));
+        dialog.setGraphic(null);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setText(Utils.getString("dialog.ok"));
+        Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButton.setText(Utils.getString("dialog.cancel"));
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(s -> {
+            setPlaylistName(s);
+        });
+    }
+
+    public void newPlaylist() {
+        TextInputDialog dialog = new TextInputDialog(Utils.getString("player.playlist"));
+        dialog.setTitle(Utils.getString("dialog.addplaylist"));
+        dialog.setHeaderText(null);
+        dialog.setContentText(Utils.getString("dialog.entername"));
+        dialog.setGraphic(null);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setText(Utils.getString("dialog.ok"));
+        Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancelButton.setText(Utils.getString("dialog.cancel"));
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(s -> {
+            this.playlistProperties = new PlaylistProperties(PLAYLIST_FOLDER + "/" + s + ".playlist", s);
+            loadPlaylistFiles();
+            playlistFXMLController.reloadCombobox(-1);
+        });
+    }
+
+
+    //TODO: przetlumaczyc
     public void addNew() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource Files");
@@ -275,6 +441,13 @@ public class Playlist {
             for (File file : list) {
                 add(file);
             }
+
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    loadPlaylist();
+                }
+            });
         }
     }
 

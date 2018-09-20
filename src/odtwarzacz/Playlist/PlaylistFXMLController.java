@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import odtwarzacz.MainFXMLController;
+import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
 import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Utils.Utils;
@@ -36,13 +38,15 @@ public class PlaylistFXMLController implements Initializable {
 
     public TextField searchBox;
     public Button clearSearchBoxButton;
-    public ComboBox playlistComboBox;
+    public ComboBox<String> playlistComboBox;
     @FXML
     private ScrollPane playlistScroll;
     @FXML
     private VBox playlistPane;
 
     private ExpandableTimeTask searchTask;
+
+    private ChangeListener<String> changeListener;
 
     /**
      * Initializes the controller class.
@@ -61,11 +65,16 @@ public class PlaylistFXMLController implements Initializable {
             }
         });
 
-        playlistComboBox.getItems().addAll(
-                "Option 4",
-                "Option 5",
-                "Option 6"
-        );
+
+        changeListener = (observable, oldValue, newValue) -> {
+            getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(playlistComboBox.getSelectionModel().getSelectedIndex()));
+            getPlaylist().loadPlaylist();
+        };
+
+        reloadCombobox();
+
+
+
 
 
         searchTask = new ExpandableTimeTask(() -> {
@@ -106,6 +115,38 @@ public class PlaylistFXMLController implements Initializable {
         });
     }
 
+    public void reloadCombobox() {
+        int index = 0;
+        for (int i = 0; i < getPlaylist().getPlaylistFilesList().size(); i++) {
+            if (getPlaylist().getPlaylistFilesList().get(i).equals(Odtwarzacz.getConfig().getProperty("playlist.lastused"))) {
+                index = i;
+                break;
+            }
+        }
+
+        reloadCombobox(index);
+    }
+
+    public void reloadCombobox(int index) {
+        playlistComboBox.valueProperty().removeListener(changeListener);
+        playlistComboBox.getItems().clear();
+        playlistComboBox.getItems().addAll(
+                getPlaylist().getPlaylistNames()
+        );
+
+        if (index == -1) {
+            playlistComboBox.getSelectionModel().selectLast();
+        } else {
+            playlistComboBox.getSelectionModel().select(index);
+        }
+
+        playlistComboBox.valueProperty().addListener(changeListener);
+    }
+
+    public ComboBox<String> getPlaylistComboBox() {
+        return playlistComboBox;
+    }
+
     @FXML
     private void add(ActionEvent event) {
         getPlaylist().addNew();
@@ -136,8 +177,8 @@ public class PlaylistFXMLController implements Initializable {
 
         if (queueRoot == null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/QueueFXML.fxml"), Utils.getResourceBundle());
-//                queueRoot = FXMLLoader.load(getClass().getResource("Queue/QueueFXML.fxml"), Utils.getResourceBundle());
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/QueueFXML.fxml"), Utils.getTranslationsBundle());
+//                queueRoot = FXMLLoader.load(getClass().getResource("Queue/QueueFXML.fxml"), Utils.getTranslationsBundle());
 
                 queueRoot = loader.load();
 
@@ -180,5 +221,13 @@ public class PlaylistFXMLController implements Initializable {
         } else {
             getPlaylist().dock();
         }
+    }
+
+    public void renamePlaylist(ActionEvent event) {
+        getPlaylist().renamePlaylist();
+    }
+
+    public void newPlaylist(ActionEvent event) {
+        getPlaylist().newPlaylist();
     }
 }

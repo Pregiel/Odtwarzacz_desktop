@@ -48,9 +48,9 @@
                      <children>
                         <AnchorPane GridPane.columnSpan="2147483647">
                            <children>
-                              <AnchorPane fx:id="timeBackTrack" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="8.0" style="-fx-background-color: grey;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="22.0">
+                              <AnchorPane fx:id="timeBackTrack" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="8.0" styleClass="time-slider-background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="22.0">
                                  <children>
-                                    <Pane fx:id="timeTrack" style="-fx-background-color: red;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <Pane fx:id="timeTrack" styleClass="time-slider-foreground" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                               <Label fx:id="timeLabel1" styleClass="time-label" text="00:00" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -95,7 +95,7 @@
                         </HBox>
                         <HBox fx:id="controllers" alignment="CENTER" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <children>
-                              <Button fx:id="backwardButton" mnemonicParsing="false" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="6" wrapText="true">
+                              <Button fx:id="backwardButton" mnemonicParsing="false" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="N" wrapText="true">
                                  <tooltip>
                                     <Tooltip text="%player.previousbackward" />
                                  </tooltip></Button>
@@ -103,7 +103,7 @@
                                  <tooltip>
                                     <Tooltip text="%player.playpause" />
                                  </tooltip></Button>
-                              <Button fx:id="forwardButton" mnemonicParsing="false" onMouseDragged="#forwardButtonDrag" onMousePressed="#forwardButtonPressed" onMouseReleased="#forwardButtonReleased" text="5" wrapText="true">
+                              <Button fx:id="forwardButton" mnemonicParsing="false" onMouseDragged="#forwardButtonDrag" onMousePressed="#forwardButtonPressed" onMouseReleased="#forwardButtonReleased" text="M" wrapText="true">
                                  <tooltip>
                                     <Tooltip text="%player.nextforward" />
                                  </tooltip></Button>

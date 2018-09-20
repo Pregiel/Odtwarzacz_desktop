@@ -100,6 +100,9 @@ public class Theme {
                         getStyle("-player-background-color", "player.background.color"),
                         getStyle("-player-text-color", "player.text.color"),
 
+                        getStyle("-player-time-slider-background-color", "player.time.slider.background.color"),
+                        getStyle("-player-time-slider-foreground-color", "player.time.slider.foreground.color"),
+
                         getStyle("-player-volume-box-background-color", "player.volume.box.background.color"),
                         getStyle("-player-volume-box-border-color", "player.volume.box.border.color"),
                         getStyle("-player-volume-box-text-color", "player.volume.box.text.color"),
