@@ -127,6 +127,15 @@ public class Playlist {
         public int getSort_id() {
             return sort_id;
         }
+
+        @Override
+        public String toString() {
+            return "SortClass{" +
+                    "file='" + file + '\'' +
+                    ", id=" + id +
+                    ", sort_id=" + sort_id +
+                    "}";
+        }
     }
 
     public void sortPlaylistFiles() {
@@ -140,7 +149,7 @@ public class Playlist {
             }
 
             for (int i = 0; i < list.size(); i++) {
-                for (int ii = i+1; ii < list.size(); ii++) {
+                for (int ii = i + 1; ii < list.size(); ii++) {
                     if (list.get(i).getSort_id() > list.get(ii).getSort_id()) {
                         Collections.swap(list, i, ii);
                     }
@@ -151,7 +160,6 @@ public class Playlist {
             for (SortClass sortClass : list) {
                 playlistFilesList.add(sortClass.getFile());
             }
-
         }
     }
 
@@ -425,6 +433,77 @@ public class Playlist {
             loadPlaylistFiles();
             playlistFXMLController.reloadCombobox(-1);
         });
+    }
+
+    public void closePlaylist() {
+        ButtonType addButton = new ButtonType(Utils.getString("dialog.yes"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType(Utils.getString("dialog.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                Utils.getString("dialog.areyousure"),
+                addButton,
+                cancelButton);
+        alert.setTitle(Utils.getString("dialog.closeplaylist"));
+        alert.setHeaderText(null);
+
+
+        Optional<ButtonType> result = alert.showAndWait();
+        result.ifPresent(buttonType -> {
+            if (buttonType.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+                removePlaylist(playlistProperties.getPlaylistId());
+            }
+        });
+    }
+
+    private class PlaylistClass {
+        private String file;
+        private PlaylistProperties properties;
+
+        public PlaylistClass(String file, PlaylistProperties properties) {
+            this.file = file;
+            this.properties = properties;
+        }
+
+        public String getFile() {
+            return file;
+        }
+
+        public PlaylistProperties getProperties() {
+            return properties;
+        }
+    }
+
+    private void removePlaylist(int indexToDelete) {
+        if (playlistFilesList.size() > 1) {
+            List<PlaylistClass> list = new ArrayList<>();
+
+            for (String s : playlistFilesList) {
+                list.add(new PlaylistClass(s, new PlaylistProperties(s)));
+            }
+
+            int noIndex = 1;
+
+            for (PlaylistClass playlistClass : list) {
+                int index = playlistClass.getProperties().getPlaylistId();
+                if (index == indexToDelete) {
+                    File file = new File(playlistClass.getFile());
+                    file.delete();
+                    noIndex--;
+                } else if (index > indexToDelete) {
+                    playlistClass.getProperties().setProperty("playlist.id", String.valueOf(noIndex));
+                    playlistClass.getProperties().save();
+                }
+                noIndex++;
+            }
+        } else {
+            File file = new File(playlistFilesList.get(0));
+            file.delete();
+
+            this.playlistProperties = new PlaylistProperties(DEFAULT_PLAYLIST);
+        }
+
+        loadPlaylistFiles();
+        playlistFXMLController.reloadCombobox(0);
     }
 
 

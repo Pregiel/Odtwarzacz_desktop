@@ -32,7 +32,7 @@
             <MenuButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="smaller-button" text="E">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#newPlaylist" text="%playlist.newplaylist" />
-                <MenuItem mnemonicParsing="false" text="%playlist.closeplaylist" />
+                <MenuItem mnemonicParsing="false" onAction="#closePlaylist" text="%playlist.closeplaylist" />
                   <MenuItem mnemonicParsing="false" onAction="#renamePlaylist" text="%playlist.renameplaylist" />
               </items>
             </MenuButton>

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,8 +47,9 @@ public class PlaylistFXMLController implements Initializable {
 
     private ExpandableTimeTask searchTask;
 
-    private ChangeListener<String> changeListener;
+    private ChangeListener<Boolean> changeListener;
 
+    private int lastedComboboxIndex;
     /**
      * Initializes the controller class.
      */
@@ -67,13 +69,14 @@ public class PlaylistFXMLController implements Initializable {
 
 
         changeListener = (observable, oldValue, newValue) -> {
-            getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(playlistComboBox.getSelectionModel().getSelectedIndex()));
-            getPlaylist().loadPlaylist();
+            if (!newValue && playlistComboBox.getSelectionModel().getSelectedIndex() != lastedComboboxIndex) {
+                getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(playlistComboBox.getSelectionModel().getSelectedIndex()));
+                getPlaylist().loadPlaylist();
+            }
+            lastedComboboxIndex = playlistComboBox.getSelectionModel().getSelectedIndex();
         };
 
         reloadCombobox();
-
-
 
 
 
@@ -128,7 +131,7 @@ public class PlaylistFXMLController implements Initializable {
     }
 
     public void reloadCombobox(int index) {
-        playlistComboBox.valueProperty().removeListener(changeListener);
+        playlistComboBox.showingProperty().removeListener(changeListener);
         playlistComboBox.getItems().clear();
         playlistComboBox.getItems().addAll(
                 getPlaylist().getPlaylistNames()
@@ -140,7 +143,7 @@ public class PlaylistFXMLController implements Initializable {
             playlistComboBox.getSelectionModel().select(index);
         }
 
-        playlistComboBox.valueProperty().addListener(changeListener);
+        playlistComboBox.showingProperty().addListener(changeListener);
     }
 
     public ComboBox<String> getPlaylistComboBox() {
@@ -229,5 +232,9 @@ public class PlaylistFXMLController implements Initializable {
 
     public void newPlaylist(ActionEvent event) {
         getPlaylist().newPlaylist();
+    }
+
+    public void closePlaylist(ActionEvent event) {
+        getPlaylist().closePlaylist();
     }
 }
