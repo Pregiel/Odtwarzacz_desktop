@@ -2,6 +2,8 @@ package odtwarzacz;
 
 import javafx.scene.Node;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -11,17 +13,17 @@ public class Theme {
     public static final String DARK_THEME = "Dark";
     public static final String LIGHT_THEME = "Light";
 
-    public static final int MAIN_FXML = 1;
-    public static final int MEDIA_FXML = 2;
-    public static final int PLAYLIST_FXML = 3;
+    public static final int MAIN_FXML = 1, MEDIA_FXML = 2, PLAYLIST_FXML = 3, PLAYLISTELEMENT_FXML = 4;
 
     private static Theme instance;
 
-    private Node MainNode, MediaNode, PlayListNode;
+    private Node mainNode, mediaNode, playListNode;
+    private List<Node> playListElementNode;
 
     public Theme(String theme) {
         resourceBundle = ResourceBundle.getBundle("Resources.Theme", new Locale(theme));
         instance = this;
+        playListElementNode = new ArrayList<>();
     }
 
     public ResourceBundle getResourceBundle() {
@@ -33,24 +35,38 @@ public class Theme {
         Odtwarzacz.getConfig().save();
 
         resourceBundle = ResourceBundle.getBundle("Resources.Theme", new Locale(theme));
-        if (MainNode != null)
-            MainNode.setStyle(getStyleConst(MAIN_FXML));
-        if (MediaNode != null)
-            MediaNode.setStyle(getStyleConst(MEDIA_FXML));
-        if (PlayListNode != null)
-            PlayListNode.setStyle(getStyleConst(PLAYLIST_FXML));
+        if (mainNode != null)
+            mainNode.setStyle(getStyleConst(MAIN_FXML));
+        if (mediaNode != null)
+            mediaNode.setStyle(getStyleConst(MEDIA_FXML));
+        if (playListNode != null)
+            playListNode.setStyle(getStyleConst(PLAYLIST_FXML));
+        if (playListElementNode.size() > 0) {
+            for (Node node : playListElementNode) {
+                node.setStyle(getStyleConst(PLAYLISTELEMENT_FXML));
+            }
+        }
+
     }
 
     public void setMainNode(Node mainNode) {
-        MainNode = mainNode;
+        this.mainNode = mainNode;
     }
 
     public void setMediaNode(Node mediaNode) {
-        MediaNode = mediaNode;
+        this.mediaNode = mediaNode;
     }
 
     public void setPlayListNode(Node playListNode) {
-        PlayListNode = playListNode;
+        this.playListNode = playListNode;
+    }
+
+    public void clearPlayListElementNode() {
+        this.playListElementNode.clear();
+    }
+
+    public void addPlayListElementNode(Node playListElementNode) {
+        this.playListElementNode.add(playListElementNode);
     }
 
     public static Theme getInstance() {
@@ -72,29 +88,35 @@ public class Theme {
     public static String getStyleConst(int fxmlStyle) {
         switch (fxmlStyle) {
             case MAIN_FXML:
-                return getStyles(getStyle("-menu-background-color", "menu.background.color"),
+                return getStyles(
+                        getStyle("-menu-background-color", "menu.background.color"),
                         getStyle("-menu-background-highlight-color", "menu.background.highlight.color"),
                         getStyle("-menu-text-color", "menu.text.color"),
                         getStyle("-menu-text-highlight-color", "menu.text.highlight.color"),
                         getStyle("-playlist-background-color", "playlist.background.color"));
 
             case MEDIA_FXML:
-                return getStyles(getStyle("-player-background-color", "player.background.color"),
+                return getStyles(
+                        getStyle("-player-background-color", "player.background.color"),
                         getStyle("-player-text-color", "player.text.color"),
+
                         getStyle("-player-volume-box-background-color", "player.volume.box.background.color"),
                         getStyle("-player-volume-box-border-color", "player.volume.box.border.color"),
                         getStyle("-player-volume-box-text-color", "player.volume.box.text.color"),
                         getStyle("-player-volume-slider-background-color", "player.volume.slider.background.color"),
                         getStyle("-player-volume-slider-foreground-color", "player.volume.slider.foreground.color"),
+
                         getStyle("-player-icon-color", "player.icon.color"),
                         getStyle("-player-icon-off-color", "player.icon.off.color"),
+
                         getStyle("-player-icon-background-color", "player.icon.background.color"),
                         getStyle("-player-icon-background-hover-color", "player.icon.background.hover.color"),
                         getStyle("-player-icon-background-pressed-color", "player.icon.background.pressed.color"));
 
 
             case PLAYLIST_FXML:
-                return getStyles(getStyle("-playlist-background-color", "playlist.background.color"),
+                return getStyles(
+                        getStyle("-playlist-background-color", "playlist.background.color"),
                         getStyle("-playlist-text-color", "playlist.text.color"),
                         getStyle("-playlist-text-hover-color", "playlist.text.hover.color"),
                         getStyle("-playlist-text-pressed-color", "playlist.text.pressed.color"),
@@ -102,7 +124,31 @@ public class Theme {
                         getStyle("-playlist-button-color", "playlist.button.color"),
                         getStyle("-playlist-button-background-color", "playlist.button.background.color"),
                         getStyle("-playlist-button-background-hover-color", "playlist.button.background.hover.color"),
-                        getStyle("-playlist-button-background-pressed-color", "playlist.button.background.pressed.color"));
+                        getStyle("-playlist-button-background-pressed-color", "playlist.button.background.pressed.color"),
+                        getStyle("-playlist-box-background-color", "playlist.box.background.color"));
+
+            case PLAYLISTELEMENT_FXML:
+                return getStyles(
+                        getStyle("-playlist-element-background-color-1", "playlist.element.background.color.1"),
+                        getStyle("-playlist-element-background-color-2", "playlist.element.background.color.2"),
+
+                        getStyle("-playlist-element-background-hover-color-1", "playlist.element.background.hover.color.1"),
+                        getStyle("-playlist-element-background-hover-color-2", "playlist.element.background.hover.color.2"),
+
+                        getStyle("-playlist-element-background-selected-color", "playlist.element.background.selected.color"),
+                        getStyle("-playlist-element-background-selected-hover-color", "playlist.element.background.selected.hover.color"),
+
+                        getStyle("-playlist-element-text-color", "playlist.element.text.color"),
+                        getStyle("-playlist-element-selected-text-color", "playlist.element.selected.text.color"),
+                        getStyle("-playlist-element-playing-text-color", "playlist.element.playing.text.color"),
+                        getStyle("-playlist-element-notfound-text-color", "playlist.element.notfound.text.color"),
+
+                        getStyle("-playlist-element-button-background-color", "playlist.element.button.background.color"),
+                        getStyle("-playlist-element-button-background-hover-color", "playlist.element.button.background.hover.color"),
+                        getStyle("-playlist-element-button-background-pressed-color", "playlist.element.button.background.pressed.color"),
+
+                        getStyle("-playlist-element-checkbox-background-color", "playlist.element.checkbox.background.color"),
+                        getStyle("-playlist-element-checkbox-mark-color", "playlist.element.checkbox.mark.color"));
         }
         return "";
     }

@@ -73,7 +73,11 @@ public class Odtwarzacz extends Application {
         stage.setMinHeight(PLAYER_MIN_HEIGHT);
 
         stage.setOnCloseRequest(event -> {
-            MainFXMLController.getPlaylist().getPlaylistWindow().close();
+            try {
+                MainFXMLController.getPlaylist().getPlaylistWindow().close();
+            } catch (Exception ignored) {
+
+            }
         });
 
         stage.show();

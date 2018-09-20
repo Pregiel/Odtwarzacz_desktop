@@ -13,20 +13,25 @@
 	src: url('Fonts/MediaIcons.ttf');
 }
 
-* {
+*.const {
     -playlist-element-background-color-1: #3a3a3a;
     -playlist-element-background-color-2: #3f3f3f;
+
     -playlist-element-background-hover-color-1: #4a4a4a;
     -playlist-element-background-hover-color-2: #4f4f4f;
+
     -playlist-element-background-selected-color: #aaaaaa;
     -playlist-element-background-selected-hover-color: #c6c6c6;
+
    	-playlist-element-text-color: #d6d6d6;
    	-playlist-element-selected-text-color: #323232;
    	-playlist-element-playing-text-color: #ee0022;
    	-playlist-element-notfound-text-color: #717171;
+
     -playlist-element-button-background-color: transparent;
     -playlist-element-button-background-hover-color: #6d6d6d;
     -playlist-element-button-background-pressed-color: #969696;
+
     -playlist-element-checkbox-background-color: #6d6d6d;
     -playlist-element-checkbox-mark-color: #ffffff;
 

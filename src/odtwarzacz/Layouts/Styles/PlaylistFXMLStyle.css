@@ -13,7 +13,7 @@
 	src: url('Fonts/MediaIcons.ttf');
 }
 
-* {
+*.const {
     -playlist-background-color: #545454;
    	-playlist-text-color: #d6d6d6;
    	-playlist-text-hover-color: #efefef;
@@ -71,6 +71,45 @@
 
 .menu-button > .arrow-button > .arrow {
     -fx-padding: 0;
+}
+
+.smaller-button > .label, .smaller-button > .text {
+    -fx-font-size: 18px;
+}
+
+/*** combo-box ***/
+.combo-box {
+    -fx-background-color: -playlist-button-background-color;
+}
+
+.combo-box:hover, .combo-box:showing {
+    -fx-background-color: -playlist-button-background-hover-color;
+}
+
+.combo-box > .arrow-button > .arrow {
+    -fx-padding: 5px;
+    -fx-background-color: -playlist-button-color;
+}
+
+.combo-box > .list-cell > .text {
+	-fx-font-size: 16px;
+    -fx-font-family: 'Roboto Medium';
+    -fx-fill: -playlist-button-color;
+}
+
+.combo-box .list-view .list-cell {
+    -fx-background-color: -playlist-background-color;
+	-fx-font-size: 14px;
+    -fx-font-family: 'Roboto Medium';
+    -fx-text-fill: -playlist-text-color;
+}
+
+.combo-box .list-view .list-cell:hover {
+    -fx-background-color: -playlist-button-background-hover-color;
+}
+
+.combo-box .list-view .list-cell:pressed {
+    -fx-background-color: -playlist-button-background-pressed-color;
 }
 
 .title-label {

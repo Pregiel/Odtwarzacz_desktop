@@ -28,11 +28,15 @@
    <top>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <ComboBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#undock" text="F" HBox.hgrow="NEVER">
-               <HBox.margin>
-                  <Insets left="6.0" />
-               </HBox.margin></Button>
+            <ComboBox fx:id="playlistComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="playlista" HBox.hgrow="ALWAYS" />
+            <MenuButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="smaller-button" text="E">
+              <items>
+                <MenuItem mnemonicParsing="false" text="%playlist.newplaylist" />
+                <MenuItem mnemonicParsing="false" text="%playlist.closeplaylist" />
+                  <MenuItem mnemonicParsing="false" text="%playlist.renameplaylist" />
+              </items>
+            </MenuButton>
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#undock" styleClass="smaller-button" text="F" />
          </children>
          <BorderPane.margin>
             <Insets bottom="8.0" />

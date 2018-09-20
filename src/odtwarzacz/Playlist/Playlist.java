@@ -138,7 +138,6 @@ public class Playlist {
         double windowWidth = Double.parseDouble(Odtwarzacz.getConfig().getProperty("window.width"));
 
         splitPane.setDividerPosition(0, 1 - (dividerPosition / windowWidth));
-        System.out.println(dividerPosition + " " + windowWidth);
 
         splitPane.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue) -> {
             if (saveDividerPositionTast.isStarted() && !saveDividerPositionTast.isFinished()) {
@@ -147,7 +146,6 @@ public class Playlist {
                 saveDividerPositionTast.start();
             }
         });
-
 
 
         Odtwarzacz.getConfig().setProperty("playlist.visible", "true");
@@ -160,7 +158,7 @@ public class Playlist {
         return playlistWindow;
     }
 
-    public void showUndock() {
+    public void undock() {
         hide();
         if (playlistWindow != null) {
             playlistWindow.close();
@@ -183,6 +181,10 @@ public class Playlist {
 
     }
 
+    public void dock() {
+        show();
+    }
+
     public void toogle() {
         if (Odtwarzacz.getConfig().getProperty("playlist.visible").equals("true")) {
             ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.MEDIA_MIN_WIDTH);
@@ -202,6 +204,7 @@ public class Playlist {
         playlistElementList.clear();
         ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
                 ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+        Theme.getInstance().clearPlayListElementNode();
 
         int i = 1;
         for (String s : playlistList) {

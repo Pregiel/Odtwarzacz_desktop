@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,13 +18,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
-import odtwarzacz.Theme;
 import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Utils.Utils;
 
@@ -40,6 +36,7 @@ public class PlaylistFXMLController implements Initializable {
 
     public TextField searchBox;
     public Button clearSearchBoxButton;
+    public ComboBox playlistComboBox;
     @FXML
     private ScrollPane playlistScroll;
     @FXML
@@ -63,6 +60,12 @@ public class PlaylistFXMLController implements Initializable {
                 getPlaylist().unselectAll();
             }
         });
+
+        playlistComboBox.getItems().addAll(
+                "Option 4",
+                "Option 5",
+                "Option 6"
+        );
 
 
         searchTask = new ExpandableTimeTask(() -> {
@@ -172,6 +175,10 @@ public class PlaylistFXMLController implements Initializable {
     }
 
     public void undock(ActionEvent event) {
-        getPlaylist().showUndock();
+        if (getPlaylist().getPlaylistWindow() == null) {
+            getPlaylist().undock();
+        } else {
+            getPlaylist().dock();
+        }
     }
 }

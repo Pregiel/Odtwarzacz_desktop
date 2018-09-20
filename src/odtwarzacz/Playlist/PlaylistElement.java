@@ -17,6 +17,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import odtwarzacz.Theme;
 import odtwarzacz.Utils.FileType;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Metadata.Metadata;
@@ -53,6 +54,9 @@ public class PlaylistElement {
     public PlaylistElement(int index, String path, GridPane pane) {
         this.index = index;
         this.pane = pane;
+        this.pane.setStyle(Theme.getStyleConst(Theme.PLAYLISTELEMENT_FXML));
+        Theme.getInstance().addPlayListElementNode(pane);
+
         this.titleLabel = (Label) pane.lookup("#songName");
         this.songCheckbox = (CheckBox) pane.lookup("#songCheckbox");
 
