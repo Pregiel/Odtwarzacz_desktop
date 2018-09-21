@@ -13,14 +13,13 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
-import odtwarzacz.Layouts.Styles.Fonts.IconFont;
+import odtwarzacz.IconFont;
 import odtwarzacz.Odtwarzacz;
 
 /**

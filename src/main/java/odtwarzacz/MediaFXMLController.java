@@ -1,14 +1,12 @@
-/*
+package odtwarzacz;/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package odtwarzacz;
 
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -26,7 +24,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
-import odtwarzacz.Layouts.Styles.Fonts.IconFont;
 import odtwarzacz.Metadata.Metadata;
 import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
@@ -39,8 +36,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.*;
 
-import static odtwarzacz.Layouts.Styles.Fonts.IconFont.ICON_PAUSE;
-import static odtwarzacz.Layouts.Styles.Fonts.IconFont.ICON_PLAY;
+import static odtwarzacz.IconFont.ICON_PAUSE;
+import static odtwarzacz.IconFont.ICON_PLAY;
 import static odtwarzacz.MainFXMLController.getPlaylist;
 
 /**

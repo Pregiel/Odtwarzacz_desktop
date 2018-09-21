@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ResourceBundleManager">
-    <file url="file://$PROJECT_DIR$/src/Resources/Theme_Dark.properties" />
-    <file url="file://$PROJECT_DIR$/src/Resources/Theme_Light.properties" />
-    <file url="file://$PROJECT_DIR$/src/Translations/MessagesBundle.properties" />
-    <file url="file://$PROJECT_DIR$/src/Translations/MessagesBundle_pl.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/java/main/java/Resources/Theme_Dark.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/java/main/java/Resources/Theme_Light.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/java/main/java/Translations/MessagesBundle.properties" />
+    <file url="file://$PROJECT_DIR$/src/main/java/main/java/Translations/MessagesBundle_pl.properties" />
     <custom-resource-bundle>
-      <file value="file://$PROJECT_DIR$/src/Translations/MessagesBundle.properties" />
-      <file value="file://$PROJECT_DIR$/src/Translations/MessagesBundle_pl.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/java/main/java/Translations/MessagesBundle.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/java/main/java/Translations/MessagesBundle_pl.properties" />
       <base-name>MessagesBundle</base-name>
     </custom-resource-bundle>
     <custom-resource-bundle>
-      <file value="file://$PROJECT_DIR$/src/Resources/Theme_Dark.properties" />
-      <file value="file://$PROJECT_DIR$/src/Resources/Theme_Light.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/java/main/java/Resources/Theme_Dark.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/java/main/java/Resources/Theme_Light.properties" />
       <base-name>Theme</base-name>
     </custom-resource-bundle>
   </component>

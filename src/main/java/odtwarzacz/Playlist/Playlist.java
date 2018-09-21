@@ -38,8 +38,8 @@ import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
  */
 public class Playlist {
 
-    private static final String DEFAULT_PLAYLIST = "src/Playlists/default_playlist.playlist";
-    public static final String PLAYLIST_FOLDER = "src/Playlists";
+    private static final String DEFAULT_PLAYLIST = "Playlists/default_playlist.playlist";
+    public static final String PLAYLIST_FOLDER = "Playlists";
 
     private BorderPane pane;
     private SplitPane splitPane;
@@ -66,20 +66,23 @@ public class Playlist {
         playlistFilesList = new ArrayList<>();
         queue = new Queue();
 
+        new File(PLAYLIST_FOLDER).mkdir();
 
         this.random = Boolean.parseBoolean(String.valueOf(Odtwarzacz.getConfig().get("random")));
 
         loadPlaylistFiles();
+        File lastUsedFile;
+        if (Odtwarzacz.getConfig().getProperty("playlist.lastused") != null) {
+            lastUsedFile = new File(Odtwarzacz.getConfig().getProperty("playlist.lastused"));
 
-        File lastUsedFile = new File(Odtwarzacz.getConfig().getProperty("playlist.lastused"));
-
-        if (lastUsedFile.exists() && lastUsedFile.isFile()) {
-            loadPlaylistList(lastUsedFile.getAbsolutePath());
+            if (lastUsedFile.exists() && lastUsedFile.isFile()) {
+                loadPlaylistList(lastUsedFile.getAbsolutePath());
+            } else {
+                loadPlaylistList((playlistFilesList.size() > 0) ? playlistFilesList.get(0) : DEFAULT_PLAYLIST);
+            }
         } else {
             loadPlaylistList((playlistFilesList.size() > 0) ? playlistFilesList.get(0) : DEFAULT_PLAYLIST);
         }
-
-
     }
 
     private List<String> playlistFilesList;
@@ -208,7 +211,7 @@ public class Playlist {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
                 ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/PlaylistFXML.fxml"), resourceBundle);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistFXML.fxml"), resourceBundle);
 
         pane = loader.load();
         playlistFXMLController = loader.getController();
@@ -335,7 +338,7 @@ public class Playlist {
             List<PlaylistElement> playlistElements = new ArrayList<>();
             for (String s : playlistList) {
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("../Layouts/PlaylistElementFXML.fxml"), resourceBundle);
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistElementFXML.fxml"), resourceBundle);
 
                     PlaylistElement element = new PlaylistElement(i++, s, loader.load());
                     playlistElementList.add(element);

@@ -5,8 +5,10 @@
  */
 package odtwarzacz.Metadata;
 
-import it.sauronsoftware.jave.*;
-import javafx.scene.media.Media;
+import it.sauronsoftware.jave.Encoder;
+import it.sauronsoftware.jave.EncoderException;
+import it.sauronsoftware.jave.MultimediaInfo;
+import it.sauronsoftware.jave.VideoInfo;
 import javafx.util.Duration;
 
 import java.io.File;

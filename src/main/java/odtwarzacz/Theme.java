@@ -1,6 +1,4 @@
-package odtwarzacz;
-
-import javafx.scene.Node;
+package odtwarzacz;import javafx.scene.Node;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -17,7 +17,6 @@ import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
 import odtwarzacz.InfoLabel;
 import odtwarzacz.MainFXMLController;
-import odtwarzacz.MediaFXMLController;
 
 /**
  *

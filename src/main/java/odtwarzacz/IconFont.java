@@ -1,4 +1,4 @@
-package odtwarzacz.Layouts.Styles.Fonts;
+package odtwarzacz;
 
 public class IconFont {
     public static final String ICON_PLAY = "1";

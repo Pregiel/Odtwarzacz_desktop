@@ -1,9 +1,8 @@
-/*
+package odtwarzacz;/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package odtwarzacz;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +18,7 @@ import odtwarzacz.Utils.Utils;
 public class Odtwarzacz extends Application {
 
     private static final String CONFIGFILENAME = "config.properties";
-    private static final String DEFAULTCONFIGFILENAME = "src/Resources/DefaultConfigFile.properties";
+    private static final String DEFAULTCONFIGFILENAME = "/Resources/DefaultConfigFile.properties";
 
     public static final int MEDIA_MIN_WIDTH = 420;
     public static final int PLAYLIST_MIN_WIDTH = 300;
@@ -33,13 +32,12 @@ public class Odtwarzacz extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
-        configProp = new ConfigProperties(CONFIGFILENAME, DEFAULTCONFIGFILENAME);
+        configProp = new ConfigProperties(CONFIGFILENAME, this.getClass().getResource(DEFAULTCONFIGFILENAME).getFile());
 
         new Theme(configProp.getProperty("theme"));
 
         Utils.initTranslationsBundle();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/MainFXML.fxml"), Utils.getTranslationsBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MainFXML.fxml"), Utils.getTranslationsBundle());
         Parent root = loader.load();
 
         root.setStyle(Theme.getStyleConst(Theme.MAIN_FXML));

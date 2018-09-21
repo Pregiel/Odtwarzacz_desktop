@@ -1,9 +1,8 @@
-/*
+package odtwarzacz;/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package odtwarzacz;
 
 import javafx.application.Platform;
 import javafx.scene.control.*;
@@ -76,7 +75,7 @@ public class MainFXMLController implements Initializable {
 
         try {
 //            refreshScene();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/FirstViewFXML.fxml"), Utils.getTranslationsBundle());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/FirstViewFXML.fxml"), Utils.getTranslationsBundle());
             lastPickedPane = loader.load();
 
             playlist = new Playlist(this);
@@ -160,7 +159,7 @@ public class MainFXMLController implements Initializable {
     }
 
     private void refreshScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Layouts/MediaFXML.fxml"), Utils.getTranslationsBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MediaFXML.fxml"), Utils.getTranslationsBundle());
         Pane mediaPane = loader.load();
         mediaPane.setStyle(Theme.getStyleConst(Theme.MEDIA_FXML));
         Theme.getInstance().setMediaNode(mediaPane);
