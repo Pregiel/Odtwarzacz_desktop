@@ -5,6 +5,7 @@ package odtwarzacz;/*
  */
 
 import javafx.application.Platform;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -140,7 +141,7 @@ public class MainFXMLController implements Initializable {
                 CustomStage stage = ((CustomStage) pane.getScene().getWindow());
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 2) {
-                        stage.setWindowMaximazed(true);
+                        stage.setWindowMaximazed(!stage.isWindowMaximazed());
                     } else {
                         dragDelta.x = stage.getX() - mouseEvent.getScreenX();
                         dragDelta.y = stage.getY() - mouseEvent.getScreenY();
@@ -151,7 +152,7 @@ public class MainFXMLController implements Initializable {
             });
 
             titleBar.setOnMouseDragged(mouseEvent -> {
-                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 1) {
                     CustomStage stage = ((CustomStage) pane.getScene().getWindow());
                     if (!stage.isResizing()) {
                         if (stage.isWindowMaximazed()) {
@@ -169,6 +170,7 @@ public class MainFXMLController implements Initializable {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     CustomStage stage = ((CustomStage) pane.getScene().getWindow());
                     stage.setMoving(false);
+                    stage.getScene().setCursor(Cursor.DEFAULT);
                 }
             });
 
