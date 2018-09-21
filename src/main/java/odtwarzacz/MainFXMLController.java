@@ -6,17 +6,19 @@ package odtwarzacz;/*
 
 import javafx.application.Platform;
 import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.GridPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.*;
 import lk.vivoxalabs.customstage.tools.ActionAdapter;
 import odtwarzacz.Connection.UsbConnection;
 import odtwarzacz.Playlist.Playlist;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -30,10 +32,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import odtwarzacz.Connection.BtConnection;
 import odtwarzacz.Connection.Connection;
@@ -81,6 +79,8 @@ public class MainFXMLController implements Initializable {
     private Menu openRecentMenu;
 
     private ActionAdapter actionAdapter;
+
+    private Stage maximazeScreen;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -162,6 +162,13 @@ public class MainFXMLController implements Initializable {
                             stage.setX(mouseEvent.getScreenX() + dragDelta.x);
                             stage.setY(mouseEvent.getScreenY() + dragDelta.y);
                         }
+                        if (mouseEvent.getScreenY() == 0) {
+                            maximazeScreen.show();
+
+                        } else {
+                            maximazeScreen.hide();
+
+                        }
                     }
                 }
             });
@@ -171,8 +178,16 @@ public class MainFXMLController implements Initializable {
                     CustomStage stage = ((CustomStage) pane.getScene().getWindow());
                     stage.setMoving(false);
                     stage.getScene().setCursor(Cursor.DEFAULT);
+
+                    if (mouseEvent.getScreenY() == 0) {
+                        stage.setWindowMaximazed(true);
+                    }
+                    maximazeScreen.hide();
+
                 }
             });
+
+            initMaximazeScreen();
 
             Platform.runLater(() ->
                     actionAdapter = new ActionAdapter((Stage) pane.getScene().getWindow()));
@@ -181,6 +196,22 @@ public class MainFXMLController implements Initializable {
             Logger.getLogger(MainFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    private void initMaximazeScreen() {
+        Rectangle winSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+
+        Pane screen = new Pane();
+
+        screen.setPrefHeight(winSize.height - 10);
+        screen.setPrefWidth(winSize.width - 10);
+        screen.setStyle("-fx-background-color: rgba(99,170,255,0.2);");
+
+        maximazeScreen = new Stage();
+        maximazeScreen.setScene(new Scene(screen));
+        maximazeScreen.initStyle(StageStyle.TRANSPARENT);
+        maximazeScreen.getScene().setFill(Color.TRANSPARENT);
+        maximazeScreen.setAlwaysOnTop(false);
     }
 
 
