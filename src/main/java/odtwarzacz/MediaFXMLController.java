@@ -163,7 +163,6 @@ public class MediaFXMLController implements Initializable {
     }
 
     public void changeFile(File file) {
-
         mediaPlayer.dispose();
         changeMediaPlayer(file);
         mediaView.setMediaPlayer(mediaPlayer);

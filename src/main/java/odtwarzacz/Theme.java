@@ -110,6 +110,11 @@ public class Theme {
         return key + ": " + instance.getResourceBundle().getString(value) + ";";
     }
 
+
+    public static String getStyle(String key) {
+        return instance.getResourceBundle().getString(key);
+    }
+
     public static String getStyles(String... style) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String s : style) {
@@ -126,7 +131,10 @@ public class Theme {
                         getStyle("-menu-background-highlight-color", "menu.background.highlight.color"),
                         getStyle("-menu-text-color", "menu.text.color"),
                         getStyle("-menu-text-highlight-color", "menu.text.highlight.color"),
-                        getStyle("-playlist-background-color", "playlist.background.color"));
+                        getStyle("-playlist-background-color", "playlist.background.color"),
+                        getStyle("-menu-button-pressed-color", "menu.button.pressed.color"),
+                        getStyle("-menu-exit-button-hover-color", "menu.exit.button.hover.color"),
+                        getStyle("-menu-exit-button-pressed-color", "menu.exit.button.pressed.color"));
 
             case MEDIA_FXML:
                 return getStyles(

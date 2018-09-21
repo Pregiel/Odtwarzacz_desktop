@@ -6,7 +6,13 @@ package odtwarzacz;/*
 
 import javafx.application.Platform;
 import javafx.scene.control.*;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import lk.vivoxalabs.customstage.tools.ActionAdapter;
 import odtwarzacz.Connection.UsbConnection;
 import odtwarzacz.Playlist.Playlist;
 
@@ -31,6 +37,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import odtwarzacz.Connection.BtConnection;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.Connection.WifiConnection;
+import odtwarzacz.Utils.CustomStage;
+import odtwarzacz.Utils.Delta;
 import odtwarzacz.Utils.Utils;
 
 /**
@@ -40,6 +48,7 @@ public class MainFXMLController implements Initializable {
 
     public static final String[] SUPPORTED_AUDIO = {"*.MP3"};//{"*.AIFF", "*.MP3", "*.WAV"};
     public static final String[] SUPPORTED_VIDEO = {"*.MP4"};//{"*.FLV", "*.MP4"};
+    public GridPane titleBar;
 
     @FXML
     private BorderPane pane;
@@ -70,6 +79,8 @@ public class MainFXMLController implements Initializable {
     @FXML
     private Menu openRecentMenu;
 
+    private ActionAdapter actionAdapter;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -82,7 +93,6 @@ public class MainFXMLController implements Initializable {
             playlist.makePlaylistPane();
 
             playlist.setSplitPane(splitPane);
-
 
 
             double dividerPosition = Double.parseDouble(Odtwarzacz.getConfig().getProperty("playlist.divider"));
@@ -124,12 +134,53 @@ public class MainFXMLController implements Initializable {
                     changeLanguage(languageGroup.getSelectedToggle().getUserData().toString());
                 }
             });
+            final Delta dragDelta = new Delta();
+
+            titleBar.setOnMousePressed(mouseEvent -> {
+                CustomStage stage = ((CustomStage) pane.getScene().getWindow());
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    if (mouseEvent.getClickCount() == 2) {
+                        stage.setWindowMaximazed(true);
+                    } else {
+                        dragDelta.x = stage.getX() - mouseEvent.getScreenX();
+                        dragDelta.y = stage.getY() - mouseEvent.getScreenY();
+
+                        stage.setMoving(true);
+                    }
+                }
+            });
+
+            titleBar.setOnMouseDragged(mouseEvent -> {
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    CustomStage stage = ((CustomStage) pane.getScene().getWindow());
+                    if (!stage.isResizing()) {
+                        if (stage.isWindowMaximazed()) {
+                            stage.setWindowMaximazed(false);
+                            dragDelta.x = stage.getWidth() / -2;
+                        } else {
+                            stage.setX(mouseEvent.getScreenX() + dragDelta.x);
+                            stage.setY(mouseEvent.getScreenY() + dragDelta.y);
+                        }
+                    }
+                }
+            });
+
+            titleBar.setOnMouseReleased(mouseEvent -> {
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    CustomStage stage = ((CustomStage) pane.getScene().getWindow());
+                    stage.setMoving(false);
+                }
+            });
+
+            Platform.runLater(() ->
+                    actionAdapter = new ActionAdapter((Stage) pane.getScene().getWindow()));
 
         } catch (IOException ex) {
             Logger.getLogger(MainFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
+
 
     private void addInfoLabel() {
         connectionInfoLabel = new InfoLabel();
@@ -381,5 +432,31 @@ public class MainFXMLController implements Initializable {
     public void setLightTheme(ActionEvent event) {
         Theme.getInstance().changeTheme(Theme.LIGHT_THEME);
 
+    }
+
+    public void minButton(ActionEvent event) {
+        CustomStage stage = ((CustomStage) pane.getScene().getWindow());
+        if (!stage.isMoving() && !stage.isResizing()) {
+            stage.setIconified(true);
+        }
+    }
+
+    public void maxButton(ActionEvent event) {
+        CustomStage stage = ((CustomStage) pane.getScene().getWindow());
+        if (!stage.isMoving() && !stage.isResizing()) {
+            if (stage.isWindowMaximazed()) {
+                stage.setWindowMaximazed(false);
+            } else {
+                stage.setWindowMaximazed(true);
+            }
+        }
+    }
+
+    public void exitButton(ActionEvent event) {
+        CustomStage stage = ((CustomStage) pane.getScene().getWindow());
+        if (!stage.isMoving() && !stage.isResizing()) {
+            Platform.exit();
+            System.exit(0);
+        }
     }
 }
