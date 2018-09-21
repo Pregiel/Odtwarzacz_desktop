@@ -5,6 +5,8 @@
  */
 package odtwarzacz.Utils;
 
+import odtwarzacz.Odtwarzacz;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -31,7 +33,7 @@ public final class ConfigProperties extends Properties {
                 verify(defaultConfigFileName);
                 save();
             } else {
-                load(new File(defaultConfigFileName));
+                load(defaultConfigFileName);
                 save();
             }
         } catch (IOException ex) {
@@ -43,6 +45,14 @@ public final class ConfigProperties extends Properties {
         FileReader reader = new FileReader(file);
         this.load(reader);
         reader.close();
+    }
+
+    private void load(String file) {
+        try {
+            this.load(Odtwarzacz.class.getResourceAsStream(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void save() {
@@ -58,8 +68,7 @@ public final class ConfigProperties extends Properties {
     private void verify(String defaultConfigFileName) throws IOException {
         Properties defaultConfig = new Properties();
 
-        FileReader reader = new FileReader(defaultConfigFileName);
-        defaultConfig.load(reader);
+        defaultConfig.load(Odtwarzacz.class.getResourceAsStream(defaultConfigFileName));
         defaultConfig.forEach((key, value) -> {
             if (this.get(key) == null) {
                 this.setProperty(key.toString(), value.toString());

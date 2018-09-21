@@ -19,6 +19,9 @@
       <element id="archive" name="Odtwarzacz.jar">
         <element id="module-output" name="Odtwarzacz" />
       </element>
+      <element id="library" level="project" name="jave-1.0.2" />
+      <element id="library" level="project" name="Maven: commons-io:commons-io:2.6" />
+      <element id="library" level="project" name="Maven: net.sf.bluecove:bluecove:2.1.0" />
     </root>
   </artifact>
 </component>

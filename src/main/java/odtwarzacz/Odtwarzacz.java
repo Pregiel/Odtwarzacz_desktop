@@ -32,7 +32,7 @@ public class Odtwarzacz extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        configProp = new ConfigProperties(CONFIGFILENAME, this.getClass().getResource(DEFAULTCONFIGFILENAME).getFile());
+        configProp = new ConfigProperties(CONFIGFILENAME, DEFAULTCONFIGFILENAME);
 
         new Theme(configProp.getProperty("theme"));
 

@@ -1,5 +1,14 @@
-package odtwarzacz;import javafx.scene.Node;
+package odtwarzacz;
 
+import javafx.scene.Node;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -11,6 +20,9 @@ public class Theme {
     public static final String DARK_THEME = "Dark";
     public static final String LIGHT_THEME = "Light";
 
+    private static final String DARK_THEME_FULL = "Theme_Dark.properties";
+    private static final String LIGHT_THEME_FULL = "Theme_Light.properties";
+
     public static final int MAIN_FXML = 1, MEDIA_FXML = 2, PLAYLIST_FXML = 3, PLAYLISTELEMENT_FXML = 4;
 
     private static Theme instance;
@@ -18,8 +30,31 @@ public class Theme {
     private Node mainNode, mediaNode, playListNode;
     private List<Node> playListElementNode;
 
+    private ClassLoader loader;
+
     public Theme(String theme) {
-        resourceBundle = ResourceBundle.getBundle("Resources.Theme", new Locale(theme));
+        new File("Themes").mkdir();
+
+        try {
+            if (!new File("Themes\\" + DARK_THEME_FULL).exists())
+                Files.copy(Theme.class.getResourceAsStream("/Themes/" + DARK_THEME_FULL), Paths.get("Themes\\" + DARK_THEME_FULL));
+            if (!new File("Themes\\" + LIGHT_THEME_FULL).exists())
+                Files.copy(Theme.class.getResourceAsStream("/Themes/" + LIGHT_THEME_FULL), Paths.get("Themes\\" + LIGHT_THEME_FULL));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        File file = new File("Themes");
+        URL[] urls = new URL[0];
+        try {
+            urls = new URL[]{file.toURI().toURL()};
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        loader = new URLClassLoader(urls);
+
+        resourceBundle = ResourceBundle.getBundle("Theme", new Locale(theme), loader);
         instance = this;
         playListElementNode = new ArrayList<>();
     }
@@ -32,7 +67,7 @@ public class Theme {
         Odtwarzacz.getConfig().setProperty("theme", theme);
         Odtwarzacz.getConfig().save();
 
-        resourceBundle = ResourceBundle.getBundle("Resources.Theme", new Locale(theme));
+        resourceBundle = ResourceBundle.getBundle("Theme", new Locale(theme), loader);
         if (mainNode != null)
             mainNode.setStyle(getStyleConst(MAIN_FXML));
         if (mediaNode != null)
