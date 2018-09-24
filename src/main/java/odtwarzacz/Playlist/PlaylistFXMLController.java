@@ -8,9 +8,9 @@ package odtwarzacz.Playlist;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.ResourceBundle;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,6 +51,7 @@ public class PlaylistFXMLController implements Initializable {
     private ChangeListener<Boolean> changeListener;
 
     private int lastedComboboxIndex;
+
     /**
      * Initializes the controller class.
      */
@@ -78,7 +79,6 @@ public class PlaylistFXMLController implements Initializable {
         };
 
         reloadCombobox();
-
 
 
         searchTask = new ExpandableTimeTask(() -> {
@@ -134,14 +134,25 @@ public class PlaylistFXMLController implements Initializable {
     public void reloadCombobox(int index) {
         playlistComboBox.showingProperty().removeListener(changeListener);
         playlistComboBox.getItems().clear();
-        playlistComboBox.getItems().addAll(
-                getPlaylist().getPlaylistNames()
-        );
+        List<String> playlistNames = getPlaylist().getPlaylistNames();
+        if (playlistNames.size() == 0) {
+            playlistComboBox.getItems().add(Utils.getTranslationsBundle().getString("player.playlist"));
+        } else {
+            playlistComboBox.getItems().addAll(playlistNames);
+        }
 
         if (index == -1) {
             playlistComboBox.getSelectionModel().selectLast();
         } else {
             playlistComboBox.getSelectionModel().select(index);
+        }
+
+        int selectedIndex = playlistComboBox.getSelectionModel().getSelectedIndex();
+        if (selectedIndex > 0) {
+            getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(selectedIndex));
+            getPlaylist().loadPlaylist();
+
+            lastedComboboxIndex = selectedIndex;
         }
 
         playlistComboBox.showingProperty().addListener(changeListener);

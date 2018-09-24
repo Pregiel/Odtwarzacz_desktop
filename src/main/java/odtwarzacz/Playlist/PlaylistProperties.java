@@ -42,16 +42,16 @@ public final class PlaylistProperties extends Properties {
                         i++;
                     }
                     setPlaylistName(playlistName);
-                } else {
-                    load(playlistFile);
                 }
+                load(playlistFile);
             } else {
-                if (playlistName.replaceAll(" ", "").equals("")) {
+                if (playlistName.equals("")) {
                     setPlaylistName(Utils.getTranslationsBundle().getString("player.playlist"));
                 } else {
                     setPlaylistName(playlistName);
                 }
             }
+
             if (getProperty("playlist.name") == null) {
                 setProperty("playlist.name", Utils.getTranslationsBundle().getString("player.playlist"));
             }
@@ -116,12 +116,20 @@ public final class PlaylistProperties extends Properties {
         return result;
     }
 
+
     public void setArray(List<String> list) {
-        clear();
+        clearArray();
         int i = 0;
         for (String s : list) {
             setProperty(PROPERTY_NAME + "." + i++, s);
         }
+    }
+
+    private void clearArray() {
+        for (int i = 0; getProperty(PROPERTY_NAME + "." + i) != null; i++) {
+            remove(PROPERTY_NAME + "." + i);
+        }
+        save();
     }
 
 }

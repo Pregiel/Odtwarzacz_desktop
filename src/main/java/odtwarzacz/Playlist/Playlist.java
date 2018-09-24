@@ -33,6 +33,7 @@ import odtwarzacz.Playlist.Queue.QueueFXMLController;
 import odtwarzacz.Utils.Utils;
 
 import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
+import static odtwarzacz.MainFXMLController.getPlaylist;
 
 /**
  * @author Pregiel
@@ -72,9 +73,10 @@ public class Playlist {
         this.random = Boolean.parseBoolean(String.valueOf(Odtwarzacz.getConfig().get("random")));
 
         loadPlaylistFiles();
-        File lastUsedFile;
-        if (Odtwarzacz.getConfig().getProperty("playlist.lastused") != null) {
-            lastUsedFile = new File(Odtwarzacz.getConfig().getProperty("playlist.lastused"));
+
+        String lastUsedPlaylist = Odtwarzacz.getConfig().getProperty("playlist.lastused");
+        if (lastUsedPlaylist != null) {
+            File lastUsedFile = new File(lastUsedPlaylist);
 
             if (lastUsedFile.exists() && lastUsedFile.isFile()) {
                 loadPlaylistList(lastUsedFile.getAbsolutePath());
@@ -209,9 +211,6 @@ public class Playlist {
     }
 
     public void makePlaylistPane() throws IOException {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
-                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
-
 //        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistFXML.fxml"), resourceBundle);
         FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/PlaylistFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
 
@@ -331,9 +330,8 @@ public class Playlist {
     public void loadPlaylist() {
         playlistPane.getChildren().clear();
         playlistElementList.clear();
-//        ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
-//                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
         Theme.getInstance().clearPlayListElementNode();
+
 
         loadPlaylistThread = new Thread(() -> {
             int i = 1;
@@ -353,6 +351,7 @@ public class Playlist {
             }
 
             Platform.runLater(() -> {
+                playlistPane.getChildren().clear();
                 for (PlaylistElement playlistElement : playlistElements) {
                     playlistPane.getChildren().add(playlistElement.getPane());
 
