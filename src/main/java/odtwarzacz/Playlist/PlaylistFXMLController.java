@@ -74,8 +74,8 @@ public class PlaylistFXMLController implements Initializable {
             if (!newValue && playlistComboBox.getSelectionModel().getSelectedIndex() != lastedComboboxIndex) {
                 getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(playlistComboBox.getSelectionModel().getSelectedIndex()));
                 getPlaylist().loadPlaylist();
+                lastedComboboxIndex = playlistComboBox.getSelectionModel().getSelectedIndex();
             }
-            lastedComboboxIndex = playlistComboBox.getSelectionModel().getSelectedIndex();
         };
 
         reloadCombobox();
@@ -148,11 +148,11 @@ public class PlaylistFXMLController implements Initializable {
         }
 
         int selectedIndex = playlistComboBox.getSelectionModel().getSelectedIndex();
-        if (selectedIndex > 0) {
+        if (selectedIndex > -1 && getPlaylist().getPlaylistFilesList().size() > 0) {
             getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(selectedIndex));
             getPlaylist().loadPlaylist();
 
-            lastedComboboxIndex = selectedIndex;
+//            lastedComboboxIndex = selectedIndex;
         }
 
         playlistComboBox.showingProperty().addListener(changeListener);

@@ -35,8 +35,8 @@ public final class PlaylistProperties extends Properties {
         try {
             if (playlistFile.exists()) {
                 if (!playlistName.equals("")) {
-                    int i = 1;
-                    while (playlistFile.exists() && i < 100) {
+                    long i = 1;
+                    while (playlistFile.exists() && i < Long.MAX_VALUE) {
                         playlistFileName = Playlist.PLAYLIST_FOLDER + "/" + playlistName + "_" + i + ".playlist";
                         playlistFile = new File(playlistFileName);
                         i++;
