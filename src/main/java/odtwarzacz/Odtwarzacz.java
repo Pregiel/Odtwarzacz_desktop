@@ -15,6 +15,9 @@ import odtwarzacz.Utils.CustomStage;
 import odtwarzacz.Utils.ResizeHelper;
 import odtwarzacz.Utils.Utils;
 
+import java.net.URL;
+import java.nio.file.Paths;
+
 /**
  * @author Pregiel
  */
@@ -39,7 +42,8 @@ public class Odtwarzacz extends Application {
         new Theme(configProp.getProperty("theme"));
 
         Utils.initTranslationsBundle();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MainFXML.fxml"), Utils.getTranslationsBundle());
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MainFXML.fxml"), Utils.getTranslationsBundle());
+        FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/MainFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
         Pane root = loader.load();
 
         root.setStyle(Theme.getStyleConst(Theme.MAIN_FXML));

@@ -39,37 +39,37 @@
 
 /*** button ***/
 /*** menu-button ***/
-.button, .menu-button {
+.playlist-button, .playlist-menu-button {
     -fx-background-color: -playlist-button-background-color;
     -fx-padding: 5 5 2 5;
 }
 
-.button:hover, .menu-button:hover, .menu-button:pressed, .menu-button:showing {
+.playlist-button:hover, .playlist-menu-button:hover, .playlist-menu-button:pressed, .playlist-menu-button:showing {
     -fx-background-color: -playlist-button-background-hover-color;
 }
 
-.button:pressed {
+.playlist-button:pressed {
     -fx-background-color: -playlist-button-background-pressed-color;
 }
 
-.button > .text {
+.playlist-button > .text {
 	-fx-font-size: 24px;
     -fx-font-family: 'MediaIcons';
 	-fx-fill: -playlist-button-color;
 }
 
-.menu-button > .label {
+.playlist-menu-button > .label {
 	-fx-font-size: 24px;
     -fx-font-family: 'MediaIcons';
 	-fx-text-fill: -playlist-button-color;
 	-fx-padding: 0;
 }
 
-.menu-button > .arrow-button {
+.playlist-menu-button > .arrow-button {
     -fx-padding: 0;
 }
 
-.menu-button > .arrow-button > .arrow {
+.playlist-menu-button > .arrow-button > .arrow {
     -fx-padding: 0;
 }
 

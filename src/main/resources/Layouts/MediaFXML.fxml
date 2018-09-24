@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
@@ -53,15 +54,23 @@
                                     <Pane fx:id="timeTrack" styleClass="time-slider-foreground" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
-                              <Label fx:id="timeLabel1" styleClass="time-label" text="00:00" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <Label fx:id="timeLabel1" text="00:00" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <padding>
                                     <Insets left="6.0" />
                                  </padding>
+                                 <styleClass>
+                                    <String fx:value="time-label" />
+                                    <String fx:value="media-label" />
+                                 </styleClass>
                               </Label>
-                              <Label fx:id="timeLabel2" layoutX="10.0" layoutY="10.0" styleClass="time-label" text="00:00" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <Label fx:id="timeLabel2" layoutX="10.0" layoutY="10.0" text="00:00" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <padding>
                                     <Insets right="6.0" />
                                  </padding>
+                                 <styleClass>
+                                    <String fx:value="time-label" />
+                                    <String fx:value="media-label" />
+                                 </styleClass>
                               </Label>
                            </children>
                         </AnchorPane>
@@ -69,13 +78,17 @@
                            <padding>
                               <Insets left="24.0" />
                            </padding>
-                           <Button fx:id="volButton" mnemonicParsing="false" onAction="#muteButton" styleClass="volume-button" text="8" wrapText="true">
+                           <Button fx:id="volButton" mnemonicParsing="false" onAction="#muteButton" text="8" wrapText="true">
                               <HBox.margin>
                                  <Insets />
                               </HBox.margin>
                               <tooltip>
                                  <Tooltip text="%player.muteunmute" />
                               </tooltip>
+                              <styleClass>
+                                 <String fx:value="volume-button" />
+                                 <String fx:value="media-button" />
+                              </styleClass>
                            </Button>
                            <GridPane.margin>
                               <Insets />
@@ -86,11 +99,19 @@
                               <ToggleButton fx:id="repeatToggleButton" mnemonicParsing="false" onAction="#repeatToggleButton" text="H" wrapText="true">
                                  <tooltip>
                                     <Tooltip text="%player.repeat" />
-                                 </tooltip></ToggleButton>
+                                 </tooltip>
+                                 <styleClass>
+                                    <String fx:value="toggle-media-button" />
+                                    <String fx:value="media-button" />
+                                 </styleClass></ToggleButton>
                               <ToggleButton fx:id="randomToggleButton" mnemonicParsing="false" onAction="#randomToggleButton" text="I" wrapText="true">
                                  <tooltip>
                                     <Tooltip text="%player.random" />
-                                 </tooltip></ToggleButton>
+                                 </tooltip>
+                                 <styleClass>
+                                    <String fx:value="toggle-media-button" />
+                                    <String fx:value="media-button" />
+                                 </styleClass></ToggleButton>
                            </children>
                         </HBox>
                         <HBox fx:id="controllers" alignment="CENTER" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -98,15 +119,30 @@
                               <Button fx:id="backwardButton" mnemonicParsing="false" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="N" wrapText="true">
                                  <tooltip>
                                     <Tooltip text="%player.previousbackward" />
-                                 </tooltip></Button>
+                                 </tooltip>
+                                 <styleClass>
+                                    <String fx:value="long-button" />
+                                    <String fx:value="media-button" />
+                                 </styleClass></Button>
                               <Button fx:id="playButton" mnemonicParsing="false" onAction="#playPauseButton" text="1" wrapText="true">
                                  <tooltip>
                                     <Tooltip text="%player.playpause" />
-                                 </tooltip></Button>
-                              <Button fx:id="forwardButton" mnemonicParsing="false" onMouseDragged="#forwardButtonDrag" onMousePressed="#forwardButtonPressed" onMouseReleased="#forwardButtonReleased" text="M" wrapText="true">
+                                 </tooltip>
+                                 <styleClass>
+                                    <String fx:value="play-button" />
+                                    <String fx:value="media-button" />
+                                 </styleClass></Button>
+                              <Button fx:id="forwardButton" mnemonicParsing="false" onMouseClicked="#forwardButtonClick" onMouseDragged="#forwardButtonDrag" onMousePressed="#forwardButtonPressed" onMouseReleased="#forwardButtonReleased" text="M" wrapText="true">
                                  <tooltip>
                                     <Tooltip text="%player.nextforward" />
-                                 </tooltip></Button>
+                                 </tooltip>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                                 <styleClass>
+                                    <String fx:value="long-button" />
+                                    <String fx:value="media-button" />
+                                 </styleClass></Button>
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -114,11 +150,11 @@
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                            <children>
-                              <Button fx:id="playlistButton" mnemonicParsing="false" onAction="#showHidePlaylist" text="C" wrapText="true" HBox.hgrow="NEVER">
+                              <Button fx:id="playlistButton" mnemonicParsing="false" onAction="#showHidePlaylist" styleClass="media-button" text="C" wrapText="true" HBox.hgrow="NEVER">
                                  <tooltip>
                                     <Tooltip text="%player.showhideplaylist" />
                                  </tooltip></Button>
-                              <Button fx:id="fullscreenButton" mnemonicParsing="false" onAction="#fullscreenToggle" text="A" wrapText="true">
+                              <Button fx:id="fullscreenButton" mnemonicParsing="false" onAction="#fullscreenToggle" styleClass="media-button" text="A" wrapText="true">
                                  <tooltip>
                                     <Tooltip text="%player.fullscreen" />
                                  </tooltip></Button>
@@ -136,7 +172,7 @@
                               <Pane fx:id="volTrack" styleClass="volume-slider-foreground" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
-                        <Label fx:id="volLabel" alignment="CENTER" text="68%" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        <Label fx:id="volLabel" alignment="CENTER" styleClass="media-label" text="68%" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </children>

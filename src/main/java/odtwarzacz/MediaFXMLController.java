@@ -457,17 +457,26 @@ public class MediaFXMLController implements Initializable {
     private int START_MOVETO_VALUE = 5;
     private int MAX_MOVETO_VALUE_SPEED = 30;
     private static final Duration BACKWARD_VALUE = Duration.seconds(-5);
+    private boolean clicked = false;
 
+
+    public void forwardButtonClick(MouseEvent mouseEvent) {
+        if (clicked) {
+            getPlaylist().playNext();
+        }
+    }
 
     public void forwardButtonPressed(MouseEvent mouseEvent) {
+        clicked = true;
         moveToValueJump = 0;
         moveToTimer = new Timer();
         moveToTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 timeSlider.moveTo(getMoveToValue(1));
+                clicked = false;
             }
-        }, 0, 500);
+        }, 200, 500);
     }
 
     public void forwardButtonReleased(MouseEvent mouseEvent) {
@@ -600,4 +609,5 @@ public class MediaFXMLController implements Initializable {
     public void randomToggle() {
         randomToggleButton.fire();
     }
+
 }

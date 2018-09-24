@@ -7,6 +7,7 @@ package odtwarzacz.Playlist;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
@@ -180,8 +181,8 @@ public class PlaylistFXMLController implements Initializable {
 
         if (queueRoot == null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/QueueFXML.fxml"), Utils.getTranslationsBundle());
-//                queueRoot = FXMLLoader.load(getClass().getResource("Queue/QueueFXML.fxml"), Utils.getTranslationsBundle());
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/QueueFXML.fxml"), Utils.getTranslationsBundle());
+                FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/QueueFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
 
                 queueRoot = loader.load();
 

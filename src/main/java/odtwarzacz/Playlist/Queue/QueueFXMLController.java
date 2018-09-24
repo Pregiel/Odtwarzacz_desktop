@@ -11,9 +11,11 @@ import javafx.scene.layout.VBox;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Utils.MyLocale;
 import odtwarzacz.Playlist.Playlist;
+import odtwarzacz.Utils.Utils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -46,13 +48,14 @@ public class QueueFXMLController implements Initializable {
 
     public void loadQueue() {
         queuePane.getChildren().clear();
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
-                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+//        ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
+//                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
         int i = 0;
         for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/QueueElementFXML.fxml"), resourceBundle);
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/QueueElementFXML.fxml"), resourceBundle);
+                FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/QueueElementFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
 
                 GridPane pane = loader.load();
 

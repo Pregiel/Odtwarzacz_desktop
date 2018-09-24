@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -23,11 +24,13 @@ public class Theme {
     private static final String DARK_THEME_FULL = "Theme_Dark.properties";
     private static final String LIGHT_THEME_FULL = "Theme_Light.properties";
 
-    public static final int MAIN_FXML = 1, MEDIA_FXML = 2, PLAYLIST_FXML = 3, PLAYLISTELEMENT_FXML = 4;
+    public static final int MAIN_FXML = 1, MEDIA_FXML = 2,
+            PLAYLIST_FXML = 3, PLAYLISTELEMENT_FXML = 4,
+            FIRSTVIEW_FXML = 5;
 
     private static Theme instance;
 
-    private Node mainNode, mediaNode, playListNode;
+    private Node mainNode, mediaNode, playListNode, firstViewNode;
     private List<Node> playListElementNode;
 
     private ClassLoader loader;
@@ -36,10 +39,10 @@ public class Theme {
         new File("Themes").mkdir();
 
         try {
-            if (!new File("Themes\\" + DARK_THEME_FULL).exists())
-                Files.copy(Theme.class.getResourceAsStream("/Themes/" + DARK_THEME_FULL), Paths.get("Themes\\" + DARK_THEME_FULL));
-            if (!new File("Themes\\" + LIGHT_THEME_FULL).exists())
-                Files.copy(Theme.class.getResourceAsStream("/Themes/" + LIGHT_THEME_FULL), Paths.get("Themes\\" + LIGHT_THEME_FULL));
+//            if (!new File("Themes\\" + DARK_THEME_FULL).exists())
+            Files.copy(Theme.class.getResourceAsStream("/Themes/" + DARK_THEME_FULL), Paths.get("Themes\\" + DARK_THEME_FULL), StandardCopyOption.REPLACE_EXISTING);
+//            if (!new File("Themes\\" + LIGHT_THEME_FULL).exists())
+            Files.copy(Theme.class.getResourceAsStream("/Themes/" + LIGHT_THEME_FULL), Paths.get("Themes\\" + LIGHT_THEME_FULL), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,6 +82,8 @@ public class Theme {
                 node.setStyle(getStyleConst(PLAYLISTELEMENT_FXML));
             }
         }
+        if (firstViewNode != null)
+            firstViewNode.setStyle(getStyleConst(FIRSTVIEW_FXML));
 
     }
 
@@ -92,6 +97,10 @@ public class Theme {
 
     public void setPlayListNode(Node playListNode) {
         this.playListNode = playListNode;
+    }
+
+    public void setFirstViewNode(Node firstViewNode) {
+        this.firstViewNode = firstViewNode;
     }
 
     public void clearPlayListElementNode() {
@@ -193,6 +202,15 @@ public class Theme {
 
                         getStyle("-playlist-element-checkbox-background-color", "playlist.element.checkbox.background.color"),
                         getStyle("-playlist-element-checkbox-mark-color", "playlist.element.checkbox.mark.color"));
+            case FIRSTVIEW_FXML:
+                return getStyles(
+                        getStyle("-first-background-color", "first.background.color"),
+                        getStyle("-first-box-background-color", "first.box.background.color"),
+                        getStyle("-first-box-border-color", "first.box.border.color"),
+                        getStyle("-first-text-color", "first.text.color"),
+                        getStyle("-first-text-hover-color", "first.text.hover.color"));
+
+
         }
         return "";
     }

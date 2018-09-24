@@ -7,6 +7,7 @@ package odtwarzacz.Playlist;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -211,7 +212,8 @@ public class Playlist {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
                 ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistFXML.fxml"), resourceBundle);
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistFXML.fxml"), resourceBundle);
+        FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/PlaylistFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
 
         pane = loader.load();
         playlistFXMLController = loader.getController();
@@ -329,8 +331,8 @@ public class Playlist {
     public void loadPlaylist() {
         playlistPane.getChildren().clear();
         playlistElementList.clear();
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
-                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+//        ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
+//                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
         Theme.getInstance().clearPlayListElementNode();
 
         loadPlaylistThread = new Thread(() -> {
@@ -338,7 +340,8 @@ public class Playlist {
             List<PlaylistElement> playlistElements = new ArrayList<>();
             for (String s : playlistList) {
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistElementFXML.fxml"), resourceBundle);
+//                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistElementFXML.fxml"), resourceBundle);
+                    FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/PlaylistElementFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
 
                     PlaylistElement element = new PlaylistElement(i++, s, loader.load());
                     playlistElementList.add(element);
@@ -588,13 +591,15 @@ public class Playlist {
 
     public void playNext() {
         nextPlaylistIndex();
-        if (getPlaylistIndex() <= playlistList.size()) {
-            play(getPlaylistIndex());
-        } else {
-            if (mainController.getConnection() != null) {
-                mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, 0);
+        if (getPlaylistIndex() > -1) {
+            if (getPlaylistIndex() <= playlistList.size()) {
+                play(getPlaylistIndex());
+            } else {
+                if (mainController.getConnection() != null) {
+                    mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, 0);
+                }
+                setNoPlayAll();
             }
-            setNoPlayAll();
         }
     }
 
@@ -618,32 +623,34 @@ public class Playlist {
     }
 
     private void nextPlaylistIndex() {
-        if (queue.getQueueElements().size() > 0) {
-            playlistIndex = queue.getQueueElements().get(0).getPlaylistIndex();
-            queue.removeFirstElement();
-            playlistElementList.forEach(PlaylistElement::setQueueLabel);
-            if (playlistElementList.get(playlistIndex - 1).isNotFounded()) {
-                nextPlaylistIndex();
-            }
-        } else if (random) {
-            int newIndex;
-            do {
-                newIndex = new Random().nextInt(playlistList.size()) + 1;
-            } while (newIndex == getPlaylistIndex());
-            setPlaylistIndex(newIndex);
-        } else {
-            boolean next = true;
-            do {
-                playlistIndex++;
-                if (playlistIndex - 1 >= playlistElementList.size()) {
-                    next = false;
-                    playlistIndex++;
-                } else if (playlistElementList.get(playlistIndex - 1).isPlayable() &&
-                        !playlistElementList.get(playlistIndex - 1).isNotFounded()) {
-                    next = false;
+        if (playlistIndex > -1) {
+            if (queue.getQueueElements().size() > 0) {
+                playlistIndex = queue.getQueueElements().get(0).getPlaylistIndex();
+                queue.removeFirstElement();
+                playlistElementList.forEach(PlaylistElement::setQueueLabel);
+                if (playlistElementList.get(playlistIndex - 1).isNotFounded()) {
+                    nextPlaylistIndex();
                 }
+            } else if (random) {
+                int newIndex;
+                do {
+                    newIndex = new Random().nextInt(playlistList.size()) + 1;
+                } while (newIndex == getPlaylistIndex());
+                setPlaylistIndex(newIndex);
+            } else {
+                boolean next = true;
+                do {
+                    playlistIndex++;
+                    if (playlistIndex - 1 >= playlistElementList.size()) {
+                        next = false;
+                        playlistIndex++;
+                    } else if (playlistElementList.get(playlistIndex - 1).isPlayable() &&
+                            !playlistElementList.get(playlistIndex - 1).isNotFounded()) {
+                        next = false;
+                    }
 
-            } while (next);
+                } while (next);
+            }
         }
     }
 

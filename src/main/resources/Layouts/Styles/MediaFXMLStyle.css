@@ -51,37 +51,43 @@
 /*** button ***/
 /*** toggle-button ***/
 /*** volume-button ***/
-.button, .toggle-button{
+.media-button, .toggle-button{
     -fx-background-color: -player-icon-background-color;
     -fx-padding: 5 5 2 5;
 }
 
-.button:hover, .toggle-button:hover{
+.media-button:hover, .toggle-button:hover{
     -fx-background-color: -player-icon-background-hover-color;
 }
 
-.button:pressed{
+.media-button:pressed{
     -fx-background-color: -player-icon-background-pressed-color;
 }
 
-.button > .text {
-	-fx-font-size: 32px;
+.media-button > .text {
+	-fx-font-size: 26px;
     -fx-font-family: 'MediaIcons';
 	-fx-fill: -player-icon-color;
 }
 
-.toggle-button > .text {
+.play-button > .text {
 	-fx-font-size: 32px;
-    -fx-font-family: 'MediaIcons';
+}
+
+.long-button {
+    -fx-padding: 5 15 2 15;
+}
+
+.toggle-media-button > .text {
 	-fx-fill: -player-icon-off-color;
 }
 
-.toggle-button:selected > .text {
+.toggle-media-button:selected > .text {
 	-fx-fill: -player-icon-color;
 }
 
 /*** label ***/
-.label > .text {
+.media-label > .text {
 	-fx-font-size: 14px;
     -fx-font-family: 'Roboto Medium';
     -fx-fill: -player-volume-box-text-color;

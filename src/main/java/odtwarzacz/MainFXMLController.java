@@ -1,44 +1,45 @@
-package odtwarzacz;/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package odtwarzacz;
 
 import javafx.application.Platform;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.stage.*;
-import lk.vivoxalabs.customstage.tools.ActionAdapter;
-import odtwarzacz.Connection.UsbConnection;
-import odtwarzacz.Playlist.Playlist;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import odtwarzacz.Connection.BtConnection;
 import odtwarzacz.Connection.Connection;
+import odtwarzacz.Connection.UsbConnection;
 import odtwarzacz.Connection.WifiConnection;
+import odtwarzacz.Playlist.Playlist;
 import odtwarzacz.Utils.CustomStage;
 import odtwarzacz.Utils.Delta;
 import odtwarzacz.Utils.Utils;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Pregiel
@@ -78,17 +79,17 @@ public class MainFXMLController implements Initializable {
     @FXML
     private Menu openRecentMenu;
 
-    private ActionAdapter actionAdapter;
-
     private Stage maximazeScreen;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         try {
-//            refreshScene();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/FirstViewFXML.fxml"), Utils.getTranslationsBundle());
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/FirstViewFXML.fxml"), Utils.getTranslationsBundle());
+            FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/FirstViewFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
             lastPickedPane = loader.load();
+            lastPickedPane.setStyle(Theme.getStyleConst(Theme.FIRSTVIEW_FXML));
+            Theme.getInstance().setFirstViewNode(lastPickedPane);
 
             playlist = new Playlist(this);
             playlist.makePlaylistPane();
@@ -103,9 +104,7 @@ public class MainFXMLController implements Initializable {
                 playlist.show();
             }
 
-            Platform.runLater(() -> {
-                splitPane.setDividerPosition(0, 1 - (dividerPosition / windowWidth));
-            });
+            Platform.runLater(() -> splitPane.setDividerPosition(0, 1 - (dividerPosition / windowWidth)));
 
 
             splitPane.widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -114,7 +113,6 @@ public class MainFXMLController implements Initializable {
             });
 
             refreshRecentFiles();
-//            pane.setCenter(mediaPane);
             centerPane.getChildren().add(lastPickedPane);
             addInfoLabel();
 
@@ -189,9 +187,6 @@ public class MainFXMLController implements Initializable {
 
             initMaximazeScreen();
 
-            Platform.runLater(() ->
-                    actionAdapter = new ActionAdapter((Stage) pane.getScene().getWindow()));
-
         } catch (IOException ex) {
             Logger.getLogger(MainFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -205,7 +200,7 @@ public class MainFXMLController implements Initializable {
 
         screen.setPrefHeight(winSize.height - 10);
         screen.setPrefWidth(winSize.width - 10);
-        screen.setStyle("-fx-background-color: rgba(99,170,255,0.2);");
+        screen.setStyle("-fx-background-color: " + Theme.getStyle("window.maximaze.color") + ";");
 
         maximazeScreen = new Stage();
         maximazeScreen.setScene(new Scene(screen));
@@ -217,7 +212,6 @@ public class MainFXMLController implements Initializable {
 
     private void addInfoLabel() {
         connectionInfoLabel = new InfoLabel();
-//        connectionInfoLabel.setText("");
         connectionInfoLabel.getStyleClass().add("info-label");
 
         centerPane.getChildren().add(connectionInfoLabel);
@@ -243,13 +237,13 @@ public class MainFXMLController implements Initializable {
     }
 
     private void refreshScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MediaFXML.fxml"), Utils.getTranslationsBundle());
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MediaFXML.fxml"), Utils.getTranslationsBundle());
+        FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/MediaFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
         Pane mediaPane = loader.load();
         mediaPane.setStyle(Theme.getStyleConst(Theme.MEDIA_FXML));
         Theme.getInstance().setMediaNode(mediaPane);
 
         mediaControl = loader.getController();
-//                mediaControl.setConnectionInfo(connectionInfoLabel);
         mediaControl.setConnection(connection);
         mediaControl.setFileInfoLabel(fileInfoLabel);
 
@@ -275,6 +269,7 @@ public class MainFXMLController implements Initializable {
 
         Odtwarzacz.getConfig().getArrayProperty("last").forEach((s) -> {
             Hyperlink recentFile = new Hyperlink(s);
+            recentFile.getStyleClass().add("first-link");
             recentFile.setOnAction((event) -> {
                 loadFile(new File(s));
             });
@@ -291,11 +286,6 @@ public class MainFXMLController implements Initializable {
 
     }
 
-    //    private WifiConnection wifiConnection;
-//    
-//    public WifiConnection getWifiConnection() {
-//        return wifiConnection;
-//    }
     private Connection connection;
 
     public Connection getConnection() {
@@ -313,11 +303,9 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void wifiSendTAK(ActionEvent event) {
-//        wifiConnection.sendMessage("TAK");
         connection.sendSnapshot();
     }
 
-    //    private BtConnection btConnection;
     @FXML
     private void connectBT(ActionEvent event) {
         connection = new BtConnection();
@@ -329,7 +317,6 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void BTSendTAK(ActionEvent event) {
-//        btConnection.sendMessage("TAK");
 
     }
 
@@ -343,8 +330,6 @@ public class MainFXMLController implements Initializable {
     }
 
 
-    private File file;
-
     @FXML
     private void chooseFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -353,7 +338,7 @@ public class MainFXMLController implements Initializable {
                 new ExtensionFilter("Video Files", SUPPORTED_VIDEO),
                 new ExtensionFilter("Audio Files", SUPPORTED_AUDIO),
                 new ExtensionFilter("All Files", "*.*"));
-        file = fileChooser.showOpenDialog(null);
+        File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             loadFile(file);
         }

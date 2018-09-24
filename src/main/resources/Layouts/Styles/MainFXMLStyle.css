@@ -92,8 +92,6 @@
 	-fx-mark-color: -menu-text-color;
 }
 
-
-
 .menu-item .label:disabled {
     -fx-opacity: 1.0;
 }    
@@ -133,25 +131,30 @@
 	-fx-font-size: 16px;
 }
 
-.button {
+.title-bar-button {
     -fx-background-color: -menu-background-color;
 	-fx-font-family: 'MediaIcons';
     -fx-text-fill: -menu-text-color;
 	-fx-font-size: 18px;
 }
 
-.button:hover {
+.title-bar-button:hover {
     -fx-background-color: -menu-background-highlight-color;
 }
 
-.button:pressed {
+.title-bar-button:pressed {
     -fx-background-color: -menu-button-pressed-color;
 }
 
-.exit-button:hover {
+.title-bar-exit-button:hover {
     -fx-background-color: -menu-exit-button-hover-color;
 }
 
-.exit-button:pressed {
+.title-bar-exit-button:pressed {
     -fx-background-color: -menu-exit-button-pressed-color;
+}
+
+.tooltip {
+	-fx-font-family: 'Roboto Regular';
+	-fx-font-size: 16px;
 }

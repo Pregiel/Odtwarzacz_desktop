@@ -31,11 +31,11 @@
          </GridPane.margin>
       </Label>
       <Label fx:id="queueIndex" maxWidth="-Infinity" minWidth="-Infinity" styleClass="title" GridPane.columnIndex="2" GridPane.rowSpan="2" />
-      <Button fx:id="queueAdd" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="F" GridPane.columnIndex="3">
+      <Button fx:id="queueAdd" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="playlist-element-button" text="F" GridPane.columnIndex="3">
          <tooltip>
             <Tooltip text="%playlist.element.addqueue" />
          </tooltip></Button>
-      <Button fx:id="queueRemove" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="G" GridPane.columnIndex="3" GridPane.rowIndex="1">
+      <Button fx:id="queueRemove" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="playlist-element-button" text="G" GridPane.columnIndex="3" GridPane.rowIndex="1">
          <tooltip>
             <Tooltip text="%playlist.element.removequeue" />
          </tooltip></Button>

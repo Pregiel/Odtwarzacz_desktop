@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -29,14 +30,22 @@
       <HBox BorderPane.alignment="CENTER">
          <children>
             <ComboBox fx:id="playlistComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="%player.playlist" HBox.hgrow="ALWAYS" />
-            <MenuButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="smaller-button" text="E">
+            <MenuButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="E">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#newPlaylist" text="%playlist.newplaylist" />
                 <MenuItem mnemonicParsing="false" onAction="#closePlaylist" text="%playlist.closeplaylist" />
                   <MenuItem mnemonicParsing="false" onAction="#renamePlaylist" text="%playlist.renameplaylist" />
               </items>
+               <styleClass>
+                  <String fx:value="smaller-button" />
+                  <String fx:value="playlist-menu-button" />
+               </styleClass>
             </MenuButton>
-            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#undock" styleClass="smaller-button" text="O" />
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#undock" text="O">
+               <styleClass>
+                  <String fx:value="smaller-button" />
+                  <String fx:value="playlist-button" />
+               </styleClass></Button>
          </children>
          <BorderPane.margin>
             <Insets bottom="8.0" />
@@ -57,15 +66,15 @@
                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#add" text="F">
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#add" styleClass="playlist-button" text="F">
                      <tooltip>
                         <Tooltip text="%playlist.add" />
                      </tooltip></Button>
-                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#remove" text="G" GridPane.columnIndex="1">
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#remove" styleClass="playlist-button" text="G" GridPane.columnIndex="1">
                      <tooltip>
                         <Tooltip text="%playlist.remove" />
                      </tooltip></Button>
-                  <MenuButton alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" popupSide="TOP" text="D" GridPane.columnIndex="2">
+                  <MenuButton alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" popupSide="TOP" styleClass="playlist-menu-button" text="D" GridPane.columnIndex="2">
                     <items>
                       <MenuItem mnemonicParsing="false" text="Sort by" />
                         <MenuItem mnemonicParsing="false" text="Group by" />

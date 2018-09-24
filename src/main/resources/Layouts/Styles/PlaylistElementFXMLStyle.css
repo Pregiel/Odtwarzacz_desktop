@@ -85,25 +85,24 @@
     -fx-text-fill: -playlist-element-notfound-text-color;
 }
 
-.button {
+.playlist-element-button {
     -fx-background-color: -playlist-element-button-background-color;
     -fx-padding: 5 5 2 5;
 }
 
-.button:hover, .menu-button:hover {
+.playlist-element-button:hover {
     -fx-background-color: -playlist-element-button-background-hover-color;
 }
 
-.button:pressed, .menu-button:pressed {
+.playlist-element-button:pressed {
     -fx-background-color: -playlist-element-button-background-pressed-color;
 }
 
-.button > .text {
+.playlist-element-button > .text {
     -fx-font-size: 12px;
     -fx-font-family: 'MediaIcons';
     -fx-fill: -playlist-element-text-color;
 }
-
 
 .check-box .box {
     -fx-background-color: transparent;
