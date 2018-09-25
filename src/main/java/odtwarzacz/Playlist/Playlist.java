@@ -7,6 +7,7 @@ package odtwarzacz.Playlist;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
@@ -21,12 +22,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Metadata.Metadata;
 import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
 import odtwarzacz.Theme;
+import odtwarzacz.Utils.CustomStage;
 import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.Queue;
@@ -246,7 +249,7 @@ public class Playlist {
 
         splitPane.getItems().add(1, getPane());
 
-        ExpandableTimeTask saveDividerPositionTast = new ExpandableTimeTask(new Runnable() {
+        ExpandableTimeTask saveDividerPositionTask = new ExpandableTimeTask(new Runnable() {
             @Override
             public void run() {
                 Odtwarzacz.getConfig().setProperty("playlist.divider", String.valueOf(pane.getWidth()));
@@ -260,10 +263,10 @@ public class Playlist {
         splitPane.setDividerPosition(0, 1 - (dividerPosition / windowWidth));
 
         splitPane.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue) -> {
-            if (saveDividerPositionTast.isStarted() && !saveDividerPositionTast.isFinished()) {
-                saveDividerPositionTast.resume();
+            if (saveDividerPositionTask.isStarted() && !saveDividerPositionTask.isFinished()) {
+                saveDividerPositionTask.resume();
             } else {
-                saveDividerPositionTast.start();
+                saveDividerPositionTask.start();
             }
         });
 
@@ -272,7 +275,7 @@ public class Playlist {
         Odtwarzacz.getConfig().save();
     }
 
-    private Stage playlistWindow;
+    private CustomStage playlistWindow;
 
     public Stage getPlaylistWindow() {
         return playlistWindow;
@@ -280,29 +283,44 @@ public class Playlist {
 
     public void undock() {
         hide();
-        if (playlistWindow != null) {
-            playlistWindow.close();
+//        if (playlistWindow != null) {
+//            playlistWindow.close();
+//        }
+
+
+        if (playlistWindow == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/PlaylistUndockedFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+
+                BorderPane pane = loader.load();
+                pane.setStyle(Theme.getStyleConst(Theme.PLAYLISTUNDOCKED_FXML));
+                Theme.getInstance().setPlayListUndockedNode(pane);
+                ((AnchorPane) pane.lookup("#center")).getChildren().add(getPane());
+
+                AnchorPane.setTopAnchor(getPane(), 0.0);
+                AnchorPane.setRightAnchor(getPane(), 0.0);
+                AnchorPane.setLeftAnchor(getPane(), 0.0);
+                AnchorPane.setBottomAnchor(getPane(), 0.0);
+
+                playlistWindow = new CustomStage();
+                playlistWindow.setTitle(Utils.getString("player.playlist"));
+                playlistWindow.setScene(new Scene(pane, 400, 600));
+                playlistWindow.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH);
+                playlistWindow.setMinHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
+                playlistWindow.initStyle(StageStyle.UNDECORATED);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        AnchorPane pane = new AnchorPane();
-        pane.getChildren().add(getPane());
-
-        AnchorPane.setTopAnchor(getPane(), 0.0);
-        AnchorPane.setRightAnchor(getPane(), 0.0);
-        AnchorPane.setLeftAnchor(getPane(), 0.0);
-        AnchorPane.setBottomAnchor(getPane(), 0.0);
-
-        playlistWindow = new Stage();
-        playlistWindow.setTitle(Utils.getString("player.playlist"));
-        playlistWindow.setScene(new Scene(pane, 400, 600));
-        playlistWindow.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH);
-        playlistWindow.setMinHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
         playlistWindow.show();
 
     }
 
     public void dock() {
         show();
+        Theme.getInstance().setPlayListUndockedNode(null);
     }
 
     public void toogle() {

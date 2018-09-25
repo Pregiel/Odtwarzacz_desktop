@@ -26,11 +26,11 @@ public class Theme {
 
     public static final int MAIN_FXML = 1, MEDIA_FXML = 2,
             PLAYLIST_FXML = 3, PLAYLISTELEMENT_FXML = 4,
-            FIRSTVIEW_FXML = 5;
+            FIRSTVIEW_FXML = 5, PLAYLISTUNDOCKED_FXML = 6;
 
     private static Theme instance;
 
-    private Node mainNode, mediaNode, playListNode, firstViewNode;
+    private Node mainNode, mediaNode, playListNode, firstViewNode, playListUndockedNode;
     private List<Node> playListElementNode;
 
     private ClassLoader loader;
@@ -84,6 +84,8 @@ public class Theme {
         }
         if (firstViewNode != null)
             firstViewNode.setStyle(getStyleConst(FIRSTVIEW_FXML));
+        if (playListUndockedNode != null)
+            playListUndockedNode.setStyle(getStyleConst(PLAYLISTUNDOCKED_FXML));
 
     }
 
@@ -101,6 +103,10 @@ public class Theme {
 
     public void setFirstViewNode(Node firstViewNode) {
         this.firstViewNode = firstViewNode;
+    }
+
+    public void setPlayListUndockedNode(Node playListUndockedNode) {
+        this.playListUndockedNode = playListUndockedNode;
     }
 
     public void clearPlayListElementNode() {
@@ -209,6 +215,15 @@ public class Theme {
                         getStyle("-first-box-border-color", "first.box.border.color"),
                         getStyle("-first-text-color", "first.text.color"),
                         getStyle("-first-text-hover-color", "first.text.hover.color"));
+            case PLAYLISTUNDOCKED_FXML:
+                return getStyles(
+                        getStyle("-playlist-undocked-background-color", "menu.background.color"),
+                        getStyle("-playlist-undocked-background-highlight-color", "menu.background.highlight.color"),
+                        getStyle("-playlist-undocked-text-color", "menu.text.color"),
+                        getStyle("-playlist-undocked-text-highlight-color", "menu.text.highlight.color"),
+                        getStyle("-playlist-undocked-button-pressed-color", "menu.button.pressed.color"),
+                        getStyle("-playlist-undocked-exit-button-hover-color", "menu.exit.button.hover.color"),
+                        getStyle("-playlist-undocked-exit-button-pressed-color", "menu.exit.button.pressed.color"));
 
 
         }
