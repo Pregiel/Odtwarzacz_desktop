@@ -5,22 +5,21 @@
  */
 package odtwarzacz.Playlist;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.ResourceBundle;
-
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import odtwarzacz.MainFXMLController;
@@ -28,6 +27,12 @@ import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
 import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Utils.Utils;
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import static odtwarzacz.MainFXMLController.getPlaylist;
 
@@ -67,6 +72,11 @@ public class PlaylistFXMLController implements Initializable {
             } else if (event.getCode() == KeyCode.D && event.isControlDown()) {
                 getPlaylist().unselectAll();
             }
+        });
+
+        playlistScroll.setOnMouseClicked(event -> {
+            if (event.getTarget().toString().contains("ScrollPaneSkin"))
+                getPlaylist().unselectAll();
         });
 
 
