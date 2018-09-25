@@ -283,10 +283,6 @@ public class Playlist {
 
     public void undock() {
         hide();
-//        if (playlistWindow != null) {
-//            playlistWindow.close();
-//        }
-
 
         if (playlistWindow == null) {
             try {
@@ -376,6 +372,7 @@ public class Playlist {
                     PlaylistElement element = new PlaylistElement(i, s, loader.load());
                     element.getMetadata().setMetadata(i, playlistProperties);
                     element.generateTitleLabel();
+                    element.setDurationLabel();
                     playlistElementList.add(element);
                     playlistElements.add(element);
                     i++;
@@ -476,6 +473,7 @@ public class Playlist {
 
             element.setMetadata(metadata);
             element.generateTitleLabel();
+            element.setDurationLabel();
             playlistElementList.add(element);
 
             Platform.runLater(() -> {

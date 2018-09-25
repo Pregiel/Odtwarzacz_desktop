@@ -39,7 +39,7 @@ public class PlaylistElement {
 
     private GridPane pane;
     private CheckBox songCheckbox;
-    private Label titleLabel, queueIndexLabel;
+    private Label titleLabel, queueIndexLabel, durationLabel;
     private Button queueAddBtn, queueRemoveBtn;
 
     private boolean selected, playing, notFounded;
@@ -65,6 +65,8 @@ public class PlaylistElement {
         this.queueIndexLabel = (Label) pane.lookup("#queueIndex");
         this.queueAddBtn = (Button) pane.lookup("#queueAdd");
         this.queueRemoveBtn = (Button) pane.lookup("#queueRemove");
+
+        this.durationLabel = (Label) pane.lookup("#durationLabel");
 
         this.songCheckbox.selectedProperty().set(true);
         this.file = new File(path);
@@ -165,6 +167,11 @@ public class PlaylistElement {
 
     public void generateTitleLabel() {
         titleLabel.setText(index + ". " + metadata.getName());
+    }
+
+    public void setDurationLabel() {
+        long s = (long) metadata.getDuration().toSeconds();
+        durationLabel.setText(String.format("%d:%02d:%02d", s/3600, (s%3600)/60, (s%60)));
     }
 
     public void setStyle(int value) {
