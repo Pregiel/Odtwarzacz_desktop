@@ -39,10 +39,10 @@ public class Theme {
         new File("Themes").mkdir();
 
         try {
-//            if (!new File("Themes\\" + DARK_THEME_FULL).exists())
-            Files.copy(Theme.class.getResourceAsStream("/Themes/" + DARK_THEME_FULL), Paths.get("Themes\\" + DARK_THEME_FULL), StandardCopyOption.REPLACE_EXISTING);
-//            if (!new File("Themes\\" + LIGHT_THEME_FULL).exists())
-            Files.copy(Theme.class.getResourceAsStream("/Themes/" + LIGHT_THEME_FULL), Paths.get("Themes\\" + LIGHT_THEME_FULL), StandardCopyOption.REPLACE_EXISTING);
+            if (!new File("Themes\\" + DARK_THEME_FULL).exists())
+                Files.copy(Theme.class.getResourceAsStream("/Themes/" + DARK_THEME_FULL), Paths.get("Themes\\" + DARK_THEME_FULL), StandardCopyOption.REPLACE_EXISTING);
+            if (!new File("Themes\\" + LIGHT_THEME_FULL).exists())
+                Files.copy(Theme.class.getResourceAsStream("/Themes/" + LIGHT_THEME_FULL), Paths.get("Themes\\" + LIGHT_THEME_FULL), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }

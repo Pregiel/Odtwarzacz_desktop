@@ -50,6 +50,8 @@ public class PlaylistElement {
 
     private FileType fileType;
 
+    private String name;
+
 
     public PlaylistElement(int index, String path, GridPane pane) {
         this.index = index;
@@ -79,28 +81,33 @@ public class PlaylistElement {
         } else {
             fileType = FileType.NONE;
         }
+
         if (file.exists()) {
-            metadata.generate(file, () -> titleLabel.setText(index + ". " + metadata.generateLabel()));
-            this.titleLabel.setText(index + ". " + metadata.generateLabel());
+//            metadata.generate(file, () -> {
+//                name = metadata.generateLabel();
+//                generateTitleLabel();
+//            });
+//            name = metadata.generateLabel();
+            generateTitleLabel();
         } else {
             setNotFounded(true);
-
-            this.titleLabel.setText(index + ". " + file.getName());
+//            name = file.getName();
         }
+//        generateTitleLabel();
 //        generateMetadata();
 
 
         this.pane.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
-                if (event.getClickCount() == 2) {
-                    MainFXMLController.getPlaylist().play(index);
-                } else if (event.getClickCount() == 1) {
-                    if (!event.isControlDown()) {
+                if (!event.isControlDown()) {
+                    if (event.getClickCount() == 1) {
                         MainFXMLController.getPlaylist().unselectAll();
                         setSelected(true);
                     } else {
-                        setSelected(!isSelected());
+                        MainFXMLController.getPlaylist().play(index);
                     }
+                } else {
+                    setSelected(!isSelected());
                 }
             }
         });
@@ -150,6 +157,14 @@ public class PlaylistElement {
         }
 
 
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
+    }
+
+    public void generateTitleLabel() {
+        titleLabel.setText(index + ". " + metadata.getName());
     }
 
     public void setStyle(int value) {

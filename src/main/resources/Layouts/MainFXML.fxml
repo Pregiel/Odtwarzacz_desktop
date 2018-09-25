@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="pane" stylesheets="@Styles/MainFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MainFXMLController">
+<BorderPane fx:id="pane" styleClass="background" stylesheets="@Styles/MainFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MainFXMLController">
     <top>
         <VBox BorderPane.alignment="CENTER">
             <children>
@@ -101,10 +101,13 @@
         </VBox>
     </top>
     <center>
-        <SplitPane fx:id="splitPane" BorderPane.alignment="CENTER">
+        <SplitPane fx:id="splitPane" styleClass="background" BorderPane.alignment="CENTER">
             <items>
                 <StackPane fx:id="centerPane" />
             </items>
+         <BorderPane.margin>
+            <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+         </BorderPane.margin>
         </SplitPane>
     </center>
 </BorderPane>

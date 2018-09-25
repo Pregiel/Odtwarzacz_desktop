@@ -27,6 +27,7 @@ import odtwarzacz.Connection.Connection;
 import odtwarzacz.Metadata.Metadata;
 import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
+import odtwarzacz.Playlist.PlaylistProperties;
 import odtwarzacz.Sliders.TimeSlider;
 import odtwarzacz.Sliders.VolumeSlider;
 import odtwarzacz.Utils.ExpandableTimeTask;
@@ -309,18 +310,12 @@ public class MediaFXMLController implements Initializable {
     }
 
     public Metadata generateMetadata(File file) {
-        Metadata metadata;
+        Metadata metadata = null;
 
         if (Arrays.asList(MainFXMLController.SUPPORTED_AUDIO).contains("*." + Utils.getExtension(file.getAbsolutePath()).toUpperCase())) {
             metadata = new MetadataAudio();
         } else if (Arrays.asList(MainFXMLController.SUPPORTED_VIDEO).contains("*." + Utils.getExtension(file.getAbsolutePath()).toUpperCase())) {
             metadata = new MetadataVideo();
-        } else {
-            metadata = new Metadata() {
-                @Override
-                public void generateMetadata(File file) {
-                }
-            };
         }
 
         return metadata;

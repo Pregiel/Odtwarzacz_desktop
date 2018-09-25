@@ -10,6 +10,7 @@ import it.sauronsoftware.jave.EncoderException;
 import it.sauronsoftware.jave.MultimediaInfo;
 import it.sauronsoftware.jave.VideoInfo;
 import javafx.util.Duration;
+import odtwarzacz.Playlist.PlaylistProperties;
 
 import java.io.File;
 
@@ -42,6 +43,18 @@ public class MetadataVideo extends Metadata {
         }
     }
 
+    @Override
+    public void setProperties(int index, PlaylistProperties playlistProperties) {
+        if (playlistProperties != null) {
+            playlistProperties.setProperty(index, DURATION, String.valueOf(getDuration().toMillis())+"ms");
+            playlistProperties.setProperty(index, BIT_RATE, bitRate);
+            playlistProperties.setProperty(index, WIDTH, width);
+            playlistProperties.setProperty(index, HEIGHT, height);
+            playlistProperties.setProperty(index, FRAME_RATE, frameRate);
+            playlistProperties.save();
+        }
+    }
+
 
     public int getBitRate() {
         return bitRate;
@@ -70,6 +83,15 @@ public class MetadataVideo extends Metadata {
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
+    }
+
+    @Override
+    public void setMetadata(int index, PlaylistProperties playlistProperties) {
+        super.setMetadata(index, playlistProperties);
+        bitRate = Integer.parseInt(playlistProperties.getProperty(index, BIT_RATE));
+        width = Integer.parseInt(playlistProperties.getProperty(index, WIDTH));
+        height = Integer.parseInt(playlistProperties.getProperty(index, HEIGHT));
+        frameRate = Float.parseFloat(playlistProperties.getProperty(index, FRAME_RATE));
     }
 
     @Override

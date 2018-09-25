@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="420.0" prefWidth="600.0" stylesheets="@Styles/FirstViewFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.FirstViewFXMLController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="420.0" prefWidth="600.0" styleClass="background" stylesheets="@Styles/FirstViewFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.FirstViewFXMLController">
    <center>
       <VBox alignment="CENTER" spacing="8.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
          <children>
-            <Label text="%firstview.recentfiles">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
+            <Label styleClass="first-label" text="%firstview.recentfiles">
                <VBox.margin>
                   <Insets bottom="8.0" />
                </VBox.margin>
             </Label>
-            <VBox fx:id="recentFiles" alignment="CENTER_LEFT" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="100.0" spacing="8.0" styleClass="recent-pane" />
+            <VBox fx:id="recentFiles" alignment="CENTER_LEFT" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="100.0" spacing="8.0" styleClass="recent-pane">
+               <children>
+                  <Hyperlink styleClass="first-link" text="C:\Users\Pregiel\Documents\NetBeansProjects\odtwarzacz2\Odtwarzacz\Layouts" />
+               </children>
+               <padding>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </padding></VBox>
          </children>
          <padding>
             <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />

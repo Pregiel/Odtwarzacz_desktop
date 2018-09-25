@@ -77,6 +77,7 @@ public abstract class Connection {
     public static final String FILECHOOSER_DRIVE_LIST = "FILECHOOSER_DRIVE_LIST";
     public static final String FILECHOOSER_PLAY = "FILECHOOSER_PLAY";
     public static final String FILECHOOSER_PLAYLIST_ADD = "FILECHOOSER_PLAYLIST_ADD";
+    public static final String FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST = "FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST";
 
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final String SNAPSHOT_REQUEST = "SNAPSHOT_REQUEST";
@@ -351,6 +352,10 @@ public abstract class Connection {
                 break;
 
             case FILECHOOSER_PLAYLIST_ADD:
+                MainFXMLController.getPlaylist().add(new File(message[1]), 1);
+                break;
+
+            case FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST:
                 MainFXMLController.getPlaylist().add(new File(message[1]));
                 break;
 

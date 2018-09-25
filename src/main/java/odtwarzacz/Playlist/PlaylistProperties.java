@@ -14,10 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,6 +71,14 @@ public final class PlaylistProperties extends Properties {
         return getProperty("playlist.name", Utils.getTranslationsBundle().getString("player.playlist"));
     }
 
+    public void setProperty(int index, String key, Object value) {
+        setProperty(PROPERTY_NAME + "." + index + "." + key, value.toString());
+    }
+
+    public String getProperty(int index, String key) {
+        return getProperty(PROPERTY_NAME + "." + index + "." + key);
+    }
+
 
     public int getPlaylistId() {
         String id = getProperty("playlist.id");
@@ -109,7 +114,7 @@ public final class PlaylistProperties extends Properties {
 
         String value;
 
-        for (int i = 0; (value = getProperty(PROPERTY_NAME + "." + i)) != null; i++) {
+        for (int i = 1; (value = getProperty(PROPERTY_NAME + "." + i + ".path")) != null; i++) {
             result.add(value);
         }
 
@@ -121,12 +126,43 @@ public final class PlaylistProperties extends Properties {
         clearArray();
         int i = 0;
         for (String s : list) {
-            setProperty(PROPERTY_NAME + "." + i++, s);
+            setProperty(i, "path", s);
         }
     }
 
+    public void addToArray(String path, int index) {
+        setProperty(index, "path", path);
+        save();
+    }
+
+    public void removeFromArray(int index) {
+        Enumeration<String> enumeration = (Enumeration<String>) propertyNames();
+
+        while (enumeration.hasMoreElements()) {
+            String name = enumeration.nextElement();
+            if (name.startsWith(PROPERTY_NAME + "." + index + ".")) {
+                remove(name);
+            }
+        }
+        save();
+    }
+
+    public void changeIndexInArray(int from, int to) {
+        Enumeration<String> enumeration = (Enumeration<String>) propertyNames();
+        while (enumeration.hasMoreElements()) {
+            String name = enumeration.nextElement();
+            if (name.startsWith(PROPERTY_NAME + "." + from + ".")) {
+                String value = getProperty(name);
+
+                setProperty(to, name.substring((PROPERTY_NAME + "." + from).length() + 1), value);
+                remove(name);
+            }
+        }
+        save();
+    }
+
     private void clearArray() {
-        for (int i = 0; getProperty(PROPERTY_NAME + "." + i) != null; i++) {
+        for (int i = 1; getProperty(PROPERTY_NAME + "." + i + ".path") != null; i++) {
             remove(PROPERTY_NAME + "." + i);
         }
         save();

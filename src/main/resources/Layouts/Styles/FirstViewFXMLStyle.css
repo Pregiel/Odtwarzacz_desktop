@@ -13,9 +13,42 @@
 	src: url('Fonts/MediaIcons.ttf');
 }
 
+*.const {
+    -first-background-color: #3a3a3a;
+    -first-box-background-color: #3f3f3f;
+    -first-box-border-color: #545454;
+    -first-text-color: #d6d6d6;
+    -first-text-hover-color: #ffffff;
+}
+
+.background {
+    -fx-background-color: -first-background-color;
+}
+
+.first-label {
+	-fx-font-size: 20px;
+    -fx-font-family: 'Roboto Bold';
+	-fx-text-fill: -first-text-color;
+}
+
 .recent-pane {
-    -fx-background-color: #fbfbfb;
+    -fx-background-color: -first-box-background-color;
     -fx-border-width: 1px;
-    -fx-border-color: #666666;
+    -fx-border-color: -first-box-border-color;
     -fx-border-style: dashed;
+}
+
+.first-link {
+	-fx-font-size: 12px;
+    -fx-font-family: 'Roboto Medium';
+	-fx-text-fill: -first-text-color;
+}
+
+.first-link:hover {
+	-fx-text-fill: -first-text-hover-color;
+	-fx-underline: false;
+}
+
+.first-link:focused {
+	-fx-border-color: -first-text-hover-color;
 }
