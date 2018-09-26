@@ -261,24 +261,26 @@ public class MainFXMLController implements Initializable {
     }
 
     private void refreshRecentFiles() {
-        ((Pane) lastPickedPane.lookup("#recentFiles")).getChildren().clear();
-        openRecentMenu.getItems().clear();
+        Platform.runLater(() -> {
+            ((Pane) lastPickedPane.lookup("#scrollPane").lookup("#recentFiles")).getChildren().clear();
+            openRecentMenu.getItems().clear();
 
-        Odtwarzacz.getConfig().getArrayProperty("last").forEach((s) -> {
-            Hyperlink recentFile = new Hyperlink(s);
-            recentFile.getStyleClass().add("first-link");
-            recentFile.setOnAction((event) -> {
-                loadFile(new File(s));
+            Odtwarzacz.getConfig().getArrayProperty("last").forEach((s) -> {
+                Hyperlink recentFile = new Hyperlink(s);
+                recentFile.getStyleClass().add("first-link");
+                recentFile.setOnAction((event) -> {
+                    loadFile(new File(s));
+                });
+
+                ((Pane) lastPickedPane.lookup("#recentFiles")).getChildren().add(recentFile);
+
+                MenuItem menuItem = new MenuItem(s);
+                menuItem.setOnAction((event) -> {
+                    loadFile(new File(s));
+                });
+
+                openRecentMenu.getItems().add(menuItem);
             });
-
-            ((Pane) lastPickedPane.lookup("#recentFiles")).getChildren().add(recentFile);
-
-            MenuItem menuItem = new MenuItem(s);
-            menuItem.setOnAction((event) -> {
-                loadFile(new File(s));
-            });
-
-            openRecentMenu.getItems().add(menuItem);
         });
 
     }

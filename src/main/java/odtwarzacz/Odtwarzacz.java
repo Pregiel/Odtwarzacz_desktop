@@ -67,15 +67,15 @@ public class Odtwarzacz extends Application {
         });
 
 
-        if (Boolean.valueOf(getConfig().getProperty("playlist.visible", "false"))) {
-            stage.setMinWidth(PLAYER_MIN_WIDTH);
-        } else {
-            stage.setMinWidth(MEDIA_MIN_WIDTH);
-        }
+//        if (Boolean.valueOf(getConfig().getProperty("playlist.visible", "false"))) {
+//            stage.setMinWidth(PLAYER_MIN_WIDTH-30);
+//        } else {
+//            stage.setMinWidth(MEDIA_MIN_WIDTH-30);
+//        }
 
         stage.setFullScreenExitHint("");
 
-        stage.setMinHeight(PLAYER_MIN_HEIGHT);
+//        stage.setMinHeight(PLAYER_MIN_HEIGHT);
 
         stage.setOnCloseRequest(event -> {
             try {
@@ -86,7 +86,7 @@ public class Odtwarzacz extends Application {
         });
 
         stage.initStyle(StageStyle.UNDECORATED);
-        ResizeHelper.addResizeListener(stage, PLAYER_MIN_WIDTH, PLAYER_MIN_HEIGHT, 1.7976931348623157E308D, 1.7976931348623157E308D);
+        ResizeHelper.addResizeListener(stage, PLAYER_MIN_WIDTH+20, PLAYER_MIN_HEIGHT+30, 1.7976931348623157E308D, 1.7976931348623157E308D);
 
 
         stage.show();

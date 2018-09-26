@@ -304,7 +304,7 @@ public class Playlist {
                 playlistWindow = new CustomStage();
                 playlistWindow.setTitle(Utils.getString("player.playlist"));
                 playlistWindow.setScene(new Scene(pane, 400, 600));
-                playlistWindow.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH);
+                playlistWindow.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH-30);
                 playlistWindow.setMinHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
                 playlistWindow.initStyle(StageStyle.UNDECORATED);
 
@@ -326,11 +326,11 @@ public class Playlist {
 
     public void toogle() {
         if (Odtwarzacz.getConfig().getProperty("playlist.visible").equals("true")) {
-            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.MEDIA_MIN_WIDTH);
+            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.MEDIA_MIN_WIDTH-30);
             hide();
         } else {
             show();
-            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.PLAYER_MIN_WIDTH);
+            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.PLAYER_MIN_WIDTH-30);
         }
     }
 

@@ -216,7 +216,7 @@ public class PlaylistFXMLController implements Initializable {
                 CustomStage stage = new CustomStage();
                 stage.setTitle(Utils.getString("player.queue"));
                 stage.setScene(new Scene(queueRoot, 400, 600));
-                stage.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH);
+                stage.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH-30);
                 stage.setMinHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
                 stage.initStyle(StageStyle.UNDECORATED);
                 stage.setOnHidden(e -> {

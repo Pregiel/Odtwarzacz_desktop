@@ -1,0 +1,44 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+	font-family: 'MediaIcons';
+	src: url('Fonts/MediaIcons.ttf');
+}
+
+.background {
+	-fx-background-color: -background-color;
+}
+
+.box, .box > .viewport{
+    -fx-background-color: -background-color;
+}
+
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: -box-color-primary;
+    -fx-background-radius: 0em;
+}
+
+.label {
+    -fx-text-fill: -text-color;
+	-fx-font-size: 14px;
+    -fx-font-family: 'Roboto Regular';
+}
+
+.property-name {
+    -fx-font-family: 'Roboto Bold';
+    -fx-padding: 5 15 5 5;
+}
+
+.property-value {
+    -fx-padding: 5;
+}

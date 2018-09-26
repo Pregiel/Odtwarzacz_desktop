@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,15 +23,19 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.StageStyle;
+import odtwarzacz.Odtwarzacz;
+import odtwarzacz.Playlist.Queue.QueueFXMLController;
 import odtwarzacz.Theme;
-import odtwarzacz.Utils.FileType;
+import odtwarzacz.Utils.*;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Metadata.Metadata;
 import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
 import odtwarzacz.Playlist.Queue.QueueElement;
-import odtwarzacz.Utils.Utils;
 
 import static odtwarzacz.MainFXMLController.getPlaylist;
 
@@ -174,7 +182,7 @@ public class PlaylistElement {
         removeSelected.setOnAction(event -> getPlaylist().removeSelected());
 
         properties.setOnAction(event -> {
-
+            makePropertiesWindow();
         });
 
         fileLocation.setOnAction(event -> {
@@ -183,7 +191,6 @@ public class PlaylistElement {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         });
 
         playableMenuItem.setOnAction(event -> songCheckbox.fire());
@@ -207,6 +214,86 @@ public class PlaylistElement {
 
         contextMenu.getItems().addAll(play, new SeparatorMenuItem(), properties, fileLocation, queue,
                 new SeparatorMenuItem(), remove, removeSelected, new SeparatorMenuItem(), playableMenuItem);
+
+    }
+
+    private void makePropertiesWindow() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/WindowFXML.fxml"), Utils.getTranslationsBundle());
+
+            BorderPane root = loader.load();
+            root.setStyle(Theme.getStyleConst(Theme.WINDOW_FXML));
+            ((Label) root.lookup("#windowTitle")).setText(Utils.getString("player.queue"));
+
+            FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/Layouts/PropertiesFXML.fxml"), Utils.getTranslationsBundle());
+            AnchorPane propertiesPane = loader2.load();
+
+            ((AnchorPane) root.lookup("#center")).getChildren().add(propertiesPane);
+
+            AnchorPane.setTopAnchor(propertiesPane, 0.0);
+            AnchorPane.setRightAnchor(propertiesPane, 0.0);
+            AnchorPane.setLeftAnchor(propertiesPane, 0.0);
+            AnchorPane.setBottomAnchor(propertiesPane, 0.0);
+
+            CustomStage stage = new CustomStage();
+            stage.setTitle(Utils.getString("player.properties"));
+            stage.setScene(new Scene(root, 500, 300));
+            stage.initStyle(StageStyle.UNDECORATED);
+
+            ResizeHelper.addResizeListener(stage, 300, 200, 1.7976931348623157E308D, 1.7976931348623157E308D);
+
+            Platform.runLater(() -> {
+                GridPane gridPane = ((GridPane) propertiesPane.lookup("#scrollPane").lookup("#gridPane"));
+                insertProperties(gridPane);
+            });
+
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void insertProperties(GridPane gridPane) {
+        propertyAmount = 0;
+
+        insertProperty(gridPane, Utils.getString("properties.name"), metadata.getName());
+        insertProperty(gridPane, Utils.getString("properties.path"), file.getAbsolutePath());
+        insertProperty(gridPane, Utils.getString("properties.duration"), durationLabel.getText());
+
+        if (metadata instanceof MetadataAudio) {
+            insertProperty(gridPane, Utils.getString("properties.artist"), String.valueOf(((MetadataAudio) metadata).getArtist()));
+            insertProperty(gridPane, Utils.getString("properties.album"), String.valueOf(((MetadataAudio) metadata).getAlbum()));
+            if (((MetadataAudio) metadata).getBitRate() != -1)
+                insertProperty(gridPane, Utils.getString("properties.bitRate"), String.valueOf(((MetadataAudio) metadata).getBitRate()) + " kbps");
+            insertProperty(gridPane, Utils.getString("properties.channels"), String.valueOf(((MetadataAudio) metadata).getChannels()) +
+                    (((MetadataAudio) metadata).getChannels() == 2 ? " (stereo)" : (((MetadataAudio) metadata).getChannels() == 1 ? " (mono)" : "")));
+            insertProperty(gridPane, Utils.getString("properties.samplingRate"), String.valueOf(((MetadataAudio) metadata).getSamplingRate()) + " Hz");
+        } else if (metadata instanceof MetadataVideo) {
+            if (((MetadataVideo) metadata).getBitRate() != -1)
+                insertProperty(gridPane, Utils.getString("properties.bitRate"), String.valueOf(((MetadataVideo) metadata).getBitRate()) + " kbps");
+            insertProperty(gridPane, Utils.getString("properties.width"), String.valueOf(((MetadataVideo) metadata).getWidth()));
+            insertProperty(gridPane, Utils.getString("properties.height"), String.valueOf(((MetadataVideo) metadata).getHeight()));
+            insertProperty(gridPane, Utils.getString("properties.frameRate"), String.valueOf(((MetadataVideo) metadata).getFrameRate()));
+
+        }
+
+    }
+
+    private int propertyAmount = 0;
+
+    private void insertProperty(GridPane gridPane, String propertyName, String propertyValue) {
+        Label name = new Label(propertyName);
+        name.getStyleClass().add("property-name");
+        name.setWrapText(true);
+
+        Label value = new Label(propertyValue);
+        value.getStyleClass().add("property-value");
+        value.setWrapText(true);
+
+        gridPane.add(name, 0, propertyAmount);
+        gridPane.add(value, 1, propertyAmount);
+
+        propertyAmount++;
 
     }
 
