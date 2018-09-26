@@ -46,7 +46,7 @@
       </Button>
       <Button fx:id="queueRemove" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="playlist-element-button" text="G" GridPane.columnIndex="4" GridPane.rowIndex="1">
          <tooltip>
-            <Tooltip text="%playlist.element.removequeue" />
+            <Tooltip text="%queue.removeFromQueue" />
          </tooltip>
       </Button>
       <Label fx:id="queueIndex" maxWidth="-Infinity" minWidth="-Infinity" styleClass="title" GridPane.columnIndex="2" GridPane.rowSpan="2" />

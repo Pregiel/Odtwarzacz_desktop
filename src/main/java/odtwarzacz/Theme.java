@@ -203,10 +203,15 @@ public class Theme {
                         getStyle("-background-pressed-color", "background.pressed.color"),
                         getStyle("-text-color", "text.color"),
                         getStyle("-text-pressed-color", "text.pressed.color"),
-                        getStyle("-playlist-undocked-exit-button-hover-color", "menu.exit.button.hover.color"),
-                        getStyle("-playlist-undocked-exit-button-pressed-color", "menu.exit.button.pressed.color"),
+                        getStyle("-text-selected-color", "text.selected.color"),
+                        getStyle("-exit-button-hover-color", "menu.exit.button.hover.color"),
+                        getStyle("-exit-button-pressed-color", "menu.exit.button.pressed.color"),
                         getStyle("-box-color-primary", "box.color.primary"),
-                        getStyle("-box-color-secondary", "box.color.secondary"));
+                        getStyle("-box-color-secondary", "box.color.secondary"),
+                        getStyle("-box-hover-color-primary", "box.hover.color.primary"),
+                        getStyle("-box-hover-color-secondary", "box.hover.color.secondary"),
+                        getStyle("-background-selected-color", "background.selected.color"),
+                        getStyle("-background-selected-hover-color", "background.selected.hover.color"));
 
 
         }

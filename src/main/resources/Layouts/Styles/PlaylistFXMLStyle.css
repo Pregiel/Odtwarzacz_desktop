@@ -136,7 +136,7 @@
     -fx-fill: -text-pressed-color;
 }
 
-.scroll-pane, .scroll-pane > .viewport{
+.box, .box > .viewport{
     -fx-background-color: -box-color-primary;
 }
 

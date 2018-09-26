@@ -32,6 +32,7 @@ import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.Queue;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
+import odtwarzacz.Utils.ResizeHelper;
 import odtwarzacz.Utils.Utils;
 
 import static odtwarzacz.Connection.Connection.FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST;
@@ -207,6 +208,10 @@ public class Playlist {
         this.queueFXMLController = queueFXMLController;
     }
 
+    public QueueFXMLController getQueueFXMLController() {
+        return queueFXMLController;
+    }
+
     public void refreshQueueView() {
         if (queueFXMLController != null) {
             queueFXMLController.loadQueue();
@@ -287,6 +292,8 @@ public class Playlist {
                 BorderPane pane = loader.load();
                 pane.setStyle(Theme.getStyleConst(Theme.WINDOW_FXML));
                 Theme.getInstance().setPlayListUndockedNode(pane);
+
+                ((Label) pane.lookup("#windowTitle")).setText(Utils.getString("player.playlist"));
                 ((AnchorPane) pane.lookup("#center")).getChildren().add(getPane());
 
                 AnchorPane.setTopAnchor(getPane(), 0.0);
@@ -300,6 +307,8 @@ public class Playlist {
                 playlistWindow.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH);
                 playlistWindow.setMinHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
                 playlistWindow.initStyle(StageStyle.UNDECORATED);
+
+                ResizeHelper.addResizeListener(playlistWindow, Odtwarzacz.PLAYLIST_MIN_WIDTH, Odtwarzacz.PLAYER_MIN_HEIGHT, 1.7976931348623157E308D, 1.7976931348623157E308D);
 
             } catch (IOException e) {
                 e.printStackTrace();

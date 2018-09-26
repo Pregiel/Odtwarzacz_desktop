@@ -18,13 +18,19 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import odtwarzacz.MainFXMLController;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
+import odtwarzacz.Theme;
+import odtwarzacz.Utils.CustomStage;
 import odtwarzacz.Utils.ExpandableTimeTask;
+import odtwarzacz.Utils.ResizeHelper;
 import odtwarzacz.Utils.Utils;
 
 import java.io.IOException;
@@ -179,7 +185,7 @@ public class PlaylistFXMLController implements Initializable {
         getPlaylist().playAll();
     }
 
-    private Parent queueRoot;
+    private BorderPane queueRoot;
 
     private void clearQueueView() {
         queueRoot = null;
@@ -189,21 +195,38 @@ public class PlaylistFXMLController implements Initializable {
 
         if (queueRoot == null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/QueueFXML.fxml"), Utils.getTranslationsBundle());
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/WindowFXML.fxml"), Utils.getTranslationsBundle());
 
                 queueRoot = loader.load();
+                queueRoot.setStyle(Theme.getStyleConst(Theme.WINDOW_FXML));
+                ((Label) queueRoot.lookup("#windowTitle")).setText(Utils.getString("player.queue"));
 
-                QueueFXMLController queueFXMLController = loader.getController();
-
+                FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/Layouts/QueueFXML.fxml"), Utils.getTranslationsBundle());
+                BorderPane queuePane = loader2.load();
+                QueueFXMLController queueFXMLController = loader2.getController();
                 MainFXMLController.getPlaylist().setQueueFXMLController(queueFXMLController);
 
-                Stage stage = new Stage();
+                ((AnchorPane) queueRoot.lookup("#center")).getChildren().add(queuePane);
+
+                AnchorPane.setTopAnchor(queuePane, 0.0);
+                AnchorPane.setRightAnchor(queuePane, 0.0);
+                AnchorPane.setLeftAnchor(queuePane, 0.0);
+                AnchorPane.setBottomAnchor(queuePane, 0.0);
+
+                CustomStage stage = new CustomStage();
                 stage.setTitle(Utils.getString("player.queue"));
-                stage.setScene(new Scene(queueRoot, 250, 350));
+                stage.setScene(new Scene(queueRoot, 400, 600));
+                stage.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH);
+                stage.setMinHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
+                stage.initStyle(StageStyle.UNDECORATED);
                 stage.setOnHidden(e -> {
                     clearQueueView();
                     MainFXMLController.getPlaylist().setQueueFXMLController(null);
                 });
+
+                ResizeHelper.addResizeListener(stage, Odtwarzacz.PLAYLIST_MIN_WIDTH, Odtwarzacz.PLAYER_MIN_HEIGHT, 1.7976931348623157E308D, 1.7976931348623157E308D);
+
+
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();

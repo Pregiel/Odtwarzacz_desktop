@@ -22,7 +22,6 @@ import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
 import odtwarzacz.Playlist.Queue.QueueElement;
 import odtwarzacz.Utils.Utils;
-import sun.applet.Main;
 
 import static odtwarzacz.MainFXMLController.getPlaylist;
 
@@ -108,7 +107,7 @@ public class PlaylistElement {
                     setSelected(!isSelected());
                 }
             } else if (event.getButton().equals(MouseButton.SECONDARY)) {
-                if (!event.isControlDown()){
+                if (!event.isControlDown()) {
                     getPlaylist().unselectAll();
                 }
                 setSelected(true);
@@ -156,7 +155,7 @@ public class PlaylistElement {
 
         Menu queue = new Menu(Utils.getString("player.queue"));
         MenuItem queueAdd = new MenuItem(Utils.getString("playlist.element.addqueue"));
-        MenuItem queueRemove = new MenuItem(Utils.getString("playlist.element.removequeue"));
+        MenuItem queueRemove = new MenuItem(Utils.getString("queue.removeFromQueue"));
         MenuItem queueClear = new MenuItem(Utils.getString("playlist.element.clearqueue"));
         MenuItem queueShow = new MenuItem(Utils.getString("playlist.showQueue"));
 
@@ -362,11 +361,10 @@ public class PlaylistElement {
     public void setSelected(boolean selected) {
         this.selected = selected;
 
-//        pane.getStyleClass().removeAll("playlist-element", "playlist-element-selected");
         if (selected) {
-            pane.getStyleClass().add(CSS_BACKGROUND_SELECTED);
+            if (!pane.getStyleClass().contains(CSS_BACKGROUND_SELECTED))
+                pane.getStyleClass().add(CSS_BACKGROUND_SELECTED);
         } else {
-//            pane.getStyleClass().add("playlist-element");
             pane.getStyleClass().remove(CSS_BACKGROUND_SELECTED);
         }
     }

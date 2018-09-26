@@ -25,8 +25,8 @@
 	-text-pressed-color: #ffffff;
 
 	-background-pressed-color: #969696;
-	-playlist-undocked-exit-button-hover-color: #ee3333;
-	-playlist-undocked-exit-button-pressed-color: #ee7777;
+	-exit-button-hover-color: #ee3333;
+	-exit-button-pressed-color: #ee7777;
 }
 
 .background {
@@ -61,11 +61,11 @@
 }
 
 .title-bar-exit-button:hover {
-    -fx-background-color: -playlist-undocked-exit-button-hover-color;
+    -fx-background-color: -exit-button-hover-color;
 }
 
 .title-bar-exit-button:pressed {
-    -fx-background-color: -playlist-undocked-exit-button-pressed-color;
+    -fx-background-color: -exit-button-pressed-color;
 }
 
 .tooltip {
