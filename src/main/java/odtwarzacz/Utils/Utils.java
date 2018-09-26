@@ -41,14 +41,6 @@ public class Utils {
         return imageView.snapshot(null, null);
     }
 
-    public static void print(Object... value) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Object s : value) {
-            stringBuilder.append(s.toString()).append(" ");
-        }
-        System.out.println(stringBuilder.toString());
-    }
-
     public static String getExtension(String file) {
         return file.substring(file.lastIndexOf(".") + 1);
     }
@@ -80,5 +72,21 @@ public class Utils {
         return hsb;
 
 
+    }
+
+    public static void print(Object... value) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Object s : value) {
+            stringBuilder.append(s.toString()).append(" ");
+        }
+        System.out.println(stringBuilder.toString());
+    }
+
+    public static void println(Object... value) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Object s : value) {
+            stringBuilder.append(s.toString()).append("\n");
+        }
+        System.out.println(stringBuilder.toString());
     }
 }

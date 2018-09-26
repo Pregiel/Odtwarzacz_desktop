@@ -5,12 +5,18 @@
  */
 package odtwarzacz.Playlist;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -112,8 +118,8 @@ public class PlaylistElement {
                 }
                 setSelected(true);
                 contextMenu.show(pane, event.getScreenX(), event.getScreenY());
-                playableMenuItem.setText((getPlayable() ? Utils.getString("playlist.element.turnOff")
-                        : Utils.getString("playlist.element.turnOn")));
+                playableMenuItem.setText((getPlayable() ? Utils.getString("playlist.element.disable")
+                        : Utils.getString("playlist.element.enable")));
             } else if (event.getButton().equals(MouseButton.MIDDLE)) {
                 getPlaylist().unselectAll();
                 setSelected(true);
@@ -151,7 +157,8 @@ public class PlaylistElement {
         MenuItem remove = new MenuItem(Utils.getString("playlist.element.remove"));
         MenuItem removeSelected = new MenuItem(Utils.getString("playlist.element.removeselected"));
         MenuItem properties = new MenuItem(Utils.getString("playlist.element.properties"));
-        playableMenuItem = new MenuItem(Utils.getString("playlist.element.turnOff"));
+        MenuItem fileLocation = new MenuItem(Utils.getString("playlist.element.fileLocation"));
+        playableMenuItem = new MenuItem(Utils.getString("playlist.element.disable"));
 
         Menu queue = new Menu(Utils.getString("player.queue"));
         MenuItem queueAdd = new MenuItem(Utils.getString("playlist.element.addqueue"));
@@ -167,6 +174,15 @@ public class PlaylistElement {
         removeSelected.setOnAction(event -> getPlaylist().removeSelected());
 
         properties.setOnAction(event -> {
+
+        });
+
+        fileLocation.setOnAction(event -> {
+            try {
+                Desktop.getDesktop().open(file.getParentFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         });
 
@@ -189,7 +205,7 @@ public class PlaylistElement {
         queue.getItems().addAll(queueAdd, new SeparatorMenuItem(), queueRemove, queueClear,
                 new SeparatorMenuItem(), queueShow);
 
-        contextMenu.getItems().addAll(play, new SeparatorMenuItem(), properties, queue,
+        contextMenu.getItems().addAll(play, new SeparatorMenuItem(), properties, fileLocation, queue,
                 new SeparatorMenuItem(), remove, removeSelected, new SeparatorMenuItem(), playableMenuItem);
 
     }
