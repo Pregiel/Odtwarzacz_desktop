@@ -85,8 +85,7 @@ public class MainFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/FirstViewFXML.fxml"), Utils.getTranslationsBundle());
-            FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/FirstViewFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/FirstViewFXML.fxml"), Utils.getTranslationsBundle());
             lastPickedPane = loader.load();
             lastPickedPane.setStyle(Theme.getStyleConst(Theme.FIRSTVIEW_FXML));
             Theme.getInstance().setFirstViewNode(lastPickedPane);
@@ -237,8 +236,7 @@ public class MainFXMLController implements Initializable {
     }
 
     private void refreshScene() throws IOException {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MediaFXML.fxml"), Utils.getTranslationsBundle());
-        FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/MediaFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MediaFXML.fxml"), Utils.getTranslationsBundle());
         Pane mediaPane = loader.load();
         mediaPane.setStyle(Theme.getStyleConst(Theme.MEDIA_FXML));
         Theme.getInstance().setMediaNode(mediaPane);

@@ -215,8 +215,7 @@ public class Playlist {
     }
 
     public void makePlaylistPane() throws IOException {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistFXML.fxml"), resourceBundle);
-        FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/PlaylistFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistFXML.fxml"), Utils.getTranslationsBundle());
 
         pane = loader.load();
         playlistFXMLController = loader.getController();
@@ -284,7 +283,7 @@ public class Playlist {
 
         if (playlistWindow == null) {
             try {
-                FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/PlaylistUndockedFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistUndockedFXML.fxml"), Utils.getTranslationsBundle());
 
                 BorderPane pane = loader.load();
                 pane.setStyle(Theme.getStyleConst(Theme.PLAYLISTUNDOCKED_FXML));
@@ -364,8 +363,7 @@ public class Playlist {
             List<PlaylistElement> playlistElements = new ArrayList<>();
             for (String s : playlistList) {
                 try {
-//                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistElementFXML.fxml"), resourceBundle);
-                    FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/PlaylistElementFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistElementFXML.fxml"), Utils.getTranslationsBundle());
 
                     PlaylistElement element = new PlaylistElement(i, s, loader.load());
                     element.getMetadata().setMetadata(i, playlistProperties);
@@ -460,8 +458,7 @@ public class Playlist {
         }
 
         try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistElementFXML.fxml"), resourceBundle);
-            FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/PlaylistElementFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistElementFXML.fxml"), Utils.getTranslationsBundle());
 
             PlaylistElement element = new PlaylistElement(index, file.getAbsolutePath(), loader.load());
 

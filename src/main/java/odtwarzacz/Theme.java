@@ -153,7 +153,8 @@ public class Theme {
                         getStyle("-playlist-background-color", "playlist.background.color"),
                         getStyle("-menu-button-pressed-color", "menu.button.pressed.color"),
                         getStyle("-menu-exit-button-hover-color", "menu.exit.button.hover.color"),
-                        getStyle("-menu-exit-button-pressed-color", "menu.exit.button.pressed.color"));
+                        getStyle("-menu-exit-button-pressed-color", "menu.exit.button.pressed.color"),
+                        getStyle("-scroll-color", "scroll.color"));
 
             case MEDIA_FXML:
                 return getStyles(

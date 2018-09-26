@@ -42,8 +42,7 @@ public class Odtwarzacz extends Application {
         new Theme(configProp.getProperty("theme"));
 
         Utils.initTranslationsBundle();
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MainFXML.fxml"), Utils.getTranslationsBundle());
-        FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/MainFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/MainFXML.fxml"), Utils.getTranslationsBundle());
         Pane root = loader.load();
 
         root.setStyle(Theme.getStyleConst(Theme.MAIN_FXML));

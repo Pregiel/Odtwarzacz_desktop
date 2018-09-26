@@ -11,15 +11,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import odtwarzacz.MainFXMLController;
@@ -78,7 +77,6 @@ public class PlaylistFXMLController implements Initializable {
             if (event.getTarget().toString().contains("ScrollPaneSkin"))
                 getPlaylist().unselectAll();
         });
-
 
         changeListener = (observable, oldValue, newValue) -> {
             if (!newValue && playlistComboBox.getSelectionModel().getSelectedIndex() != lastedComboboxIndex) {
@@ -191,8 +189,7 @@ public class PlaylistFXMLController implements Initializable {
 
         if (queueRoot == null) {
             try {
-//                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/QueueFXML.fxml"), Utils.getTranslationsBundle());
-                FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/QueueFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/QueueFXML.fxml"), Utils.getTranslationsBundle());
 
                 queueRoot = loader.load();
 

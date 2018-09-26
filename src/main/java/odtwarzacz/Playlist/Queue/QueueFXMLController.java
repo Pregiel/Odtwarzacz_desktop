@@ -43,8 +43,7 @@ public class QueueFXMLController implements Initializable {
         int i = 0;
         for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
             try {
-//                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/QueueElementFXML.fxml"), resourceBundle);
-                FXMLLoader loader = new FXMLLoader(Paths.get("Layouts/QueueElementFXML.fxml").toUri().toURL(), Utils.getTranslationsBundle());
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/QueueElementFXML.fxml"), Utils.getTranslationsBundle());
 
                 GridPane pane = loader.load();
 

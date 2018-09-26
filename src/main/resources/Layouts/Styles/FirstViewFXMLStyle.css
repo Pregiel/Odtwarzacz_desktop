@@ -46,7 +46,7 @@
 
 .first-link:hover {
 	-fx-text-fill: -first-text-hover-color;
-	-fx-underline: false;
+	-fx-underline: true;
 }
 
 .first-link:focused {

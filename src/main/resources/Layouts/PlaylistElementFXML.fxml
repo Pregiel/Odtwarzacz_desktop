@@ -10,10 +10,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <GridPane fx:id="pane" minHeight="-Infinity" styleClass="background" stylesheets="@Styles/PlaylistElementFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistElementFXMLController">
-  <columnConstraints>
+    <columnConstraints>
     <ColumnConstraints hgrow="NEVER" maxWidth="42.0" minWidth="42.0" prefWidth="42.0" />
-    <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
+    <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+      <ColumnConstraints hgrow="NEVER" />
       <ColumnConstraints maxWidth="-Infinity" minWidth="-Infinity" prefWidth="32.0" />
   </columnConstraints>
   <rowConstraints>
@@ -24,20 +25,30 @@
       <CheckBox fx:id="songCheckbox" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" GridPane.rowSpan="2">
          <GridPane.margin>
             <Insets left="6.0" />
-         </GridPane.margin></CheckBox>
+         </GridPane.margin>
+      </CheckBox>
       <Label fx:id="songName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="title" text="0. Author - Title" GridPane.columnIndex="1" GridPane.rowSpan="2">
          <GridPane.margin>
-            <Insets bottom="4.0" left="8.0" right="8.0" top="4.0" />
+            <Insets bottom="4.0" left="8.0" right="4.0" top="4.0" />
          </GridPane.margin>
+         <tooltip>
+            <Tooltip fx:id="titleTooltip" />
+         </tooltip>
       </Label>
-      <Label fx:id="queueIndex" maxWidth="-Infinity" minWidth="-Infinity" styleClass="title" GridPane.columnIndex="2" GridPane.rowSpan="2" />
-      <Button fx:id="queueAdd" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="playlist-element-button" text="F" GridPane.columnIndex="3">
+      <Label fx:id="durationLabel" maxWidth="-Infinity" minWidth="-Infinity" styleClass="title" text="00:00" GridPane.columnIndex="3" GridPane.rowSpan="2">
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding></Label>
+      <Button fx:id="queueAdd" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="playlist-element-button" text="F" GridPane.columnIndex="4">
          <tooltip>
             <Tooltip text="%playlist.element.addqueue" />
-         </tooltip></Button>
-      <Button fx:id="queueRemove" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="playlist-element-button" text="G" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         </tooltip>
+      </Button>
+      <Button fx:id="queueRemove" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="playlist-element-button" text="G" GridPane.columnIndex="4" GridPane.rowIndex="1">
          <tooltip>
             <Tooltip text="%playlist.element.removequeue" />
-         </tooltip></Button>
+         </tooltip>
+      </Button>
+      <Label fx:id="queueIndex" maxWidth="-Infinity" minWidth="-Infinity" styleClass="title" GridPane.columnIndex="2" GridPane.rowSpan="2" />
    </children>
 </GridPane>

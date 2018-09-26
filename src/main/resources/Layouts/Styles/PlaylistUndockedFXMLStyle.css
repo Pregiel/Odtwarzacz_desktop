@@ -1,0 +1,110 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Thin.ttf');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Light.ttf');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+	font-family: 'MediaIcons';
+	src: url('Fonts/MediaIcons.ttf');
+}
+
+*.const {
+	-playlist-undocked-background-color: #545454;
+	-playlist-undocked-background-highlight-color: #6d6d6d;
+	-playlist-undocked-text-color: #d6d6d6;
+	-playlist-undocked-text-highlight-color: #ffffff;
+
+	-playlist-undocked-button-pressed-color: #969696;
+	-playlist-undocked-exit-button-hover-color: #ee3333;
+	-playlist-undocked-exit-button-pressed-color: #ee7777;
+}
+
+.background {
+    -fx-background-color: -playlist-undocked-background-color;
+}
+
+
+/*** title-bar ***/
+.title-bar {
+    -fx-background-color: -playlist-undocked-background-color;
+}
+
+.title-label {
+	-fx-font-family: 'Roboto Bold';
+    -fx-text-fill: -playlist-undocked-text-color;
+	-fx-font-size: 16px;
+}
+
+.title-bar-button {
+    -fx-background-color: -playlist-undocked-background-color;
+	-fx-font-family: 'MediaIcons';
+    -fx-text-fill: -playlist-undocked-text-color;
+	-fx-font-size: 18px;
+}
+
+.title-bar-button:hover {
+    -fx-background-color: -playlist-undocked-background-highlight-color;
+}
+
+.title-bar-button:pressed {
+    -fx-background-color: -playlist-undocked-button-pressed-color;
+}
+
+.title-bar-exit-button:hover {
+    -fx-background-color: -playlist-undocked-exit-button-hover-color;
+}
+
+.title-bar-exit-button:pressed {
+    -fx-background-color: -playlist-undocked-exit-button-pressed-color;
+}
+
+.tooltip {
+	-fx-font-family: 'Roboto Regular';
+	-fx-font-size: 16px;
+}
+
+
+.context-menu {
+    -fx-background-color: -playlist-undocked-background-color;
+}
+
+/*** menu-item ***/
+
+.menu-item {
+	-fx-background-color: -playlist-undocked-background-color;
+}
+
+.menu-item .label {
+	-fx-font-family: 'Roboto Light';
+    -fx-text-fill: -playlist-undocked-text-color;
+	-fx-font-size: 15px;
+}
+
+.menu-item .left-container,
+.menu-item .right-container {
+	-fx-mark-color: -playlist-undocked-text-color;
+}
+
+.menu-item .label:disabled {
+    -fx-opacity: 1.0;
+}
+
+.menu-item:focused,
+.menu-item:hovered {
+    -fx-background-color: -playlist-undocked-background-highlight-color;
+}
+
+.menu-item:focused .label,
+.menu-item:hovered .label {
+    -fx-text-fill: -playlist-undocked-text-highlight-color;
+}

@@ -32,6 +32,7 @@
 
 .text-field {
     -fx-background-color: -playlist-search-background-color;
+    -fx-background-radius: 0em;
 	-fx-font-size: 14px;
     -fx-font-family: 'Roboto Medium';
     -fx-text-fill: -playlist-text-color;
@@ -42,6 +43,7 @@
 .playlist-button, .playlist-menu-button {
     -fx-background-color: -playlist-button-background-color;
     -fx-padding: 5 5 2 5;
+    -fx-background-radius: 0em;
 }
 
 .playlist-button:hover, .playlist-menu-button:hover, .playlist-menu-button:pressed, .playlist-menu-button:showing {
@@ -80,6 +82,7 @@
 /*** combo-box ***/
 .combo-box {
     -fx-background-color: -playlist-button-background-color;
+    -fx-background-radius: 0em;
 }
 
 .combo-box:hover, .combo-box:showing {

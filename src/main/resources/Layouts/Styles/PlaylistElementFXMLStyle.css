@@ -87,6 +87,7 @@
 
 .playlist-element-button {
     -fx-background-color: -playlist-element-button-background-color;
+    -fx-background-radius: 0em;
     -fx-padding: 5 5 2 5;
 }
 
@@ -106,6 +107,7 @@
 
 .check-box .box {
     -fx-background-color: transparent;
+    -fx-background-radius: 0em;
     -fx-border-color: -playlist-element-checkbox-background-color;
     -fx-border-radius: 1px;
 }

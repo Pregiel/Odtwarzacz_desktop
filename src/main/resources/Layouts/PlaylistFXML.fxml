@@ -18,11 +18,15 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane minWidth="300.0" prefWidth="400.0" styleClass="background" stylesheets="@Styles/PlaylistFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistFXMLController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="400.0" styleClass="background" stylesheets="@Styles/PlaylistFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistFXMLController">
    <center>
       <ScrollPane fx:id="playlistScroll" fitToWidth="true" hbarPolicy="NEVER" styleClass="playlist-box">
          <content>
-            <VBox fx:id="playlistPane" prefHeight="0.0" styleClass="playlist-box" />
+            <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <children>
+                  <VBox fx:id="playlistPane" prefHeight="0.0" styleClass="playlist-box" />
+               </children>
+            </StackPane>
          </content>
       </ScrollPane>
    </center>
@@ -95,7 +99,11 @@
                            <padding>
                               <Insets left="34.0" />
                            </padding></TextField>
-                        <Button fx:id="clearSearchBoxButton" alignment="CENTER" mnemonicParsing="false" onAction="#clearSearchBox" styleClass="search-clear" text="L" visible="false" StackPane.alignment="CENTER_RIGHT" />
+                        <Button fx:id="clearSearchBoxButton" alignment="CENTER" mnemonicParsing="false" onAction="#clearSearchBox" text="L" visible="false" StackPane.alignment="CENTER_RIGHT">
+                           <styleClass>
+                              <String fx:value="search-clear" />
+                              <String fx:value="playlist-button" />
+                           </styleClass></Button>
                         <Label alignment="CENTER" styleClass="search-icon" text="J" StackPane.alignment="CENTER_LEFT">
                            <StackPane.margin>
                               <Insets left="2.0" top="4.0" />
