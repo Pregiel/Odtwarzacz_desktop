@@ -9,7 +9,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import odtwarzacz.MainFXMLController;
-import odtwarzacz.Utils.MyLocale;
 import odtwarzacz.Playlist.Playlist;
 import odtwarzacz.Utils.Utils;
 
@@ -25,22 +24,14 @@ public class QueueFXMLController implements Initializable {
     public ScrollPane queueScroll;
     public VBox queuePane;
 
-    private List<QueueElement> queueElementList;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
-//
-//
-//            queuePane.getChildren().add(element.getPane());
-//        }
-
         loadQueue();
     }
 
     public void clear(ActionEvent event) {
         for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
-            MainFXMLController.getPlaylist().getPlaylistElementList().get(queueElement.getPlaylistIndex() - 1).removeFromQueue();
+            MainFXMLController.getPlaylist().getPlaylistElementList().get(queueElement.getPlaylistIndex() - 1).removeQueueLabel();
         }
         queuePane.getChildren().clear();
         MainFXMLController.getPlaylist().getQueue().getQueueElements().clear();
@@ -48,8 +39,6 @@ public class QueueFXMLController implements Initializable {
 
     public void loadQueue() {
         queuePane.getChildren().clear();
-//        ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
-//                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
         int i = 0;
         for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
@@ -73,9 +62,6 @@ public class QueueFXMLController implements Initializable {
                     MainFXMLController.getPlaylist().getPlaylistElementList().get(removedIndex).setQueueLabel();
                     loadQueue();
                 });
-
-//                PlaylistElement element = new PlaylistElement(i++, s, loader.load());
-//                playlistElementList.add(element);
 
                 queuePane.getChildren().add(pane);
             } catch (IOException ex) {

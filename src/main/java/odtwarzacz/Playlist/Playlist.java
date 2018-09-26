@@ -7,7 +7,6 @@ package odtwarzacz.Playlist;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
@@ -34,7 +33,6 @@ import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.Queue;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
-import odtwarzacz.Utils.FileType;
 import odtwarzacz.Utils.Utils;
 
 import static odtwarzacz.Connection.Connection.FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST;
@@ -512,9 +510,7 @@ public class Playlist {
         cancelButton.setText(Utils.getString("dialog.cancel"));
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(s -> {
-            setPlaylistName(s);
-        });
+        result.ifPresent(s -> setPlaylistName(s));
     }
 
     public void newPlaylist() {
@@ -555,6 +551,10 @@ public class Playlist {
                 removePlaylist(playlistProperties.getPlaylistId());
             }
         });
+    }
+
+    public PlaylistFXMLController getPlaylistFXMLController() {
+        return playlistFXMLController;
     }
 
     private class PlaylistClass {
@@ -634,6 +634,7 @@ public class Playlist {
             if (element.isSelected()) {
                 playlistProperties.removeFromArray(element.getIndex());
                 playlistPane.getChildren().remove(element.getPane());
+                Theme.getInstance().removePlayListElementNode(element.getPane());
                 playlistList.remove((element.getIndex() - 1) - removedAmount++);
                 elementsToRemove.add(element);
             } else if (removedAmount > 0) {
@@ -647,6 +648,28 @@ public class Playlist {
             reloadLabelsPlaylist();
             redrawElementsBackground();
         }
+    }
+
+    public void remove(int index) {
+        int removedAmount = 0;
+        List<PlaylistElement> elementsToRemove = new ArrayList<>();
+        for (PlaylistElement element : playlistElementList) {
+            if (element.getIndex() == index) {
+                playlistProperties.removeFromArray(element.getIndex());
+                playlistPane.getChildren().remove(element.getPane());
+                Theme.getInstance().removePlayListElementNode(element.getPane());
+                playlistList.remove((element.getIndex() - 1) - removedAmount++);
+                elementsToRemove.add(element);
+            } else if (removedAmount > 0) {
+                playlistProperties.changeIndexInArray(element.getIndex(), element.getIndex() - removedAmount);
+                element.setIndex(element.getIndex() - removedAmount);
+            }
+        }
+        playlistElementList.removeAll(elementsToRemove);
+
+        reloadLabelsPlaylist();
+        redrawElementsBackground();
+
     }
 
     public void save() {
@@ -740,7 +763,7 @@ public class Playlist {
                         do {
                             newIndex = new Random().nextInt(playlistList.size()) + 1;
                         } while (newIndex == getPlaylistIndex() ||
-                                !playlistElementList.get(newIndex - 1).isPlayable() ||
+                                !playlistElementList.get(newIndex - 1).getPlayable() ||
                                 playlistElementList.get(newIndex - 1).isNotFounded());
                         setPlaylistIndex(newIndex);
                     }
@@ -752,7 +775,7 @@ public class Playlist {
                         if (playlistIndex - 1 >= playlistElementList.size()) {
                             next = false;
                             playlistIndex++;
-                        } else if (playlistElementList.get(playlistIndex - 1).isPlayable() &&
+                        } else if (playlistElementList.get(playlistIndex - 1).getPlayable() &&
                                 !playlistElementList.get(playlistIndex - 1).isNotFounded()) {
                             next = false;
                         }

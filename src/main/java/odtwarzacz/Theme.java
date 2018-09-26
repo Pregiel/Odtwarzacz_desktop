@@ -117,6 +117,10 @@ public class Theme {
         this.playListElementNode.add(playListElementNode);
     }
 
+    public void removePlayListElementNode(Node playListElementNode) {
+        this.playListElementNode.remove(playListElementNode);
+    }
+
     public static Theme getInstance() {
         return instance;
     }

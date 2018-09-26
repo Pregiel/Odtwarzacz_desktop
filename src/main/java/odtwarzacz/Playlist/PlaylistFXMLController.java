@@ -208,8 +208,6 @@ public class PlaylistFXMLController implements Initializable {
                     MainFXMLController.getPlaylist().setQueueFXMLController(null);
                 });
                 stage.show();
-                // Hide this current window (if this is what you want)
-//            ((Node)(event.getSource())).getScene().getWindow().hide();
             } catch (IOException e) {
                 e.printStackTrace();
             }

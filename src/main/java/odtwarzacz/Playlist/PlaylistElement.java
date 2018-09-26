@@ -10,10 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -25,6 +22,9 @@ import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
 import odtwarzacz.Playlist.Queue.QueueElement;
 import odtwarzacz.Utils.Utils;
+import sun.applet.Main;
+
+import static odtwarzacz.MainFXMLController.getPlaylist;
 
 /**
  * @author Pregiel
@@ -41,6 +41,8 @@ public class PlaylistElement {
     private CheckBox songCheckbox;
     private Label titleLabel, queueIndexLabel, durationLabel;
     private Button queueAddBtn, queueRemoveBtn;
+    private Tooltip titleTooltip;
+    private ContextMenu contextMenu;
 
     private boolean selected, playing, notFounded;
 
@@ -50,8 +52,6 @@ public class PlaylistElement {
 
     private FileType fileType;
 
-    private String name;
-
 
     public PlaylistElement(int index, String path, GridPane pane) {
         this.index = index;
@@ -59,17 +59,21 @@ public class PlaylistElement {
         this.pane.setStyle(Theme.getStyleConst(Theme.PLAYLISTELEMENT_FXML));
         Theme.getInstance().addPlayListElementNode(pane);
 
-        this.titleLabel = (Label) pane.lookup("#songName");
-        this.songCheckbox = (CheckBox) pane.lookup("#songCheckbox");
+        titleLabel = (Label) pane.lookup("#songName");
+        songCheckbox = (CheckBox) pane.lookup("#songCheckbox");
 
-        this.queueIndexLabel = (Label) pane.lookup("#queueIndex");
-        this.queueAddBtn = (Button) pane.lookup("#queueAdd");
-        this.queueRemoveBtn = (Button) pane.lookup("#queueRemove");
+        queueIndexLabel = (Label) pane.lookup("#queueIndex");
+        queueAddBtn = (Button) pane.lookup("#queueAdd");
+        queueRemoveBtn = (Button) pane.lookup("#queueRemove");
 
-        this.durationLabel = (Label) pane.lookup("#durationLabel");
+        durationLabel = (Label) pane.lookup("#durationLabel");
 
-        this.songCheckbox.selectedProperty().set(true);
-        this.file = new File(path);
+        titleTooltip = titleLabel.getTooltip();
+
+        initContextMenu();
+
+        songCheckbox.selectedProperty().set(true);
+        file = new File(path);
 
         setSelected(false);
         setPlaying(false);
@@ -85,70 +89,48 @@ public class PlaylistElement {
         }
 
         if (file.exists()) {
-//            metadata.generate(file, () -> {
-//                name = metadata.generateLabel();
-//                generateTitleLabel();
-//            });
-//            name = metadata.generateLabel();
             generateTitleLabel();
         } else {
             setNotFounded(true);
-//            name = file.getName();
         }
-//        generateTitleLabel();
-//        generateMetadata();
 
 
         this.pane.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
                 if (!event.isControlDown()) {
                     if (event.getClickCount() == 1) {
-                        MainFXMLController.getPlaylist().unselectAll();
+                        getPlaylist().unselectAll();
                         setSelected(true);
                     } else {
-                        MainFXMLController.getPlaylist().play(index);
+                        getPlaylist().play(index);
                     }
                 } else {
                     setSelected(!isSelected());
+                }
+            } else if (event.getButton().equals(MouseButton.SECONDARY)) {
+                if (!event.isControlDown()){
+                    getPlaylist().unselectAll();
+                }
+                setSelected(true);
+                contextMenu.show(pane, event.getScreenX(), event.getScreenY());
+                playableMenuItem.setText((getPlayable() ? Utils.getString("playlist.element.turnOff")
+                        : Utils.getString("playlist.element.turnOn")));
+            } else if (event.getButton().equals(MouseButton.MIDDLE)) {
+                getPlaylist().unselectAll();
+                setSelected(true);
+                if (event.isShiftDown()) {
+                    removeFromQueue();
+                } else {
+                    addToQueue();
                 }
             }
         });
 
         queueRemoveBtn.setDisable(true);
 
-        queueAddBtn.setOnAction((event) -> {
-            MainFXMLController.getPlaylist().getQueue().addToQueue(new QueueElement(index, titleLabel.getText()));
+        queueAddBtn.setOnAction((event) -> addToQueue());
 
-            setQueueLabel();
-
-            queueRemoveBtn.setDisable(false);
-            MainFXMLController.getPlaylist().refreshQueueView();
-        });
-
-        queueRemoveBtn.setOnAction((event) -> {
-            int elementIndex = MainFXMLController.getPlaylist().getQueue().removeLastElementByPlaylistIndex(index);
-
-            if (elementIndex > -1) {
-                for (int i = elementIndex; i < MainFXMLController.getPlaylist().getQueue().getQueueElements().size(); i++) {
-                    MainFXMLController.getPlaylist().getPlaylistElementList().get(
-                            MainFXMLController.getPlaylist().getQueue().getQueueElements().get(i).getPlaylistIndex() - 1
-                    ).setQueueLabel();
-                }
-            }
-
-            setQueueLabel();
-
-            MainFXMLController.getPlaylist().refreshQueueView();
-
-            for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
-                if (queueElement.getPlaylistIndex() == index) {
-                    return;
-                }
-            }
-
-            queueRemoveBtn.setDisable(true);
-
-        });
+        queueRemoveBtn.setOnAction((event) -> removeFromQueue());
 
         if (index % 2 == 0) {
             pane.getStyleClass().clear();
@@ -161,17 +143,74 @@ public class PlaylistElement {
 
     }
 
+    private MenuItem playableMenuItem;
+
+    public void initContextMenu() {
+        contextMenu = new ContextMenu();
+
+        MenuItem play = new MenuItem(Utils.getString("playlist.element.play"));
+        MenuItem remove = new MenuItem(Utils.getString("playlist.element.remove"));
+        MenuItem removeSelected = new MenuItem(Utils.getString("playlist.element.removeselected"));
+        MenuItem properties = new MenuItem(Utils.getString("playlist.element.properties"));
+        playableMenuItem = new MenuItem(Utils.getString("playlist.element.turnOff"));
+
+        Menu queue = new Menu(Utils.getString("player.queue"));
+        MenuItem queueAdd = new MenuItem(Utils.getString("playlist.element.addqueue"));
+        MenuItem queueRemove = new MenuItem(Utils.getString("playlist.element.removequeue"));
+        MenuItem queueClear = new MenuItem(Utils.getString("playlist.element.clearqueue"));
+        MenuItem queueShow = new MenuItem(Utils.getString("playlist.showQueue"));
+
+
+        play.setOnAction(event -> getPlaylist().play(index));
+
+        remove.setOnAction(event -> getPlaylist().remove(index));
+
+        removeSelected.setOnAction(event -> getPlaylist().removeSelected());
+
+        properties.setOnAction(event -> {
+
+        });
+
+        playableMenuItem.setOnAction(event -> songCheckbox.fire());
+
+        queueAdd.setOnAction(event -> addToQueue());
+
+        queueRemove.setOnAction(event -> removeFromQueue());
+
+        queueClear.setOnAction(event -> {
+            for (QueueElement queueElement : getPlaylist().getQueue().getQueueElements()) {
+                getPlaylist().getPlaylistElementList().get(queueElement.getPlaylistIndex() - 1).removeQueueLabel();
+            }
+            getPlaylist().getQueue().getQueueElements().clear();
+        });
+
+        queueShow.setOnAction(event -> getPlaylist().getPlaylistFXMLController().showQueue(event));
+
+
+        queue.getItems().addAll(queueAdd, new SeparatorMenuItem(), queueRemove, queueClear,
+                new SeparatorMenuItem(), queueShow);
+
+        contextMenu.getItems().addAll(play, new SeparatorMenuItem(), properties, queue,
+                new SeparatorMenuItem(), remove, removeSelected, new SeparatorMenuItem(), playableMenuItem);
+
+    }
+
     public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
     }
 
     public void generateTitleLabel() {
         titleLabel.setText(index + ". " + metadata.getName());
+        if (notFounded) {
+            titleTooltip.setText(Utils.getString("file.nofile") + " " + file.getAbsolutePath());
+        } else {
+            titleTooltip.setText(metadata.getName());
+        }
     }
 
     public void setDurationLabel() {
         long s = (long) metadata.getDuration().toSeconds();
-        durationLabel.setText(String.format("%d:%02d:%02d", s/3600, (s%3600)/60, (s%60)));
+        durationLabel.setText(String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60)));
     }
 
     public void setStyle(int value) {
@@ -185,10 +224,43 @@ public class PlaylistElement {
     }
 
     public void removeFromQueue() {
+        int elementIndex = getPlaylist().getQueue().removeLastElementByPlaylistIndex(index);
+
+        if (elementIndex > -1) {
+            for (int i = elementIndex; i < getPlaylist().getQueue().getQueueElements().size(); i++) {
+                getPlaylist().getPlaylistElementList().get(
+                        getPlaylist().getQueue().getQueueElements().get(i).getPlaylistIndex() - 1
+                ).setQueueLabel();
+            }
+        }
+
+        setQueueLabel();
+
+        getPlaylist().refreshQueueView();
+
+        for (QueueElement queueElement : getPlaylist().getQueue().getQueueElements()) {
+            if (queueElement.getPlaylistIndex() == index) {
+                return;
+            }
+        }
+
+        queueRemoveBtn.setDisable(true);
+    }
+
+    public void removeQueueLabel() {
         queueIndexLabel.setTooltip(null);
         queueIndexLabel.setText("");
 
         queueRemoveBtn.setDisable(true);
+    }
+
+    public void addToQueue() {
+        getPlaylist().getQueue().addToQueue(new QueueElement(index, titleLabel.getText()));
+
+        setQueueLabel();
+
+        queueRemoveBtn.setDisable(false);
+        getPlaylist().refreshQueueView();
     }
 
     private boolean hidden = false;
@@ -214,7 +286,7 @@ public class PlaylistElement {
 
         List<Integer> queueIndexes = new ArrayList<>();
         int i = 0;
-        for (QueueElement queueElement : MainFXMLController.getPlaylist().getQueue().getQueueElements()) {
+        for (QueueElement queueElement : getPlaylist().getQueue().getQueueElements()) {
             if (queueElement.getPlaylistIndex() == index) {
                 queueIndexes.add(i + 1);
             }
@@ -282,7 +354,7 @@ public class PlaylistElement {
         this.playing = playing;
     }
 
-    public boolean isPlayable() {
+    public boolean getPlayable() {
         return getSongCheckbox().isSelected();
     }
 
