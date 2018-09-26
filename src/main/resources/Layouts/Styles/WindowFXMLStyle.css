@@ -1,0 +1,135 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Thin.ttf');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Light.ttf');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+	font-family: 'MediaIcons';
+	src: url('Fonts/MediaIcons.ttf');
+}
+
+*.const {
+	-background-color: #545454;
+	-background-hover-color: #6d6d6d;
+	-text-color: #d6d6d6;
+	-text-pressed-color: #ffffff;
+
+	-background-pressed-color: #969696;
+	-playlist-undocked-exit-button-hover-color: #ee3333;
+	-playlist-undocked-exit-button-pressed-color: #ee7777;
+}
+
+.background {
+    -fx-background-color: -background-color;
+}
+
+
+/*** title-bar ***/
+.title-bar {
+    -fx-background-color: -background-color;
+}
+
+.title-label {
+	-fx-font-family: 'Roboto Bold';
+    -fx-text-fill: -text-color;
+	-fx-font-size: 16px;
+}
+
+.title-bar-button {
+    -fx-background-color: -background-color;
+	-fx-font-family: 'MediaIcons';
+    -fx-text-fill: -text-color;
+	-fx-font-size: 18px;
+}
+
+.title-bar-button:hover {
+    -fx-background-color: -background-hover-color;
+}
+
+.title-bar-button:pressed {
+    -fx-background-color: -background-pressed-color;
+}
+
+.title-bar-exit-button:hover {
+    -fx-background-color: -playlist-undocked-exit-button-hover-color;
+}
+
+.title-bar-exit-button:pressed {
+    -fx-background-color: -playlist-undocked-exit-button-pressed-color;
+}
+
+.tooltip {
+	-fx-font-family: 'Roboto Regular';
+	-fx-font-size: 16px;
+}
+
+
+.context-menu {
+    -fx-background-color: -background-color;
+}
+
+/*** menu-item ***/
+
+.menu-item {
+	-fx-background-color: -background-color;
+}
+
+.menu-item .label {
+	-fx-font-family: 'Roboto Light';
+    -fx-text-fill: -text-color;
+	-fx-font-size: 15px;
+}
+
+.menu-item .left-container,
+.menu-item .right-container {
+	-fx-mark-color: -text-color;
+}
+
+.menu-item .label:disabled {
+    -fx-opacity: 1.0;
+}
+
+.menu-item:focused,
+.menu-item:hovered {
+    -fx-background-color: -background-hover-color;
+}
+
+.menu-item:focused .label,
+.menu-item:hovered .label {
+    -fx-text-fill: -text-pressed-color;
+}
+
+
+.scroll-bar:horizontal, .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .increment-arrow, .scroll-bar:vertical .decrement-arrow,
+ .scroll-bar:vertical .increment-button, .scroll-bar:vertical .decrement-button,
+ .scroll-bar:horizontal .increment-arrow, .scroll-bar:horizontal .decrement-arrow,
+ .scroll-bar:horizontal .increment-button, .scroll-bar:horizontal .decrement-button {
+    -fx-padding: 0;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: -background-color;
+    -fx-background-radius: 0em;
+}

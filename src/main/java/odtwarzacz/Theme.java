@@ -26,7 +26,7 @@ public class Theme {
 
     public static final int MAIN_FXML = 1, MEDIA_FXML = 2,
             PLAYLIST_FXML = 3, PLAYLISTELEMENT_FXML = 4,
-            FIRSTVIEW_FXML = 5, PLAYLISTUNDOCKED_FXML = 6;
+            FIRSTVIEW_FXML = 5, WINDOW_FXML = 6;
 
     private static Theme instance;
 
@@ -85,7 +85,7 @@ public class Theme {
         if (firstViewNode != null)
             firstViewNode.setStyle(getStyleConst(FIRSTVIEW_FXML));
         if (playListUndockedNode != null)
-            playListUndockedNode.setStyle(getStyleConst(PLAYLISTUNDOCKED_FXML));
+            playListUndockedNode.setStyle(getStyleConst(WINDOW_FXML));
 
     }
 
@@ -146,29 +146,27 @@ public class Theme {
         switch (fxmlStyle) {
             case MAIN_FXML:
                 return getStyles(
-                        getStyle("-menu-background-color", "menu.background.color"),
-                        getStyle("-menu-background-highlight-color", "menu.background.highlight.color"),
-                        getStyle("-menu-text-color", "menu.text.color"),
-                        getStyle("-menu-text-highlight-color", "menu.text.highlight.color"),
-                        getStyle("-playlist-background-color", "playlist.background.color"),
-                        getStyle("-menu-button-pressed-color", "menu.button.pressed.color"),
+                        getStyle("-background-color", "background.color"),
+                        getStyle("-background-hover-color", "background.hover.color"),
+                        getStyle("-background-pressed-color", "background.pressed.color"),
+                        getStyle("-text-color", "text.color"),
+                        getStyle("-text-pressed-color", "text.pressed.color"),
                         getStyle("-menu-exit-button-hover-color", "menu.exit.button.hover.color"),
                         getStyle("-menu-exit-button-pressed-color", "menu.exit.button.pressed.color"),
-                        getStyle("-scroll-color", "scroll.color"));
+                        getStyle("-player-text-color", "player.text.color"),
+                        getStyle("-box-color-primary", "box.color.primary"),
+                        getStyle("-box-color-secondary", "box.color.secondary"));
 
             case MEDIA_FXML:
                 return getStyles(
                         getStyle("-player-background-color", "player.background.color"),
-                        getStyle("-player-text-color", "player.text.color"),
 
-                        getStyle("-player-time-slider-background-color", "player.time.slider.background.color"),
-                        getStyle("-player-time-slider-foreground-color", "player.time.slider.foreground.color"),
+                        getStyle("-player-time-slider-background-color", "time.slider.background.color"),
+                        getStyle("-player-time-slider-foreground-color", "time.slider.foreground.color"),
 
-                        getStyle("-player-volume-box-background-color", "player.volume.box.background.color"),
-                        getStyle("-player-volume-box-border-color", "player.volume.box.border.color"),
-                        getStyle("-player-volume-box-text-color", "player.volume.box.text.color"),
-                        getStyle("-player-volume-slider-background-color", "player.volume.slider.background.color"),
-                        getStyle("-player-volume-slider-foreground-color", "player.volume.slider.foreground.color"),
+                        getStyle("-player-volume-box-border-color", "background.hover.color"),
+                        getStyle("-player-volume-slider-background-color", "volume.slider.background.color"),
+                        getStyle("-player-volume-slider-foreground-color", "volume.slider.foreground.color"),
 
                         getStyle("-player-icon-color", "player.icon.color"),
                         getStyle("-player-icon-off-color", "player.icon.off.color"),
@@ -177,58 +175,38 @@ public class Theme {
                         getStyle("-player-icon-background-hover-color", "player.icon.background.hover.color"),
                         getStyle("-player-icon-background-pressed-color", "player.icon.background.pressed.color"));
 
-
             case PLAYLIST_FXML:
                 return getStyles(
-                        getStyle("-playlist-background-color", "playlist.background.color"),
-                        getStyle("-playlist-text-color", "playlist.text.color"),
-                        getStyle("-playlist-text-hover-color", "playlist.text.hover.color"),
-                        getStyle("-playlist-text-pressed-color", "playlist.text.pressed.color"),
-                        getStyle("-playlist-search-background-color", "playlist.search.background.color"),
-                        getStyle("-playlist-button-color", "playlist.button.color"),
-                        getStyle("-playlist-button-background-color", "playlist.button.background.color"),
-                        getStyle("-playlist-button-background-hover-color", "playlist.button.background.hover.color"),
-                        getStyle("-playlist-button-background-pressed-color", "playlist.button.background.pressed.color"),
-                        getStyle("-playlist-box-background-color", "playlist.box.background.color"));
+                        getStyle("-playlist-search-background-color", "background.hover.color"));
 
             case PLAYLISTELEMENT_FXML:
                 return getStyles(
-                        getStyle("-playlist-element-background-color-1", "playlist.element.background.color.1"),
-                        getStyle("-playlist-element-background-color-2", "playlist.element.background.color.2"),
+                        getStyle("-box-hover-color-primary", "box.hover.color.primary"),
+                        getStyle("-box-hover-color-secondary", "box.hover.color.secondary"),
 
-                        getStyle("-playlist-element-background-hover-color-1", "playlist.element.background.hover.color.1"),
-                        getStyle("-playlist-element-background-hover-color-2", "playlist.element.background.hover.color.2"),
+                        getStyle("-background-selected-color", "background.selected.color"),
+                        getStyle("-background-selected-hover-color", "background.selected.hover.color"),
 
-                        getStyle("-playlist-element-background-selected-color", "playlist.element.background.selected.color"),
-                        getStyle("-playlist-element-background-selected-hover-color", "playlist.element.background.selected.hover.color"),
+                        getStyle("-text-selected-color", "text.selected.color"),
+                        getStyle("-text-playing-color", "text.playing.color"),
+                        getStyle("-text-notfound-color", "text.notfound.color"),
 
-                        getStyle("-playlist-element-text-color", "playlist.element.text.color"),
-                        getStyle("-playlist-element-selected-text-color", "playlist.element.selected.text.color"),
-                        getStyle("-playlist-element-playing-text-color", "playlist.element.playing.text.color"),
-                        getStyle("-playlist-element-notfound-text-color", "playlist.element.notfound.text.color"),
-
-                        getStyle("-playlist-element-button-background-color", "playlist.element.button.background.color"),
-                        getStyle("-playlist-element-button-background-hover-color", "playlist.element.button.background.hover.color"),
-                        getStyle("-playlist-element-button-background-pressed-color", "playlist.element.button.background.pressed.color"),
-
-                        getStyle("-playlist-element-checkbox-background-color", "playlist.element.checkbox.background.color"),
-                        getStyle("-playlist-element-checkbox-mark-color", "playlist.element.checkbox.mark.color"));
+                        getStyle("-playlist-element-checkbox-background-color", "background.color"),
+                        getStyle("-playlist-element-checkbox-mark-color", "text.pressed.color"));
             case FIRSTVIEW_FXML:
                 return getStyles(
-                        getStyle("-first-background-color", "first.background.color"),
-                        getStyle("-first-box-background-color", "first.box.background.color"),
-                        getStyle("-first-box-border-color", "first.box.border.color"),
-                        getStyle("-first-text-color", "first.text.color"),
-                        getStyle("-first-text-hover-color", "first.text.hover.color"));
-            case PLAYLISTUNDOCKED_FXML:
+                        getStyle("-first-box-border-color", "background.color"));
+            case WINDOW_FXML:
                 return getStyles(
-                        getStyle("-playlist-undocked-background-color", "menu.background.color"),
-                        getStyle("-playlist-undocked-background-highlight-color", "menu.background.highlight.color"),
-                        getStyle("-playlist-undocked-text-color", "menu.text.color"),
-                        getStyle("-playlist-undocked-text-highlight-color", "menu.text.highlight.color"),
-                        getStyle("-playlist-undocked-button-pressed-color", "menu.button.pressed.color"),
+                        getStyle("-background-color", "background.color"),
+                        getStyle("-background-hover-color", "background.hover.color"),
+                        getStyle("-background-pressed-color", "background.pressed.color"),
+                        getStyle("-text-color", "text.color"),
+                        getStyle("-text-pressed-color", "text.pressed.color"),
                         getStyle("-playlist-undocked-exit-button-hover-color", "menu.exit.button.hover.color"),
-                        getStyle("-playlist-undocked-exit-button-pressed-color", "menu.exit.button.pressed.color"));
+                        getStyle("-playlist-undocked-exit-button-pressed-color", "menu.exit.button.pressed.color"),
+                        getStyle("-box-color-primary", "box.color.primary"),
+                        getStyle("-box-color-secondary", "box.color.secondary"));
 
 
         }

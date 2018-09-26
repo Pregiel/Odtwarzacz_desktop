@@ -22,7 +22,7 @@
 
 	-player-volume-box-background-color: #545454;
 	-player-volume-box-border-color: #6d6d6d;
-	-player-volume-box-text-color: #d6d6d6;
+	-text-color: #d6d6d6;
 	-player-volume-slider-background-color: #565656;
 	-player-volume-slider-foreground-color: #ffffff;
 
@@ -90,7 +90,7 @@
 .media-label > .text {
 	-fx-font-size: 14px;
     -fx-font-family: 'Roboto Medium';
-    -fx-fill: -player-volume-box-text-color;
+    -fx-fill: -text-color;
 }
 
 /*** time-label ***/
@@ -100,7 +100,7 @@
 
 /*** volume-box ***/
 .volume-box {
-    -fx-background-color: -player-volume-box-background-color;
+    -fx-background-color: -background-color;
 	-fx-border-color: -player-volume-box-border-color;
 	-fx-border-width: 2;
 }

@@ -20,30 +20,29 @@
 
 *.const {
 	-menu-background-color: #545454;
-	-menu-background-highlight-color: #6d6d6d;
-	-menu-text-color: #d6d6d6;
-	-menu-text-highlight-color: #ffffff;
+	-background-hover-color: #6d6d6d;
+	-background-pressed-color: #969696;
+	-text-color: #d6d6d6;
+	-text-pressed-color: #ffffff;
 	-playlist-background-color: #545454;
 
-	-menu-button-pressed-color: #969696;
 	-menu-exit-button-hover-color: #ee3333;
 	-menu-exit-button-pressed-color: #ee7777;
 
 	-scroll-color: #626262;
+
+	-player-text-color: #ffffff;
 }
 
 .background {
-    -fx-background-color: -menu-background-color;
+    -fx-background-color: -background-color;
 }
 
 .info-label {
-    -fx-background-color:  rgba(0, 0, 0, 0.1);
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: -player-text-color;
     -fx-font-weight: bold;
     -fx-font-size: 14;
     -fx-padding: 4px 6px 4px 6px;
-    -fx-border-insets: 4px;
-    -fx-background-insets: 4px;
 }
 
 .recent-pane {
@@ -56,48 +55,49 @@
 /*** menu-bar ***/
  
 .menu-bar{
-    -fx-background-color: -menu-background-color;
+    -fx-background-color: -background-color;
 }
 
 .menu-bar > .container > .menu-button {
-    -fx-background-color: -menu-background-color;
+    -fx-background-color: -background-color;
 }
 
 .menu-bar > .container > .menu-button > .label {
 	-fx-font-family: 'Roboto Light';
-	-fx-text-fill: -menu-text-color;
+	-fx-text-fill: -text-color;
 	-fx-font-size: 28px;
 	-fx-scale-y: 0.9;
 	-fx-padding: 2px 0px;
 }
 
 .menu-bar > .container > .menu-button:hover,
-.menu-bar > .container > .menu-button:focused,
-.menu-bar > .container > .menu-button:showing {
-	-fx-background-color: -menu-background-highlight-color;
+.menu-bar > .container > .menu-button:focused {
+	-fx-background-color: -background-hover-color;
 }
 
-.menu-bar > .container > .menu-button:hover > .label,
-.menu-bar > .container > .menu-button:focused > .label,
 .menu-bar > .container > .menu-button:showing > .label {
-    -fx-text-fill: -menu-text-highlight-color;
+    -fx-text-fill: -text-pressed-color;
+}
+
+.menu-bar > .container > .menu-button:showing {
+    -fx-background-color: -background-pressed-color;
 }
 
 /*** menu-item ***/
 
 .menu-item {
-	-fx-background-color: -menu-background-color;
+	-fx-background-color: -background-color;
 }
  
 .menu-item .label {
 	-fx-font-family: 'Roboto Light';
-    -fx-text-fill: -menu-text-color;
+    -fx-text-fill: -text-color;
 	-fx-font-size: 15px;
 }
 
 .menu-item .left-container,
 .menu-item .right-container {
-	-fx-mark-color: -menu-text-color;
+	-fx-mark-color: -text-color;
 }
 
 .menu-item .label:disabled {
@@ -106,21 +106,25 @@
    
 .menu-item:focused,
 .menu-item:hovered {
-    -fx-background-color: -menu-background-highlight-color;
+    -fx-background-color: -background-hover-color;
 }
 
-.menu-item:focused .label,
-.menu-item:hovered .label {
-    -fx-text-fill: -menu-text-highlight-color;
+.menu-item:pressed {
+    -fx-background-color: -background-pressed-color;
+}
+
+
+.menu-item:pressed .label: {
+    -fx-text-fill: -text-pressed-color;
 }
 
 
 .context-menu {
-    -fx-background-color: -menu-background-color;
+    -fx-background-color: -background-color;
 }
 
 .split-pane *.split-pane-divider {
-    -fx-background-color: -playlist-background-color;
+    -fx-background-color: -background-color;
 }
 
 .split-pane {
@@ -129,28 +133,28 @@
 
 /*** title-bar ***/
 .title-bar {
-    -fx-background-color: -menu-background-color;
+    -fx-background-color: -background-color;
 }
 
 .title-label {
 	-fx-font-family: 'Roboto Bold';
-    -fx-text-fill: -menu-text-color;
+    -fx-text-fill: -text-color;
 	-fx-font-size: 16px;
 }
 
 .title-bar-button {
-    -fx-background-color: -menu-background-color;
+    -fx-background-color: -background-color;
 	-fx-font-family: 'MediaIcons';
-    -fx-text-fill: -menu-text-color;
+    -fx-text-fill: -text-color;
 	-fx-font-size: 18px;
 }
 
 .title-bar-button:hover {
-    -fx-background-color: -menu-background-highlight-color;
+    -fx-background-color: -background-hover-color;
 }
 
 .title-bar-button:pressed {
-    -fx-background-color: -menu-button-pressed-color;
+    -fx-background-color: -background-pressed-color;
 }
 
 .title-bar-exit-button:hover {
@@ -186,6 +190,6 @@
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color: -scroll-color;
+    -fx-background-color: -background-color;
     -fx-background-radius: 0em;
 }

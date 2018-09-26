@@ -7,7 +7,6 @@ package odtwarzacz.Playlist;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -283,10 +282,10 @@ public class Playlist {
 
         if (playlistWindow == null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistUndockedFXML.fxml"), Utils.getTranslationsBundle());
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/WindowFXML.fxml"), Utils.getTranslationsBundle());
 
                 BorderPane pane = loader.load();
-                pane.setStyle(Theme.getStyleConst(Theme.PLAYLISTUNDOCKED_FXML));
+                pane.setStyle(Theme.getStyleConst(Theme.WINDOW_FXML));
                 Theme.getInstance().setPlayListUndockedNode(pane);
                 ((AnchorPane) pane.lookup("#center")).getChildren().add(getPane());
 

@@ -5,16 +5,16 @@ import javafx.stage.Stage;
 import java.awt.*;
 
 public class CustomStage extends Stage {
-    private boolean windowsMaximazed,  resizing, moving;
+    private boolean windowsMaximized,  resizing, moving;
 
     private double lastWidth=300, lastHeight=300, lastX, lastY;
 
-    public boolean isWindowMaximazed() {
-        return windowsMaximazed;
+    public boolean isWindowMaximized() {
+        return windowsMaximized;
     }
 
-    public void setWindowMaximazed(boolean windowsMaximazed) {
-        this.windowsMaximazed = windowsMaximazed;
+    public void setWindowMaximized(boolean windowsMaximazed) {
+        this.windowsMaximized = windowsMaximazed;
         if (windowsMaximazed) {
             Rectangle winSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
             lastHeight = getHeight();

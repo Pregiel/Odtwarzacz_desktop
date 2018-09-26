@@ -36,7 +36,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,7 +78,7 @@ public class MainFXMLController implements Initializable {
     @FXML
     private Menu openRecentMenu;
 
-    private Stage maximazeScreen;
+    private Stage maximizeScreen;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -138,7 +137,7 @@ public class MainFXMLController implements Initializable {
                 CustomStage stage = ((CustomStage) pane.getScene().getWindow());
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     if (mouseEvent.getClickCount() == 2) {
-                        stage.setWindowMaximazed(!stage.isWindowMaximazed());
+                        stage.setWindowMaximized(!stage.isWindowMaximized());
                     } else {
                         dragDelta.x = stage.getX() - mouseEvent.getScreenX();
                         dragDelta.y = stage.getY() - mouseEvent.getScreenY();
@@ -152,18 +151,18 @@ public class MainFXMLController implements Initializable {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 1) {
                     CustomStage stage = ((CustomStage) pane.getScene().getWindow());
                     if (!stage.isResizing()) {
-                        if (stage.isWindowMaximazed()) {
-                            stage.setWindowMaximazed(false);
+                        if (stage.isWindowMaximized()) {
+                            stage.setWindowMaximized(false);
                             dragDelta.x = stage.getWidth() / -2;
                         } else {
                             stage.setX(mouseEvent.getScreenX() + dragDelta.x);
                             stage.setY(mouseEvent.getScreenY() + dragDelta.y);
                         }
                         if (mouseEvent.getScreenY() == 0) {
-                            maximazeScreen.show();
+                            maximizeScreen.show();
 
                         } else {
-                            maximazeScreen.hide();
+                            maximizeScreen.hide();
 
                         }
                     }
@@ -177,14 +176,14 @@ public class MainFXMLController implements Initializable {
                     stage.getScene().setCursor(Cursor.DEFAULT);
 
                     if (mouseEvent.getScreenY() == 0) {
-                        stage.setWindowMaximazed(true);
+                        stage.setWindowMaximized(true);
                     }
-                    maximazeScreen.hide();
+                    maximizeScreen.hide();
 
                 }
             });
 
-            initMaximazeScreen();
+            initMaximizeScreen();
 
         } catch (IOException ex) {
             Logger.getLogger(MainFXMLController.class.getName()).log(Level.SEVERE, null, ex);
@@ -192,20 +191,20 @@ public class MainFXMLController implements Initializable {
 
     }
 
-    private void initMaximazeScreen() {
+    private void initMaximizeScreen() {
         Rectangle winSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 
         Pane screen = new Pane();
 
         screen.setPrefHeight(winSize.height - 10);
         screen.setPrefWidth(winSize.width - 10);
-        screen.setStyle("-fx-background-color: " + Theme.getStyle("window.maximaze.color") + ";");
+        screen.setStyle("-fx-background-color: " + Theme.getStyle("window.maximize.color") + ";");
 
-        maximazeScreen = new Stage();
-        maximazeScreen.setScene(new Scene(screen));
-        maximazeScreen.initStyle(StageStyle.TRANSPARENT);
-        maximazeScreen.getScene().setFill(Color.TRANSPARENT);
-        maximazeScreen.setAlwaysOnTop(false);
+        maximizeScreen = new Stage();
+        maximizeScreen.setScene(new Scene(screen));
+        maximizeScreen.initStyle(StageStyle.TRANSPARENT);
+        maximizeScreen.getScene().setFill(Color.TRANSPARENT);
+        maximizeScreen.setAlwaysOnTop(false);
     }
 
 
@@ -460,10 +459,10 @@ public class MainFXMLController implements Initializable {
     public void maxButton(ActionEvent event) {
         CustomStage stage = ((CustomStage) pane.getScene().getWindow());
         if (!stage.isMoving() && !stage.isResizing()) {
-            if (stage.isWindowMaximazed()) {
-                stage.setWindowMaximazed(false);
+            if (stage.isWindowMaximized()) {
+                stage.setWindowMaximized(false);
             } else {
-                stage.setWindowMaximazed(true);
+                stage.setWindowMaximized(true);
             }
         }
     }

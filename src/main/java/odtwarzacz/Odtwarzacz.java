@@ -15,9 +15,6 @@ import odtwarzacz.Utils.CustomStage;
 import odtwarzacz.Utils.ResizeHelper;
 import odtwarzacz.Utils.Utils;
 
-import java.net.URL;
-import java.nio.file.Paths;
-
 /**
  * @author Pregiel
  */
@@ -56,14 +53,14 @@ public class Odtwarzacz extends Application {
         stage.setHeight(Integer.valueOf(getConfig().getProperty("window.height")));
 
         stage.widthProperty().addListener((observable, oldValue, newValue) -> {
-            if (!stage.isWindowMaximazed() && !stage.isFullScreen() && !stage.isIconified()) {
+            if (!stage.isWindowMaximized() && !stage.isFullScreen() && !stage.isIconified()) {
                 getConfig().setProperty("window.width", String.valueOf(newValue.intValue()));
                 getConfig().save();
             }
         });
 
         stage.heightProperty().addListener((observable, oldValue, newValue) -> {
-            if (!stage.isWindowMaximazed() && !stage.isFullScreen() && !stage.isIconified()) {
+            if (!stage.isWindowMaximized() && !stage.isFullScreen() && !stage.isIconified()) {
                 getConfig().setProperty("window.height", String.valueOf(newValue.intValue()));
                 getConfig().save();
             }

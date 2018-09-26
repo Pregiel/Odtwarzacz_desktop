@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 
-<BorderPane fx:id="pane" styleClass="background" stylesheets="@Styles/PlaylistUndockedFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.PlaylistUndockedFXMLController">
+<BorderPane fx:id="pane" styleClass="background" stylesheets="@Styles/WindowFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Utils.WindowFXMLController">
    <top>
       <GridPane fx:id="titleBar" styleClass="title-bar" BorderPane.alignment="CENTER">
          <columnConstraints>
