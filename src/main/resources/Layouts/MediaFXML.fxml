@@ -26,12 +26,12 @@
          <items>
             <StackPane>
                <children>
-                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                  <Label fx:id="mediaLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                      <graphic>
                         <MediaView fx:id="mediaView" />
                      </graphic>
                   </Label>
-                  <GridPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" StackPane.alignment="BOTTOM_CENTER">
+                  <GridPane fx:id="mediaBar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" StackPane.alignment="BOTTOM_CENTER">
                      <StackPane.margin>
                         <Insets />
                      </StackPane.margin>

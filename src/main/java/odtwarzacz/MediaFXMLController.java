@@ -10,28 +10,27 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.Metadata.Metadata;
 import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Metadata.MetadataVideo;
-import odtwarzacz.Playlist.PlaylistProperties;
 import odtwarzacz.Sliders.TimeSlider;
 import odtwarzacz.Sliders.VolumeSlider;
 import odtwarzacz.Utils.ExpandableTimeTask;
@@ -52,13 +51,12 @@ import static odtwarzacz.MainFXMLController.getPlaylist;
  */
 public class MediaFXMLController implements Initializable {
 
-    private static final String PLAYIMAGE_PATH = "Layouts/Icons/ic_play_white.png";
-    private static final String PAUSEIMAGE_PATH = "Layouts/Icons/ic_pause_white.png";
-
     public Button playlistButton;
     public BorderPane parent;
     public Button fullscreenButton;
     public ToggleButton randomToggleButton;
+    public Label mediaLabel;
+    public GridPane mediaBar;
     @FXML
     private BorderPane pane;
     @FXML
@@ -108,6 +106,8 @@ public class MediaFXMLController implements Initializable {
 
     private Metadata metadata;
 
+    private ExpandableTimeTask hideMediaBarTask;
+
 
     public void setConnection(Connection connection) {
         this.connection = connection;
@@ -120,8 +120,6 @@ public class MediaFXMLController implements Initializable {
                 sendFileLabel(metadata);
             }
         }
-//
-//        volSlider.setVolume(mediaPlayer.getVolume());
     }
 
     public void setFileInfoLabel(InfoLabel fileInfoLabel) {
@@ -154,13 +152,47 @@ public class MediaFXMLController implements Initializable {
             }
         });
 
+        mediaLabel.setOnMouseClicked(event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                playPauseButton(null);
+            }
+        });
 
-//        previewTimer = new Timer();
-//        previewTimer.schedule(new PreviewSend(), 0, 100);
+        hideMediaBarTask = new ExpandableTimeTask(() -> {
+            mediaBar.setVisible(false);
+            if (fullscreened) {
+                pane.setCursor(Cursor.NONE);
+            }
+        }, 2000);
+
+        hideMediaBarTask.start();
+
+        mediaLabel.setOnMouseMoved(event -> {
+            if (hideMediaBarTask.isFinished() || !hideMediaBarTask.isStarted()) {
+                hideMediaBarTask.start();
+            } else {
+                hideMediaBarTask.expand();
+            }
+            if (fullscreened && pane.getCursor() == Cursor.NONE) {
+                pane.setCursor(Cursor.DEFAULT);
+            }
+
+            if (!mediaBar.isVisible()) {
+                mediaBar.setVisible(true);
+            }
+        });
+
+        mediaBar.setOnMouseEntered(event -> {
+            hideMediaBarTask.stop();
+        });
+
+        mediaBar.setOnMouseExited(event -> {
+            hideMediaBarTask.resume();
+        });
     }
 
-    public void setScaling(Window root, Pane centerPane) {
 
+    public void setScaling(Pane centerPane) {
         timeSlider.setScalingPane(centerPane);
 
         mediaView.setPreserveRatio(true);
@@ -503,9 +535,6 @@ public class MediaFXMLController implements Initializable {
 
 
     private Duration getMoveToValue(int sign) {
-//        System.out.println("tak");
-//        System.out.println(START_MOVETO_VALUE);
-//        System.out.println(moveToValueJump);
         return Duration.seconds(sign * (START_MOVETO_VALUE + moveToValueJump));
     }
 
@@ -592,6 +621,11 @@ public class MediaFXMLController implements Initializable {
             parent.setCenter(splitPane);
             fullscreened = false;
             fullscreenButton.setText(IconFont.ICON_MAXIMIZE);
+
+            Platform.runLater(() -> {
+                pane.setPrefHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
+            });
+
 
         } else {
             parent = (BorderPane) pane.getParent().getParent().getParent().getParent();

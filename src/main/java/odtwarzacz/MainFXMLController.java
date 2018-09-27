@@ -253,7 +253,7 @@ public class MainFXMLController implements Initializable {
                 centerPane.getChildren().add(connectionInfoLabel);
                 centerPane.getChildren().add(fileInfoLabel);
 
-                mediaControl.setScaling(centerPane.getScene().getWindow(), centerPane);
+                mediaControl.setScaling(centerPane);
 
             }
         });

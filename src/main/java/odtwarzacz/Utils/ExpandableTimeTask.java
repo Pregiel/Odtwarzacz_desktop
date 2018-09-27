@@ -49,6 +49,10 @@ public class ExpandableTimeTask {
         time = totalTime;
     }
 
+    public void expand() {
+        time = totalTime;
+    }
+
     public boolean isStarted() {
         return started;
     }
