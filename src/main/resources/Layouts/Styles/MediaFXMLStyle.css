@@ -54,6 +54,7 @@
 .media-button, .toggle-button{
     -fx-background-color: -player-icon-background-color;
     -fx-padding: 5 5 2 5;
+    -fx-background-radius: 0em;
 }
 
 .media-button:hover, .toggle-button:hover{

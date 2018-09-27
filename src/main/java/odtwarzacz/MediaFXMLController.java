@@ -10,8 +10,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
@@ -20,7 +22,9 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
@@ -52,7 +56,7 @@ public class MediaFXMLController implements Initializable {
     private static final String PAUSEIMAGE_PATH = "Layouts/Icons/ic_pause_white.png";
 
     public Button playlistButton;
-    public StackPane stackpane;
+    public BorderPane parent;
     public Button fullscreenButton;
     public ToggleButton randomToggleButton;
     @FXML
@@ -149,6 +153,7 @@ public class MediaFXMLController implements Initializable {
                 fullscreenButton.setText(IconFont.ICON_MAXIMIZE);
             }
         });
+
 
 //        previewTimer = new Timer();
 //        previewTimer.schedule(new PreviewSend(), 0, 100);
@@ -575,16 +580,44 @@ public class MediaFXMLController implements Initializable {
 
 
     private boolean fullscreened = false;
+    private Stage fullscreenStage;
+    private SplitPane splitPane;
 
     public void fullscreenToggle(ActionEvent event) {
         if (fullscreened) {
-            ((Stage) pane.getScene().getWindow()).setFullScreen(false);
+            ((Stage) parent.getScene().getWindow()).show();
+
+            fullscreenStage.close();
+
+            parent.setCenter(splitPane);
             fullscreened = false;
             fullscreenButton.setText(IconFont.ICON_MAXIMIZE);
+
         } else {
-            ((Stage) pane.getScene().getWindow()).setFullScreen(true);
+            parent = (BorderPane) pane.getParent().getParent().getParent().getParent();
+            splitPane = (SplitPane) pane.getParent().getParent().getParent();
+
+            parent.setCenter(null);
+
+            AnchorPane anchorPane = new AnchorPane();
+            anchorPane.getChildren().add(splitPane);
+            AnchorPane.setLeftAnchor(splitPane, 0.0);
+            AnchorPane.setTopAnchor(splitPane, 0.0);
+            AnchorPane.setRightAnchor(splitPane, 0.0);
+            AnchorPane.setBottomAnchor(splitPane, 0.0);
+
+            anchorPane.setStyle(Theme.getStyleConst(Theme.MAIN_FXML));
+            anchorPane.getStylesheets().add(String.valueOf(this.getClass().getResource("/Layouts/Styles/MainFXMLStyle.css")));
+
+            fullscreenStage = new Stage();
+            fullscreenStage.setScene(new Scene(anchorPane));
+            fullscreenStage.show();
+            fullscreenStage.setFullScreen(true);
+
             fullscreened = true;
             fullscreenButton.setText(IconFont.ICON_MINIMIZE);
+
+            parent.getScene().getWindow().hide();
         }
     }
 

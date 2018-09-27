@@ -165,7 +165,7 @@
                         </HBox>
                      </children>
                   </GridPane>
-                  <AnchorPane fx:id="volBox" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="volume-box" translateX="20.0" translateY="-58.0" visible="false" StackPane.alignment="BOTTOM_LEFT">
+                  <AnchorPane fx:id="volBox" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="volume-box" translateX="18.0" translateY="-58.0" visible="false" StackPane.alignment="BOTTOM_LEFT">
                      <children>
                         <AnchorPane fx:id="volBackTrack" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="6.0" styleClass="volume-slider-background" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
                            <children>
