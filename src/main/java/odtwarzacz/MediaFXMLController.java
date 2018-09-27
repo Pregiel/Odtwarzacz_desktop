@@ -343,7 +343,6 @@ public class MediaFXMLController implements Initializable {
             }
             volSlider.addVolume(Math.signum(event.getDeltaY()) * 0.02);
         });
-
     }
 
     public Metadata generateMetadata(File file) {

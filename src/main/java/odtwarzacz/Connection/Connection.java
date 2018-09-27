@@ -352,7 +352,7 @@ public abstract class Connection {
                 break;
 
             case FILECHOOSER_PLAYLIST_ADD:
-                MainFXMLController.getPlaylist().add(new File(message[1]), 1);
+                MainFXMLController.getPlaylist().addCheckIfExist(new File(message[1]), 1);
                 break;
 
             case FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST:

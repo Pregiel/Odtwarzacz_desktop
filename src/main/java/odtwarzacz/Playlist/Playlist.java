@@ -12,11 +12,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -90,6 +94,11 @@ public class Playlist {
         } else {
             loadPlaylistList((playlistFilesList.size() > 0) ? playlistFilesList.get(0) : DEFAULT_PLAYLIST);
         }
+
+    }
+
+    public VBox getPlaylistPane() {
+        return playlistPane;
     }
 
     private List<String> playlistFilesList;
@@ -304,7 +313,7 @@ public class Playlist {
                 playlistWindow = new CustomStage();
                 playlistWindow.setTitle(Utils.getString("player.playlist"));
                 playlistWindow.setScene(new Scene(pane, 400, 600));
-                playlistWindow.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH-30);
+                playlistWindow.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH - 30);
                 playlistWindow.setMinHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
                 playlistWindow.initStyle(StageStyle.UNDECORATED);
 
@@ -326,11 +335,11 @@ public class Playlist {
 
     public void toogle() {
         if (Odtwarzacz.getConfig().getProperty("playlist.visible").equals("true")) {
-            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.MEDIA_MIN_WIDTH-30);
+            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.MEDIA_MIN_WIDTH - 30);
             hide();
         } else {
             show();
-            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.PLAYER_MIN_WIDTH-30);
+            ((Stage) pane.getScene().getWindow()).setMinWidth(Odtwarzacz.PLAYER_MIN_WIDTH - 30);
         }
     }
 
@@ -418,7 +427,7 @@ public class Playlist {
     /**
      * @param source - 0 - local, 1 - pilot
      */
-    public void add(File file, int source) {
+    public void addCheckIfExist(File file, int source) {
         if (playlistList.contains(file.getAbsolutePath())) {
             if (source == 1) {
                 mainController.getConnection().sendMessage(FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST);
@@ -448,6 +457,7 @@ public class Playlist {
 
     public void add(File file) {
         int index = playlistList.size() + 1;
+
         playlistList.add(file.getAbsolutePath());
         playlistProperties.addToArray(file.getAbsolutePath(), index);
 
@@ -490,7 +500,7 @@ public class Playlist {
 
     public void redrawElementsBackground() {
         int i = 0;
-        for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
+        for (PlaylistElement playlistElement : playlistElementList) {
             if (!playlistElement.isHidden()) {
                 if (i % 2 == 0) {
                     playlistElement.setStyle(2);
@@ -626,7 +636,7 @@ public class Playlist {
         if (list != null) {
             if (list.size() > 0) {
                 for (File file : list) {
-                    add(file, 0);
+                    addCheckIfExist(file, 0);
                 }
             }
         }
@@ -675,6 +685,88 @@ public class Playlist {
         reloadLabelsPlaylist();
         redrawElementsBackground();
 
+    }
+
+    public void swapElement(int index_1, int index_2) {
+        if (playlistElementList.size() < index_1 && playlistElementList.size() < index_2) {
+            playlistProperties.swapIndexes(index_1, index_2);
+            for (PlaylistElement playlistElement : playlistElementList) {
+                if (playlistElement.getIndex() == index_1) {
+                    playlistElement.setIndex(index_2);
+                } else if (playlistElement.getIndex() == index_2) {
+                    playlistElement.setIndex(index_1);
+                }
+            }
+
+            ObservableList<Node> nodes = FXCollections.observableArrayList(playlistPane.getChildren());
+            Collections.swap(nodes, index_1 - 1, index_2 - 1);
+            Collections.swap(playlistElementList, index_1 - 1, index_2 - 1);
+            playlistPane.getChildren().setAll(nodes);
+
+            reloadLabelsPlaylist();
+            redrawElementsBackground();
+        }
+    }
+
+    public void moveToPosition(int from, int to) {
+        if (from != to) {
+            if (playlistElementList.size() == to - 1) {
+                to--;
+            }
+            playlistProperties.moveToIndex(from, to);
+
+            moveToIndexInLists(from, to);
+            reloadLabelsPlaylist();
+            redrawElementsBackground();
+        }
+    }
+
+    public void moveToIndexInLists(int from, int to) {
+        if (playlistIndex != -1) {
+            Utils.print(playlistIndex, from, to);
+            if (playlistIndex == from) {
+                playlistIndex = to;
+            } else if (playlistIndex >= Math.min(from, to) && playlistIndex <= Math.max(from, to)) {
+                if (from > to) {
+                    playlistIndex++;
+                } else {
+                    playlistIndex--;
+                }
+            }
+        }
+
+        for (PlaylistElement playlistElement : playlistElementList) {
+            if (playlistElement.getIndex() == from) {
+                playlistElement.setIndex(to);
+            } else if (playlistElement.getIndex() >= Math.min(from, to) && playlistElement.getIndex() <= Math.max(from, to)) {
+                if (from > to) {
+                    playlistElement.setIndex(playlistElement.getIndex() + 1);
+                } else {
+                    playlistElement.setIndex(playlistElement.getIndex() - 1);
+                }
+            }
+        }
+
+        int listSize = playlistElementList.size();
+
+        Node node = playlistPane.getChildren().get(from - 1);
+        playlistPane.getChildren().remove(from - 1);
+
+        PlaylistElement node2 = playlistElementList.get(from - 1);
+        playlistElementList.remove(from - 1);
+
+        String s = playlistList.get(from - 1);
+        playlistList.remove(from - 1);
+
+        if (listSize == to - 1) {
+            playlistElementList.add(node2);
+            playlistList.add(s);
+            playlistPane.getChildren().add(node);
+        } else {
+            playlistElementList.add(to - 1, node2);
+            playlistList.add(to - 1, s);
+            playlistPane.getChildren().add(to - 1, node);
+        }
     }
 
     public void save() {

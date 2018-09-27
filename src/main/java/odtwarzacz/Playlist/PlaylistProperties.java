@@ -9,11 +9,13 @@ import odtwarzacz.MainFXMLController;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Utils.Utils;
 
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.Key;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -159,6 +161,110 @@ public final class PlaylistProperties extends Properties {
             }
         }
         save();
+    }
+
+    private class KeyValue {
+        private String key, value;
+        private int index;
+
+        KeyValue(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        KeyValue(int index, String key, String value) {
+            this.key = key;
+            this.value = value;
+            this.index = index;
+        }
+
+        String getKey() {
+            return key;
+        }
+
+        String getValue() {
+            return value;
+        }
+
+        int getIndex() {
+            return index;
+        }
+    }
+
+    public void swapIndexes(int index_1, int index_2) {
+        Enumeration<String> enumeration = (Enumeration<String>) propertyNames();
+        List<KeyValue> firstElement = new ArrayList<>();
+        List<KeyValue> secondElement = new ArrayList<>();
+
+        while (enumeration.hasMoreElements()) {
+            String name = enumeration.nextElement();
+            if (name.startsWith(PROPERTY_NAME + "." + index_1 + ".")) {
+                firstElement.add(new KeyValue(name.substring((PROPERTY_NAME + "." + index_1).length() + 1),
+                        getProperty(name)));
+
+                remove(name);
+            } else if (name.startsWith(PROPERTY_NAME + "." + index_2 + ".")) {
+                secondElement.add(new KeyValue(name.substring((PROPERTY_NAME + "." + index_2).length() + 1),
+                        getProperty(name)));
+
+                remove(name);
+            }
+        }
+
+        for (KeyValue keyValue : firstElement) {
+            setProperty(index_2, keyValue.getKey(), keyValue.getValue());
+        }
+
+        for (KeyValue keyValue : secondElement) {
+            setProperty(index_1, keyValue.getKey(), keyValue.getValue());
+        }
+        save();
+    }
+
+    public void moveToIndex(int from, int to) {
+        Enumeration<String> enumeration = (Enumeration<String>) propertyNames();
+        List<KeyValue> fromElement = new ArrayList<>();
+        List<List<KeyValue>> restElements = new ArrayList<>();
+
+        for (int i = 0; i < Math.max(from, to) - Math.min(from, to); i++) {
+            restElements.add(new ArrayList<>());
+        }
+
+        while (enumeration.hasMoreElements()) {
+            String name = enumeration.nextElement();
+            if (name.matches("^(" + PROPERTY_NAME + ".\\d.).*")) {
+                int index = Integer.parseInt(name.substring(name.indexOf(".") + 1, name.indexOf(".", name.indexOf(".") + 1)));
+                if (index >= Math.min(from, to) && index <= Math.max(from, to)) {
+                    if (index == from) {
+                        fromElement.add(new KeyValue(to, name.substring((PROPERTY_NAME + "." + from).length() + 1),
+                                getProperty(name)));
+                    } else {
+                        int newIndex, listIndex;
+                        if (from > to) {
+                            listIndex = index - Math.min(from, to);
+                            newIndex = index + 1;
+                        } else {
+                            listIndex = index - Math.min(from, to) - 1;
+                            newIndex = index - 1;
+                        }
+                        restElements.get(listIndex).add(new KeyValue(newIndex, name.substring((PROPERTY_NAME + "." + index).length() + 1),
+                                getProperty(name)));
+                    }
+                    remove(name);
+                }
+            }
+        }
+
+        for (KeyValue keyValue : fromElement) {
+            setProperty(keyValue.getIndex(), keyValue.getKey(), keyValue.getValue());
+        }
+
+        for (List<KeyValue> restElement : restElements) {
+            for (KeyValue keyValue : restElement) {
+                setProperty(keyValue.getIndex(), keyValue.getKey(), keyValue.getValue());
+            }
+        }
+//        save();
     }
 
     private void clearArray() {

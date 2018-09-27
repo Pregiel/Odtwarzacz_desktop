@@ -10,19 +10,23 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -67,9 +71,10 @@ public class PlaylistElement {
 
 
     public PlaylistElement(int index, String path, GridPane pane) {
-        this.index = index;
         this.pane = pane;
         this.pane.setStyle(Theme.getStyleConst(Theme.PLAYLISTELEMENT_FXML));
+        setIndex(index);
+
         Theme.getInstance().addPlayListElementNode(pane);
 
         titleLabel = (Label) pane.lookup("#songName");
@@ -107,37 +112,6 @@ public class PlaylistElement {
             setNotFounded(true);
         }
 
-
-        this.pane.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
-            if (event.getButton().equals(MouseButton.PRIMARY)) {
-                if (!event.isControlDown()) {
-                    if (event.getClickCount() == 1) {
-                        getPlaylist().unselectAll();
-                        setSelected(true);
-                    } else {
-                        getPlaylist().play(index);
-                    }
-                } else {
-                    setSelected(!isSelected());
-                }
-            } else if (event.getButton().equals(MouseButton.SECONDARY)) {
-                if (!event.isControlDown()) {
-                    getPlaylist().unselectAll();
-                }
-                setSelected(true);
-                contextMenu.show(pane, event.getScreenX(), event.getScreenY());
-                playableMenuItem.setText((getPlayable() ? Utils.getString("playlist.element.disable")
-                        : Utils.getString("playlist.element.enable")));
-            } else if (event.getButton().equals(MouseButton.MIDDLE)) {
-                getPlaylist().unselectAll();
-                setSelected(true);
-                if (event.isShiftDown()) {
-                    removeFromQueue();
-                } else {
-                    addToQueue();
-                }
-            }
-        });
 
         queueRemoveBtn.setDisable(true);
 
@@ -432,9 +406,117 @@ public class PlaylistElement {
         return index;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    private EventHandler<MouseEvent> clickEventHandler;
+
+    public void setIndex(int newIndex) {
+        index = newIndex;
+
+
+        pane.setOnDragDetected(event -> {
+            Dragboard dragboard = pane.startDragAndDrop(TransferMode.ANY);
+
+            ClipboardContent content = new ClipboardContent();
+            content.putString(String.valueOf(index));
+            dragboard.setContent(content);
+
+            getPlaylist().unselectAll();
+            setSelected(true);
+
+            event.consume();
+        });
+
+        pane.setOnDragEntered(event -> {
+            if (event.getGestureSource() != pane && event.getDragboard().hasString()) {
+                if (event.getY() > pane.getHeight() / 2) {
+                    pane.getStyleClass().add("background-drag-bottom");
+                } else {
+                    pane.getStyleClass().add("background-drag-top");
+                }
+            }
+            event.consume();
+        });
+
+        pane.setOnDragExited(event -> {
+            pane.getStyleClass().remove("background-drag-top");
+            pane.getStyleClass().remove("background-drag-bottom");
+            event.consume();
+        });
+
+        pane.setOnDragOver(event -> {
+            if (event.getGestureSource() != pane && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+
+            if (event.getY() > pane.getHeight() / 2) {
+                if (!pane.getStyleClass().contains("background-drag-bottom")) {
+                    pane.getStyleClass().remove("background-drag-top");
+                    pane.getStyleClass().add("background-drag-bottom");
+                }
+            } else {
+                if (!pane.getStyleClass().contains("background-drag-top")) {
+                    pane.getStyleClass().remove("background-drag-bottom");
+                    pane.getStyleClass().add("background-drag-top");
+                }
+            }
+
+            event.consume();
+        });
+
+        pane.setOnDragDropped(event -> {
+            Dragboard dragboard = event.getDragboard();
+            boolean success = false;
+            if (dragboard.hasString()) {
+                if (event.getY() > pane.getHeight() / 2) {
+                    Utils.print(dragboard.getString(), "to", index + 1);
+                    getPlaylist().moveToPosition(Integer.parseInt(dragboard.getString()), index + 1);
+                } else {
+                    Utils.print(dragboard.getString(), "to", index);
+                    getPlaylist().moveToPosition(Integer.parseInt(dragboard.getString()), index);
+                }
+                success = true;
+            }
+
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+        if (clickEventHandler != null)
+            pane.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickEventHandler);
+
+        clickEventHandler = (MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                if (!event.isControlDown()) {
+                    if (event.getClickCount() == 1) {
+                        getPlaylist().unselectAll();
+                        setSelected(true);
+                    } else {
+                        getPlaylist().play(index);
+                    }
+                } else {
+                    setSelected(!isSelected());
+                }
+            } else if (event.getButton().equals(MouseButton.SECONDARY)) {
+                if (!event.isControlDown()) {
+                    getPlaylist().unselectAll();
+                }
+                setSelected(true);
+                contextMenu.show(pane, event.getScreenX(), event.getScreenY());
+                playableMenuItem.setText((getPlayable() ? Utils.getString("playlist.element.disable")
+                        : Utils.getString("playlist.element.enable")));
+            } else if (event.getButton().equals(MouseButton.MIDDLE)) {
+                getPlaylist().unselectAll();
+                setSelected(true);
+                if (event.isShiftDown()) {
+                    removeFromQueue();
+                } else {
+                    addToQueue();
+                }
+            }
+        };
+
+        pane.addEventHandler(MouseEvent.MOUSE_CLICKED, clickEventHandler);
     }
+
 
     public boolean isSelected() {
         return selected;

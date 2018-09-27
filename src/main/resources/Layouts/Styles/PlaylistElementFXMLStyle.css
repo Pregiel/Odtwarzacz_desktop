@@ -78,6 +78,16 @@
     -fx-fill: -text-color;
 }
 
+.background-drag-top {
+    -fx-border-color: -text-color;
+    -fx-border-width: 5 0 0 0;
+}
+
+.background-drag-bottom {
+    -fx-border-color: -text-color;
+    -fx-border-width: 0 0 5 0;
+}
+
 .title-playing {
     -fx-text-fill: -text-playing-color;
     -fx-font-family: 'Roboto Bold';

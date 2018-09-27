@@ -318,7 +318,7 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void BTSendTAK(ActionEvent event) {
-
+        getPlaylist().swapElement(1,4);
     }
 
 
