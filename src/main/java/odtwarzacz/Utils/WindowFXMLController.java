@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -32,6 +33,7 @@ public class WindowFXMLController implements Initializable {
 
     public BorderPane pane;
     public GridPane titleBar;
+    public Button maximizeButton;
 
     private Stage maximizeScreen;
 
@@ -123,8 +125,10 @@ public class WindowFXMLController implements Initializable {
         if (!stage.isMoving() && !stage.isResizing()) {
             if (stage.isWindowMaximized()) {
                 stage.setWindowMaximized(false);
+                maximizeButton.setText("P");
             } else {
                 stage.setWindowMaximized(true);
+                maximizeButton.setText("O");
             }
         }
     }

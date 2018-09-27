@@ -45,7 +45,7 @@
                   <String fx:value="playlist-menu-button" />
                </styleClass>
             </MenuButton>
-            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#undock" text="O">
+            <Button fx:id="undockButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#undock" text="Q">
                <styleClass>
                   <String fx:value="smaller-button" />
                   <String fx:value="playlist-button" />

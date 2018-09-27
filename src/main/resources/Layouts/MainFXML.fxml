@@ -40,7 +40,7 @@
                         <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
                             <children>
                                 <Button maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#minButton" prefWidth="42.0" styleClass="title-bar-button" text="_" HBox.hgrow="ALWAYS" />
-                                <Button maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#maxButton" prefWidth="42.0" styleClass="title-bar-button" text="O" />
+                                <Button fx:id="maximizeButton" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#maxButton" prefWidth="42.0" styleClass="title-bar-button" text="P" />
                                 <Button maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exitButton" prefWidth="42.0" text="L">
                            <styleClass>
                               <String fx:value="title-bar-exit-button" />

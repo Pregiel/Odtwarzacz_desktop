@@ -10,6 +10,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
@@ -48,6 +49,7 @@ public class MainFXMLController implements Initializable {
     public static final String[] SUPPORTED_AUDIO = {"*.MP3"};//{"*.AIFF", "*.MP3", "*.WAV"};
     public static final String[] SUPPORTED_VIDEO = {"*.MP4"};//{"*.FLV", "*.MP4"};
     public GridPane titleBar;
+    public Button maximizeButton;
 
     @FXML
     private BorderPane pane;
@@ -463,8 +465,10 @@ public class MainFXMLController implements Initializable {
         if (!stage.isMoving() && !stage.isResizing()) {
             if (stage.isWindowMaximized()) {
                 stage.setWindowMaximized(false);
+                maximizeButton.setText("P");
             } else {
                 stage.setWindowMaximized(true);
+                maximizeButton.setText("O");
             }
         }
     }

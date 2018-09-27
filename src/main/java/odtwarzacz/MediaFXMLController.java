@@ -625,9 +625,8 @@ public class MediaFXMLController implements Initializable {
             Platform.runLater(() -> {
                 pane.setPrefHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
             });
-
-
         } else {
+            getPlaylist().hide();
             parent = (BorderPane) pane.getParent().getParent().getParent().getParent();
             splitPane = (SplitPane) pane.getParent().getParent().getParent();
 

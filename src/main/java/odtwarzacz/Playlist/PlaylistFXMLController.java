@@ -51,6 +51,7 @@ public class PlaylistFXMLController implements Initializable {
     public TextField searchBox;
     public Button clearSearchBoxButton;
     public ComboBox<String> playlistComboBox;
+    public Button undockButton;
     @FXML
     private ScrollPane playlistScroll;
     @FXML
@@ -250,8 +251,10 @@ public class PlaylistFXMLController implements Initializable {
     public void undock(ActionEvent event) {
         if (getPlaylist().getPlaylistWindow() == null) {
             getPlaylist().undock();
+            undockButton.setText("R");
         } else {
             getPlaylist().dock();
+            undockButton.setText("Q");
         }
     }
 
