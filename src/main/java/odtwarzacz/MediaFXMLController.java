@@ -341,7 +341,7 @@ public class MediaFXMLController implements Initializable {
                     volBoxDisapear.resume();
                 }
             }
-            volSlider.setVolume(volSlider.getSliderPosition() + Math.signum(event.getDeltaY()) * 0.02);
+            volSlider.addVolume(Math.signum(event.getDeltaY()) * 0.02);
         });
 
     }

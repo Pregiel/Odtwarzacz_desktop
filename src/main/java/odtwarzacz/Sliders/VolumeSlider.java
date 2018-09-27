@@ -29,7 +29,6 @@ public class VolumeSlider extends CustomSlider {
 
     private final MediaPlayer mediaPlayer;
     private boolean collapseOnRelease;
-    private boolean isExpanded;
     private double mutedVolume = 0;
     private Connection connection;
     private Label volLabel;
@@ -38,7 +37,6 @@ public class VolumeSlider extends CustomSlider {
     public VolumeSlider(AnchorPane slider, Pane track, MediaPlayer mediaPlayer, Label volLabel, Button volButton) {
         super(slider, track);
         this.collapseOnRelease = false;
-        this.isExpanded = false;
         this.mediaPlayer = mediaPlayer;
         this.connection = null;
         this.volLabel = volLabel;
@@ -104,7 +102,6 @@ public class VolumeSlider extends CustomSlider {
         setIsChanging(false);
         setVolume(event);
         if (collapseOnRelease) {
-//            animateVolumeSliderCollapse(event);
             collapseOnRelease = false;
         }
 
@@ -126,6 +123,15 @@ public class VolumeSlider extends CustomSlider {
             volume = 1.0;
         }
 
+        if (volume > 0.0) {
+            mutedVolume = 0;
+
+            if (connection != null) {
+                connection.sendMessage(Connection.MUTE_OFF);
+            }
+            muted = false;
+        }
+
         setButtonIcon(volume);
 
 
@@ -135,6 +141,14 @@ public class VolumeSlider extends CustomSlider {
 
         if (connection != null) {
             connection.sendMessage(Connection.VOLUME, volume);
+        }
+    }
+
+    public void addVolume(double value) {
+        if (muted) {
+            setVolume(mutedVolume + value);
+        } else {
+            setVolume(getSliderPosition() + value);
         }
     }
 
@@ -160,33 +174,4 @@ public class VolumeSlider extends CustomSlider {
             setVolume(1);
         }
     }
-
-    public void animateVolumeSliderExpand(MouseEvent event) {
-        if (!isExpanded) {
-            Timeline timeline = new Timeline();
-            timeline.getKeyFrames().addAll(
-                    new KeyFrame(Duration.ZERO,
-                            new KeyValue(getBackTrack().scaleXProperty(), 0)),
-                    new KeyFrame(new Duration(250),
-                            new KeyValue(getBackTrack().scaleXProperty(), 1))
-            );
-            timeline.play();
-            isExpanded = true;
-        }
-    }
-
-    public void animateVolumeSliderCollapse(MouseEvent event) {
-        if (isExpanded) {
-            Timeline timeline = new Timeline();
-            timeline.getKeyFrames().addAll(
-                    new KeyFrame(Duration.ZERO,
-                            new KeyValue(getBackTrack().scaleXProperty(), 1)),
-                    new KeyFrame(new Duration(250),
-                            new KeyValue(getBackTrack().scaleXProperty(), 0))
-            );
-            timeline.play();
-            isExpanded = false;
-        }
-    }
-
 }
