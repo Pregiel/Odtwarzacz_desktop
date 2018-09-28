@@ -145,3 +145,41 @@
     -fx-font-family: 'MediaIcons';
 	-fx-text-fill: -text-color;
 }
+
+.separator {
+    -fx-background-color: -text-color;
+    -fx-opacity: 0.3;
+}
+
+.next-element-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0em;
+    -fx-padding: 5 5 2 5;
+}
+
+.next-element-button:hover {
+    -fx-background-color: -background-hover-color;
+}
+
+.next-element-button:pressed {
+    -fx-background-color: -background-pressed-color;
+}
+
+.next-element-button > .text {
+    -fx-font-size: 26px;
+    -fx-font-family: 'MediaIcons';
+    -fx-fill: -text-color;
+}
+
+
+.next-title {
+    -fx-text-fill: -text-color;
+	-fx-font-size: 12px;
+    -fx-font-family: 'Roboto Medium';
+}
+
+.smaller-next-title {
+    -fx-text-fill: -text-color;
+	-fx-font-size: 9px;
+    -fx-font-family: 'Roboto Medium';
+}

@@ -596,6 +596,8 @@ public class MediaFXMLController implements Initializable {
         if (connection != null) {
             connection.sendMessage(repeat ? Connection.REPEAT_ON : Connection.REPEAT_OFF);
         }
+
+        getPlaylist().setNextPlaylistIndex();
     }
 
     public void repeatToggle() {
@@ -664,10 +666,15 @@ public class MediaFXMLController implements Initializable {
         if (connection != null) {
             connection.sendMessage(randomToggleButton.isSelected() ? Connection.RANDOM_ON : Connection.RANDOM_OFF);
         }
+
+        getPlaylist().setNextPlaylistIndex();
     }
 
     public void randomToggle() {
         randomToggleButton.fire();
     }
 
+    public boolean isRepeat() {
+        return repeat;
+    }
 }

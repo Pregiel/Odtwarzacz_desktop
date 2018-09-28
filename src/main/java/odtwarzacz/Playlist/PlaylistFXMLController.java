@@ -18,10 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import odtwarzacz.MainFXMLController;
@@ -52,6 +49,15 @@ public class PlaylistFXMLController implements Initializable {
     public Button clearSearchBoxButton;
     public ComboBox<String> playlistComboBox;
     public Button undockButton;
+    public Label nextLabel;
+    public Label nextFileName;
+    public Tooltip nextTitleTooltip;
+    public Label nextDuration;
+    public Button nextReroll;
+    public Tooltip nextRerollTooltip;
+    public GridPane nextPane;
+    public VBox bottomBar;
+
     @FXML
     private ScrollPane playlistScroll;
     @FXML
@@ -217,7 +223,7 @@ public class PlaylistFXMLController implements Initializable {
                 CustomStage stage = new CustomStage();
                 stage.setTitle(Utils.getString("player.queue"));
                 stage.setScene(new Scene(queueRoot, 400, 600));
-                stage.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH-30);
+                stage.setMinWidth(Odtwarzacz.PLAYLIST_MIN_WIDTH - 30);
                 stage.setMinHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
                 stage.initStyle(StageStyle.UNDECORATED);
                 stage.setOnHidden(e -> {
@@ -268,5 +274,19 @@ public class PlaylistFXMLController implements Initializable {
 
     public void closePlaylist(ActionEvent event) {
         getPlaylist().closePlaylist();
+    }
+
+    public void setNextPane() {
+        System.out.println("tak " + getPlaylist().getPlaylistIndex());
+        if (getPlaylist().getPlaylistIndex() == -1) {
+            System.out.println("taasdasdk");
+            bottomBar.getChildren().remove(nextPane);
+        } else {
+            if (!bottomBar.getChildren().contains(nextPane))
+                bottomBar.getChildren().add(0, nextPane);
+//            if () {
+//
+//            }
+        }
     }
 }

@@ -3,6 +3,8 @@ package odtwarzacz.Playlist.Queue;
 import java.util.ArrayList;
 import java.util.List;
 
+import static odtwarzacz.MainFXMLController.getPlaylist;
+
 public class Queue {
     private List<QueueElement> queueElements;
 
@@ -43,6 +45,18 @@ public class Queue {
         }
 
         return lastIndex;
+    }
+
+    public void removeAllElements() {
+        for (QueueElement queueElement : getPlaylist().getQueue().getQueueElements()) {
+            getPlaylist().getPlaylistElementList().get(queueElement.getPlaylistIndex() - 1).removeQueueLabel();
+        }
+
+        if (getPlaylist().getQueueFXMLController() != null) {
+            getPlaylist().getQueueFXMLController().queuePane.getChildren().clear();
+        }
+
+        getPlaylist().getQueue().getQueueElements().clear();
     }
 
     @Override

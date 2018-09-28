@@ -29,6 +29,7 @@ import odtwarzacz.Connection.Connection;
 import odtwarzacz.Connection.UsbConnection;
 import odtwarzacz.Connection.WifiConnection;
 import odtwarzacz.Playlist.Playlist;
+import odtwarzacz.Playlist.Queue.QueueElement;
 import odtwarzacz.Utils.CustomStage;
 import odtwarzacz.Utils.Delta;
 import odtwarzacz.Utils.Utils;
@@ -246,6 +247,8 @@ public class MainFXMLController implements Initializable {
         mediaControl.setConnection(connection);
         mediaControl.setFileInfoLabel(fileInfoLabel);
 
+        playlist.setMediaFXMLController(mediaControl);
+
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -318,7 +321,7 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void BTSendTAK(ActionEvent event) {
-        getPlaylist().swapElement(1,4);
+
     }
 
 
@@ -348,8 +351,13 @@ public class MainFXMLController implements Initializable {
 
     public boolean loadFile(File file) {
         getPlaylist().setNoPlayAll();
-        loadFile(file, -1);
-        return true;
+
+        boolean value = loadFile(file, -1);
+        getPlaylist().getQueue().removeAllElements();
+
+        getPlaylist().setNextPlaylistIndex();
+
+        return value;
     }
 
     public boolean loadFile(File file, int playlistIndex) {

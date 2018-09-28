@@ -47,11 +47,7 @@ public class QueueFXMLController implements Initializable {
     }
 
     public void clear(ActionEvent event) {
-        for (QueueElement queueElement : getPlaylist().getQueue().getQueueElements()) {
-            getPlaylist().getPlaylistElementList().get(queueElement.getPlaylistIndex() - 1).removeQueueLabel();
-        }
-        queuePane.getChildren().clear();
-        getPlaylist().getQueue().getQueueElements().clear();
+        getPlaylist().getQueue().removeAllElements();
     }
 
     public void loadQueue() {

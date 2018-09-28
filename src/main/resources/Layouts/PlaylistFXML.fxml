@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -58,17 +59,63 @@
       </HBox>
    </top>
    <bottom>
-      <VBox>
+      <VBox fx:id="bottomBar">
          <children>
+            <GridPane fx:id="nextPane" minHeight="-Infinity">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints maxWidth="-Infinity" minWidth="-Infinity" prefWidth="36.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints prefHeight="32.0" vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="nextLabel" styleClass="smaller-next-title" text="%playlist.nextfile" GridPane.columnSpan="2147483647">
+                     <GridPane.margin>
+                        <Insets left="2.0" right="4.0" top="2.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="nextFileName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="next-title" text="0. Author - Title" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="8.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                     <tooltip>
+                        <Tooltip fx:id="nextTitleTooltip" />
+                     </tooltip>
+                  </Label>
+                  <Label fx:id="nextDuration" maxWidth="-Infinity" minWidth="-Infinity" styleClass="next-title" text="00:00" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </Label>
+                  <Button fx:id="nextReroll" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="next-element-button" text="H" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <tooltip>
+                        <Tooltip fx:id="nextRerollTooltip" text="%playlist.element.addqueue" />
+                     </tooltip>
+                  </Button>
+                  <Pane maxWidth="1.7976931348623157E308" prefHeight="1.0" styleClass="separator" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="6.0" top="6.0" />
+                     </GridPane.margin>
+                  </Pane>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </GridPane>
             <GridPane>
               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="46.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="46.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="46.0" />
                   <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="28.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="34.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#add" styleClass="playlist-button" text="F">
