@@ -732,7 +732,6 @@ public class Playlist {
 
     public void moveToIndexInLists(int from, int to) {
         if (playlistIndex != -1) {
-            Utils.print(playlistIndex, from, to);
             if (playlistIndex == from) {
                 playlistIndex = to;
             } else if (playlistIndex >= Math.min(from, to) && playlistIndex <= Math.max(from, to)) {
@@ -761,18 +760,18 @@ public class Playlist {
         Node node = playlistPane.getChildren().get(from - 1);
         playlistPane.getChildren().remove(from - 1);
 
-        PlaylistElement node2 = playlistElementList.get(from - 1);
+        PlaylistElement element = playlistElementList.get(from - 1);
         playlistElementList.remove(from - 1);
 
         String s = playlistList.get(from - 1);
         playlistList.remove(from - 1);
 
         if (listSize == to - 1) {
-            playlistElementList.add(node2);
+            playlistElementList.add(element);
             playlistList.add(s);
             playlistPane.getChildren().add(node);
         } else {
-            playlistElementList.add(to - 1, node2);
+            playlistElementList.add(to - 1, element);
             playlistList.add(to - 1, s);
             playlistPane.getChildren().add(to - 1, node);
         }

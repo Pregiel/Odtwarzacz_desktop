@@ -325,7 +325,8 @@ public class PlaylistElement {
     }
 
     public void addToQueue() {
-        getPlaylist().getQueue().addToQueue(new QueueElement(index, titleLabel.getText()));
+        int queueIndex = getPlaylist().getQueue().getQueueElements().size() + 1;
+        getPlaylist().getQueue().addToQueue(new QueueElement(queueIndex, index, titleLabel.getText()));
 
         setQueueLabel();
 
@@ -461,10 +462,8 @@ public class PlaylistElement {
             boolean success = false;
             if (dragboard.hasString()) {
                 if (event.getY() > pane.getHeight() / 2) {
-                    Utils.print(dragboard.getString(), "to", index + 1);
                     getPlaylist().moveToPosition(Integer.parseInt(dragboard.getString()), index + 1);
                 } else {
-                    Utils.print(dragboard.getString(), "to", index);
                     getPlaylist().moveToPosition(Integer.parseInt(dragboard.getString()), index);
                 }
                 success = true;

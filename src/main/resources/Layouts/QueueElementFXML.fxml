@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <GridPane fx:id="pane" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="36.0" styleClass="background" stylesheets="@Styles/QueueElementFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.Playlist.Queue.QueueElementFXMLController">
@@ -23,13 +22,10 @@
                 <Insets bottom="4.0" left="8.0" right="8.0" top="4.0" />
             </GridPane.margin>
         </Label>
-        <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
-            <children>
-                <Button fx:id="queueRemove" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#removeElement" prefWidth="36.0" styleClass="queue-element-button" text="L">
-               <tooltip>
-                  <Tooltip text="%queue.removeFromQueue" />
-               </tooltip></Button>
-            </children>
-        </HBox>
+          <Button fx:id="queueRemove" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#removeElement" prefWidth="36.0" styleClass="queue-element-button" text="L" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+         <tooltip>
+            <Tooltip text="%queue.removeFromQueue" />
+         </tooltip>
+      </Button>
     </children>
 </GridPane>

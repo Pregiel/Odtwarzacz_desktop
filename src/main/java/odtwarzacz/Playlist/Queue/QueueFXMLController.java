@@ -41,8 +41,8 @@ public class QueueFXMLController implements Initializable {
         });
 
         queueScroll.setOnMouseClicked(event -> {
-            if (event.getTarget().toString().contains("ScrollPaneSkin"))
-                getPlaylist().unselectAll();
+            if (event.getTarget().toString().contains("queuePane"))
+                unselectAll();
         });
     }
 
@@ -113,5 +113,9 @@ public class QueueFXMLController implements Initializable {
 
 
         loadQueue();
+    }
+
+    public VBox getQueuePane() {
+        return queuePane;
     }
 }

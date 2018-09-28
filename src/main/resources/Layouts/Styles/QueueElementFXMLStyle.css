@@ -51,30 +51,6 @@
     -fx-fill: -text-color;
 }
 
-
-
-
-.playlist-element-button {
-    -fx-background-color: transparent;
-    -fx-background-radius: 0em;
-    -fx-padding: 5 5 2 5;
-}
-
-.playlist-element-button:hover {
-    -fx-background-color: -background-hover-color;
-}
-
-.playlist-element-button:pressed {
-    -fx-background-color: -background-pressed-color;
-}
-
-.playlist-element-button > .text {
-    -fx-font-size: 12px;
-    -fx-font-family: 'MediaIcons';
-    -fx-fill: -text-color;
-}
-
-
 .background {
     -fx-background-color: -box-color-primary;
 }
@@ -97,6 +73,24 @@
 
 .background-selected:hover {
     -fx-background-color:  -background-selected-hover-color;
+}
+
+.background-selected > .queue-element-button > .text {
+    -fx-fill: -text-selected-color;
+}
+
+.background-selected > .queue-element-button:hover > .text {
+    -fx-fill: -text-color;
+}
+
+.background-drag-top {
+    -fx-border-color: -text-color;
+    -fx-border-width: 5 0 0 0;
+}
+
+.background-drag-bottom {
+    -fx-border-color: -text-color;
+    -fx-border-width: 0 0 5 0;
 }
 
 .title {
