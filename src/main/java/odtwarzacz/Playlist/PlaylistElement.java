@@ -279,6 +279,10 @@ public class PlaylistElement {
         durationLabel.setText(String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60)));
     }
 
+    public Label getDurationLabel() {
+        return durationLabel;
+    }
+
     public void setStyle(int value) {
         if (value == 1) {
             pane.getStyleClass().clear();

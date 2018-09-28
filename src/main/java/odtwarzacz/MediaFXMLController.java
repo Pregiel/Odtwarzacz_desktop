@@ -597,7 +597,7 @@ public class MediaFXMLController implements Initializable {
             connection.sendMessage(repeat ? Connection.REPEAT_ON : Connection.REPEAT_OFF);
         }
 
-        getPlaylist().setNextPlaylistIndex();
+//        getPlaylist().setNextPlaylistIndex();
     }
 
     public void repeatToggle() {

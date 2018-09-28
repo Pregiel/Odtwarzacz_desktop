@@ -75,6 +75,7 @@ public class Playlist {
         this.mainController = mainController;
         playlistElementList = new ArrayList<>();
         playlistFilesList = new ArrayList<>();
+        playlistIndex = -1;
         queue = new Queue();
 
         new File(PLAYLIST_FOLDER).mkdir();
@@ -95,12 +96,6 @@ public class Playlist {
         } else {
             loadPlaylistList((playlistFilesList.size() > 0) ? playlistFilesList.get(0) : DEFAULT_PLAYLIST);
         }
-        playlistIndex = -1;
-
-        Platform.runLater(() -> {
-            setNextPlaylistIndex();
-        });
-
     }
 
     public VBox getPlaylistPane() {
@@ -873,6 +868,14 @@ public class Playlist {
 
     private PlayingMode nextPlayingMode;
 
+    public int getNextPlaylistIndex() {
+        return nextPlaylistIndex;
+    }
+
+    public PlayingMode getNextPlayingMode() {
+        return nextPlayingMode;
+    }
+
     public void setNextPlaylistIndex() {
         if (playlistIndex != -1) {
             if (nextPlaylistIndex <= playlistList.size()) {
@@ -898,22 +901,8 @@ public class Playlist {
                         }
                     } else {
                         nextPlayingMode = PlayingMode.NORMAL;
-                        boolean next = true;
                         nextPlaylistIndex = playlistIndex;
-                        do {
-                            nextPlaylistIndex++;
-                            if (nextPlaylistIndex - 1 >= playlistElementList.size()) {
-                                nextPlaylistIndex = 0;
-                            } else {
-                                if (playlistElementList.get(nextPlaylistIndex - 1).isPlayable() &&
-                                        !playlistElementList.get(nextPlaylistIndex - 1).isNotFounded()) {
-                                    next = false;
-                                } else if (nextPlaylistIndex == playlistIndex) {
-                                    next = false;
-                                }
-                            }
-
-                        } while (next);
+                        incNextPlaylistIndex();
                     }
                 }
             }
@@ -924,6 +913,24 @@ public class Playlist {
             }
         }
         playlistFXMLController.setNextPane();
+    }
+
+    public void incNextPlaylistIndex() {
+        boolean next = true;
+        do {
+            nextPlaylistIndex++;
+            if (nextPlaylistIndex - 1 >= playlistElementList.size()) {
+                nextPlaylistIndex = 0;
+            } else {
+                if (playlistElementList.get(nextPlaylistIndex - 1).isPlayable() &&
+                        !playlistElementList.get(nextPlaylistIndex - 1).isNotFounded()) {
+                    next = false;
+                } else if (nextPlaylistIndex == playlistIndex) {
+                    next = false;
+                }
+            }
+
+        } while (next);
     }
 
     public void setPlaylistIndex(int playlistIndex) {

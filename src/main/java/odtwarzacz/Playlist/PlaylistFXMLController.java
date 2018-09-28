@@ -101,6 +101,8 @@ public class PlaylistFXMLController implements Initializable {
 
         reloadCombobox();
 
+        setNextPane();
+
 
         searchTask = new ExpandableTimeTask(() -> {
             if (searchBox.getText().equals("")) {
@@ -277,16 +279,46 @@ public class PlaylistFXMLController implements Initializable {
     }
 
     public void setNextPane() {
-        System.out.println("tak " + getPlaylist().getPlaylistIndex());
         if (getPlaylist().getPlaylistIndex() == -1) {
-            System.out.println("taasdasdk");
             bottomBar.getChildren().remove(nextPane);
         } else {
             if (!bottomBar.getChildren().contains(nextPane))
                 bottomBar.getChildren().add(0, nextPane);
-//            if () {
-//
-//            }
+
+            nextFileName.setText(getPlaylist().getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1).getTitleLabel().getText());
+
+            nextDuration.setText(getPlaylist().getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1).getDurationLabel().getText());
+
+            switch (getPlaylist().getNextPlayingMode()) {
+                case QUEUE:
+                    nextLabel.setText(Utils.getString("playlist.nextfile.queue"));
+                    nextReroll.setOnAction(event -> {
+                        getPlaylist().getQueue().removeFirstElement();
+                        getPlaylist().getPlaylistElementList().forEach(PlaylistElement::setQueueLabel);
+                        getPlaylist().setNextPlaylistIndex();
+                    });
+                    nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.queue"));
+                    nextReroll.setText("L");
+                    break;
+
+                case RANDOM:
+                    nextLabel.setText(Utils.getString("playlist.nextfile.random"));
+                    nextReroll.setOnAction(event -> {
+                        getPlaylist().setNextPlaylistIndex();
+                    });
+                    nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.random"));
+                    nextReroll.setText("T");
+                    break;
+
+                default:
+                    nextLabel.setText(Utils.getString("playlist.nextfile"));
+                    nextReroll.setOnAction(event -> {
+                        getPlaylist().incNextPlaylistIndex();
+                        setNextPane();
+                    });
+                    nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.normal"));
+                    nextReroll.setText("S");
+            }
         }
     }
 }

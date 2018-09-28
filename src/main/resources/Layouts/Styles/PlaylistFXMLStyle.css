@@ -171,7 +171,6 @@
     -fx-fill: -text-color;
 }
 
-
 .next-title {
     -fx-text-fill: -text-color;
 	-fx-font-size: 12px;
@@ -180,6 +179,6 @@
 
 .smaller-next-title {
     -fx-text-fill: -text-color;
-	-fx-font-size: 9px;
+	-fx-font-size: 10px;
     -fx-font-family: 'Roboto Medium';
 }
