@@ -48,6 +48,7 @@ public class QueueFXMLController implements Initializable {
 
     public void clear(ActionEvent event) {
         getPlaylist().getQueue().removeAllElements();
+        getPlaylist().setNextPlaylistIndex();
     }
 
     public void loadQueue() {
@@ -113,6 +114,7 @@ public class QueueFXMLController implements Initializable {
 
 
         loadQueue();
+        getPlaylist().setNextPlaylistIndex();
     }
 
     public VBox getQueuePane() {

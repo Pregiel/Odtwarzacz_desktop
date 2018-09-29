@@ -50,6 +50,8 @@ public class Playlist {
     private static final String DEFAULT_PLAYLIST = "Playlists/default_playlist.playlist";
     public static final String PLAYLIST_FOLDER = "Playlists";
 
+    private static final int PREV_INDEX_LIST_CAPACITY = 10;
+
     private BorderPane pane;
     private SplitPane splitPane;
     private PlaylistProperties playlistProperties;
@@ -75,6 +77,7 @@ public class Playlist {
         this.mainController = mainController;
         playlistElementList = new ArrayList<>();
         playlistFilesList = new ArrayList<>();
+        prevPlaylistIndexList = new ArrayList<>();
         playlistIndex = -1;
         queue = new Queue();
 
@@ -504,6 +507,7 @@ public class Playlist {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        setNextPlaylistIndex();
 //        save();
     }
 
@@ -669,6 +673,7 @@ public class Playlist {
         playlistElementList.removeAll(elementsToRemove);
 
         if (removedAmount > 0) {
+            setNextPlaylistIndex();
             reloadLabelsPlaylist();
             redrawElementsBackground();
         }
@@ -691,6 +696,7 @@ public class Playlist {
         }
         playlistElementList.removeAll(elementsToRemove);
 
+        setNextPlaylistIndex();
         reloadLabelsPlaylist();
         redrawElementsBackground();
 
@@ -813,13 +819,31 @@ public class Playlist {
                     t.setPlaying(false);
                 }
             });
+
             setNextPlaylistIndex();
         } else {
             playlistElementList.get(index - 1).setNotFounded(true);
         }
     }
 
+    public void addPrevIndex(int index) {
+        if (index > 0) {
+            if (prevPlaylistIndexList.size() > 0) {
+                if (prevPlaylistIndexList.get(prevPlaylistIndexList.size()-1) == index) {
+                    return;
+                }
+            }
+
+            prevPlaylistIndexList.add(index);
+            if (prevPlaylistIndexList.size() > PREV_INDEX_LIST_CAPACITY) {
+                prevPlaylistIndexList.remove(0);
+            }
+        }
+    }
+
     public void playNext() {
+        prevPlaylistIndex = playlistIndex;
+        addPrevIndex(playlistIndex);
         playlistIndex = nextPlaylistIndex;
 
         if (playlistIndex > -1) {
@@ -829,6 +853,7 @@ public class Playlist {
                     queue.removeFirstElement();
                     playlistElementList.forEach(PlaylistElement::setQueueLabel);
                 }
+
             } else {
                 if (mainController.getConnection() != null) {
                     mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, 0);
@@ -838,6 +863,87 @@ public class Playlist {
         }
 
         setNextPlaylistIndex();
+    }
+
+    private int prevPlaylistIndex = -1;
+
+    private List<Integer> prevPlaylistIndexList;
+
+    public void clearPrevPlaylistIndexList() {
+        prevPlaylistIndexList.clear();
+    }
+
+    public void playPrev() {
+        if (playlistIndex > -1) {
+            if (prevPlaylistIndexList.size() > 0) {
+                nextPlaylistIndex = playlistIndex;
+                playlistIndex = prevPlaylistIndexList.get(prevPlaylistIndexList.size() - 1);
+                prevPlaylistIndexList.remove(prevPlaylistIndexList.size() - 1);
+
+                if (playlistIndex > -1) {
+                    if (playlistIndex <= playlistList.size()) {
+                        play(playlistIndex);
+                    } else {
+                        if (mainController.getConnection() != null) {
+                            mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, 0);
+                        }
+                        setNoPlayAll();
+                    }
+                }
+            } else {
+                if (mediaFXMLController.isRandom()) {
+                    if (playlistList.size() > 1) {
+                        int newIndex;
+                        do {
+                            newIndex = new Random().nextInt(playlistList.size()) + 1;
+                        } while (newIndex == playlistIndex ||
+                                !playlistElementList.get(newIndex - 1).isPlayable() ||
+                                playlistElementList.get(newIndex - 1).isNotFounded());
+                        playlistIndex = newIndex;
+                    }
+                } else {
+                    if (playlistList.size() > 1) {
+                        prevPlaylistIndex = playlistIndex - 1;
+                        boolean prevIndexFounded = false, indexFounded = false;
+                        do {
+
+                            if (!prevIndexFounded) {
+                                prevPlaylistIndex--;
+                                if (prevPlaylistIndex < 1) {
+                                    prevPlaylistIndex = playlistElementList.size();
+                                }
+                            }
+
+                            if (!indexFounded) {
+                                playlistIndex--;
+                                if (playlistIndex < 1) {
+                                    playlistIndex = playlistElementList.size();
+                                }
+                            }
+
+                            if (playlistElementList.get(prevPlaylistIndex - 1).isPlayable() &&
+                                    !playlistElementList.get(prevPlaylistIndex - 1).isNotFounded()) {
+                                prevIndexFounded = true;
+                            }
+
+                            if (playlistElementList.get(playlistIndex - 1).isPlayable() &&
+                                    !playlistElementList.get(playlistIndex - 1).isNotFounded()) {
+                                indexFounded = true;
+                            }
+                        } while (!prevIndexFounded || !indexFounded);
+                    }
+                }
+
+                if (playlistIndex <= playlistList.size()) {
+                    play(playlistIndex);
+                } else {
+                    if (mainController.getConnection() != null) {
+                        mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, 0);
+                    }
+                    setNoPlayAll();
+                }
+            }
+        }
     }
 
     public void setNoPlayAll() {
@@ -862,7 +968,7 @@ public class Playlist {
     private int nextPlaylistIndex;
 
     enum PlayingMode {
-        NORMAL, REPEAT, RANDOM, QUEUE
+        NORMAL, RANDOM, QUEUE
     }
 
     private PlayingMode nextPlayingMode;
@@ -876,40 +982,44 @@ public class Playlist {
     }
 
     public void setNextPlaylistIndex() {
-        if (playlistIndex != -1) {
-            if (nextPlaylistIndex <= playlistList.size()) {
-                if (nextPlaylistIndex > -1) {
-                    if (queue.getQueueElements().size() > 0) {
-                        nextPlayingMode = PlayingMode.QUEUE;
-                        nextPlaylistIndex = queue.getQueueElements().get(0).getPlaylistIndex();
-                        if (playlistElementList.get(nextPlaylistIndex - 1).isNotFounded()) {
-                            queue.removeFirstElement();
-                            playlistElementList.forEach(PlaylistElement::setQueueLabel);
-                            setNextPlaylistIndex();
+        if (playlistElementList.size() > 0) {
+            if (playlistIndex != -1) {
+                if (nextPlaylistIndex <= playlistList.size()) {
+                    if (nextPlaylistIndex > -1) {
+                        if (queue.getQueueElements().size() > 0) {
+                            nextPlayingMode = PlayingMode.QUEUE;
+                            nextPlaylistIndex = queue.getQueueElements().get(0).getPlaylistIndex();
+                            if (playlistElementList.get(nextPlaylistIndex - 1).isNotFounded()) {
+                                queue.removeFirstElement();
+                                playlistElementList.forEach(PlaylistElement::setQueueLabel);
+                                setNextPlaylistIndex();
+                            }
+                        } else if (mediaFXMLController.isRandom()) {
+                            nextPlayingMode = PlayingMode.RANDOM;
+                            if (playlistList.size() > 1) {
+                                int newIndex;
+                                do {
+                                    newIndex = new Random().nextInt(playlistList.size()) + 1;
+                                } while (newIndex == playlistIndex ||
+                                        !playlistElementList.get(newIndex - 1).isPlayable() ||
+                                        playlistElementList.get(newIndex - 1).isNotFounded());
+                                nextPlaylistIndex = newIndex;
+                            }
+                        } else {
+                            nextPlayingMode = PlayingMode.NORMAL;
+                            nextPlaylistIndex = playlistIndex;
+                            incNextPlaylistIndex();
                         }
-                    } else if (random) {
-                        nextPlayingMode = PlayingMode.RANDOM;
-                        if (playlistList.size() > 1) {
-                            int newIndex;
-                            do {
-                                newIndex = new Random().nextInt(playlistList.size()) + 1;
-                            } while (newIndex == playlistIndex ||
-                                    !playlistElementList.get(newIndex - 1).isPlayable() ||
-                                    playlistElementList.get(newIndex - 1).isNotFounded());
-                            nextPlaylistIndex = newIndex;
-                        }
-                    } else {
-                        nextPlayingMode = PlayingMode.NORMAL;
-                        nextPlaylistIndex = playlistIndex;
-                        incNextPlaylistIndex();
                     }
                 }
-            }
 
-            if (nextPlaylistIndex > playlistList.size()) {
-                nextPlaylistIndex = 0;
-                setNextPlaylistIndex();
+                if (nextPlaylistIndex > playlistList.size()) {
+                    nextPlaylistIndex = 0;
+                    setNextPlaylistIndex();
+                }
             }
+        } else {
+            playlistIndex = -1;
         }
         playlistFXMLController.setNextPane();
     }
@@ -934,17 +1044,6 @@ public class Playlist {
 
     public void setPlaylistIndex(int playlistIndex) {
         this.playlistIndex = playlistIndex;
-    }
-
-    public boolean isRandom() {
-        return random;
-    }
-
-    public void setRandom(boolean random) {
-        this.random = random;
-        Odtwarzacz.getConfig().setProperty("random", String.valueOf(random));
-        Odtwarzacz.getConfig().save();
-
     }
 
     public String toMessage() {

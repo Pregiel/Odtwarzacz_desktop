@@ -10,6 +10,8 @@ import odtwarzacz.MainFXMLController;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static odtwarzacz.MainFXMLController.getPlaylist;
+
 public class QueueElementFXMLController implements Initializable {
     public Label fileName;
     public Button queueRemove;
@@ -29,16 +31,17 @@ public class QueueElementFXMLController implements Initializable {
     }
 
     public void removeElement(ActionEvent event) {
-        int removedIndex = MainFXMLController.getPlaylist().getQueue().getQueueElements().get(queueIndex).getPlaylistIndex() - 1;
+        int removedIndex = getPlaylist().getQueue().getQueueElements().get(queueIndex).getPlaylistIndex() - 1;
 
-        MainFXMLController.getPlaylist().getQueue().removeElement(queueIndex);
-        for (int i1 = queueIndex; i1 < MainFXMLController.getPlaylist().getQueue().getQueueElements().size(); i1++) {
-            MainFXMLController.getPlaylist().getPlaylistElementList().get(
-                    MainFXMLController.getPlaylist().getQueue().getQueueElements().get(i1).getPlaylistIndex() - 1
+        getPlaylist().getQueue().removeElement(queueIndex);
+        for (int i1 = queueIndex; i1 < getPlaylist().getQueue().getQueueElements().size(); i1++) {
+            getPlaylist().getPlaylistElementList().get(
+                    getPlaylist().getQueue().getQueueElements().get(i1).getPlaylistIndex() - 1
             ).setQueueLabel();
         }
 
-        MainFXMLController.getPlaylist().getPlaylistElementList().get(removedIndex).setQueueLabel();
-        MainFXMLController.getPlaylist().getQueueFXMLController().loadQueue();
+        getPlaylist().getPlaylistElementList().get(removedIndex).setQueueLabel();
+        getPlaylist().getQueueFXMLController().loadQueue();
+        getPlaylist().setNextPlaylistIndex();
     }
 }

@@ -537,15 +537,24 @@ public class MediaFXMLController implements Initializable {
         return Duration.seconds(sign * (START_MOVETO_VALUE + moveToValueJump));
     }
 
+
+    public void backwardButtonClick(MouseEvent mouseEvent) {
+        if (clicked) {
+            getPlaylist().playPrev();
+        }
+    }
+
     public void backwardButtonPressed(MouseEvent mouseEvent) {
+        clicked = true;
         moveToValueJump = 0;
         moveToTimer = new Timer();
         moveToTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 timeSlider.moveTo(getMoveToValue(-1));
+                clicked = false;
             }
-        }, 0, 500);
+        }, 200, 500);
     }
 
     public void backwardButtonReleased(MouseEvent mouseEvent) {
@@ -661,7 +670,6 @@ public class MediaFXMLController implements Initializable {
         Odtwarzacz.getConfig().setProperty("random", String.valueOf(random));
         Odtwarzacz.getConfig().save();
 
-        getPlaylist().setRandom(randomToggleButton.isSelected());
 
         if (connection != null) {
             connection.sendMessage(randomToggleButton.isSelected() ? Connection.RANDOM_ON : Connection.RANDOM_OFF);
@@ -677,4 +685,9 @@ public class MediaFXMLController implements Initializable {
     public boolean isRepeat() {
         return repeat;
     }
+
+    public boolean isRandom() {
+        return random;
+    }
+
 }

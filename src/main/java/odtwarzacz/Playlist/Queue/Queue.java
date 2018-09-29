@@ -62,6 +62,7 @@ public class Queue {
         }
 
         getPlaylist().getQueue().getQueueElements().clear();
+        getPlaylist().setNextPlaylistIndex();
     }
 
 

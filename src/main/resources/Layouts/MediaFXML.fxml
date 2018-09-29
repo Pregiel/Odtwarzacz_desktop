@@ -116,7 +116,7 @@
                         </HBox>
                         <HBox fx:id="controllers" alignment="CENTER" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <children>
-                              <Button fx:id="backwardButton" mnemonicParsing="false" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="N" wrapText="true">
+                              <Button fx:id="backwardButton" mnemonicParsing="false" onMouseClicked="#backwardButtonClick" onMouseDragged="#backwardButtonDrag" onMousePressed="#backwardButtonPressed" onMouseReleased="#backwardButtonReleased" text="N" wrapText="true">
                                  <tooltip>
                                     <Tooltip text="%player.previousbackward" />
                                  </tooltip>

@@ -279,46 +279,50 @@ public class PlaylistFXMLController implements Initializable {
     }
 
     public void setNextPane() {
-        if (getPlaylist().getPlaylistIndex() == -1) {
-            bottomBar.getChildren().remove(nextPane);
-        } else {
-            if (!bottomBar.getChildren().contains(nextPane))
-                bottomBar.getChildren().add(0, nextPane);
+        if (getPlaylist().getPlaylistElementList().size() > 0) {
+            if (getPlaylist().getPlaylistIndex() == -1) {
+                bottomBar.getChildren().remove(nextPane);
+            } else {
+                if (!bottomBar.getChildren().contains(nextPane))
+                    bottomBar.getChildren().add(0, nextPane);
 
-            nextFileName.setText(getPlaylist().getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1).getTitleLabel().getText());
+                nextFileName.setText(getPlaylist().getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1).getTitleLabel().getText());
 
-            nextDuration.setText(getPlaylist().getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1).getDurationLabel().getText());
+                nextDuration.setText(getPlaylist().getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1).getDurationLabel().getText());
 
-            switch (getPlaylist().getNextPlayingMode()) {
-                case QUEUE:
-                    nextLabel.setText(Utils.getString("playlist.nextfile.queue"));
-                    nextReroll.setOnAction(event -> {
-                        getPlaylist().getQueue().removeFirstElement();
-                        getPlaylist().getPlaylistElementList().forEach(PlaylistElement::setQueueLabel);
-                        getPlaylist().setNextPlaylistIndex();
-                    });
-                    nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.queue"));
-                    nextReroll.setText("L");
-                    break;
+                switch (getPlaylist().getNextPlayingMode()) {
+                    case QUEUE:
+                        nextLabel.setText(Utils.getString("playlist.nextfile.queue"));
+                        nextReroll.setOnAction(event -> {
+                            getPlaylist().getQueue().removeFirstElement();
+                            getPlaylist().getPlaylistElementList().forEach(PlaylistElement::setQueueLabel);
+                            getPlaylist().setNextPlaylistIndex();
+                        });
+                        nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.queue"));
+                        nextReroll.setText("L");
+                        break;
 
-                case RANDOM:
-                    nextLabel.setText(Utils.getString("playlist.nextfile.random"));
-                    nextReroll.setOnAction(event -> {
-                        getPlaylist().setNextPlaylistIndex();
-                    });
-                    nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.random"));
-                    nextReroll.setText("T");
-                    break;
+                    case RANDOM:
+                        nextLabel.setText(Utils.getString("playlist.nextfile.random"));
+                        nextReroll.setOnAction(event -> {
+                            getPlaylist().setNextPlaylistIndex();
+                        });
+                        nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.random"));
+                        nextReroll.setText("T");
+                        break;
 
-                default:
-                    nextLabel.setText(Utils.getString("playlist.nextfile"));
-                    nextReroll.setOnAction(event -> {
-                        getPlaylist().incNextPlaylistIndex();
-                        setNextPane();
-                    });
-                    nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.normal"));
-                    nextReroll.setText("S");
+                    default:
+                        nextLabel.setText(Utils.getString("playlist.nextfile"));
+                        nextReroll.setOnAction(event -> {
+                            getPlaylist().incNextPlaylistIndex();
+                            setNextPane();
+                        });
+                        nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.normal"));
+                        nextReroll.setText("S");
+                }
             }
+        } else {
+            bottomBar.getChildren().remove(nextPane);
         }
     }
 }

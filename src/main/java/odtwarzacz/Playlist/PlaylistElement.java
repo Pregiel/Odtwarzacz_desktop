@@ -142,7 +142,10 @@ public class PlaylistElement {
         MenuItem queueShow = new MenuItem(Utils.getString("playlist.showQueue"));
 
 
-        play.setOnAction(event -> getPlaylist().play(index));
+        play.setOnAction(event -> {
+            getPlaylist().addPrevIndex(getPlaylist().getPlaylistIndex());
+            getPlaylist().play(index);
+        });
 
         remove.setOnAction(event -> getPlaylist().remove(index));
 
@@ -315,6 +318,7 @@ public class PlaylistElement {
         }
 
         queueRemoveBtn.setDisable(true);
+        getPlaylist().setNextPlaylistIndex();
     }
 
     public void removeQueueLabel() {
@@ -332,6 +336,7 @@ public class PlaylistElement {
 
         queueRemoveBtn.setDisable(false);
         getPlaylist().refreshQueueView();
+        getPlaylist().setNextPlaylistIndex();
     }
 
     private boolean hidden = false;
@@ -408,14 +413,17 @@ public class PlaylistElement {
 
 
         pane.setOnDragDetected(event -> {
-            Dragboard dragboard = pane.startDragAndDrop(TransferMode.ANY);
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                Dragboard dragboard = pane.startDragAndDrop(TransferMode.ANY);
 
-            ClipboardContent content = new ClipboardContent();
-            content.putString(String.valueOf(index));
-            dragboard.setContent(content);
+                ClipboardContent content = new ClipboardContent();
+                content.putString(String.valueOf(index));
+                dragboard.setContent(content);
 
-            getPlaylist().unselectAll();
-            setSelected(true);
+                getPlaylist().unselectAll();
+                setSelected(true);
+
+            }
 
             event.consume();
         });
@@ -483,6 +491,7 @@ public class PlaylistElement {
                         getPlaylist().unselectAll();
                         setSelected(true);
                     } else {
+                        getPlaylist().addPrevIndex(getPlaylist().getPlaylistIndex());
                         getPlaylist().play(index);
                     }
                 } else {
@@ -504,7 +513,6 @@ public class PlaylistElement {
                 } else {
                     addToQueue();
                 }
-                getPlaylist().setNextPlaylistIndex();
             }
         };
 
