@@ -193,8 +193,44 @@ public class MediaFXMLController implements Initializable {
         mediaBar.setOnMouseExited(event -> {
             hideMediaBarTask.resume();
         });
+
+        timeBackTrack.setOnMouseMoved(event -> {
+            Bounds paneBounds = pane.localToScene(pane.getBoundsInLocal());
+            Bounds backTrackBounds = timeBackTrack.localToScene(timeBackTrack.getBoundsInLocal());
+
+            double position = event.getSceneX() / backTrackBounds.getMaxX();
+
+            timeBoxLabel.setText(durationToTime(duration.multiply(position)));
+
+            double x = event.getSceneX() - paneBounds.getMinX();
+            double y = backTrackBounds.getMinY() - paneBounds.getMinY();
+
+            timeBox.setTranslateX(x);
+            timeBox.setTranslateY(y - timeBox.getHeight() - 6);
+        });
+
+        timeBackTrack.setOnMouseEntered(event -> {
+            timeBox.setVisible(true);
+            if (hideInTimeBox.isStarted() && !hideInTimeBox.isFinished()) {
+                hideInTimeBox.stop();
+            }
+
+        });
+
+        timeBackTrack.setOnMouseExited(event -> {
+            if (!hideInTimeBox.isStarted() || hideInTimeBox.isFinished()) {
+                hideInTimeBox.start();
+            } else {
+                hideInTimeBox.resume();
+            }
+        });
+
+        hideInTimeBox = new ExpandableTimeTask(() -> {
+            timeBox.setVisible(false);
+        }, 500);
     }
 
+    private ExpandableTimeTask hideInTimeBox;
 
     public void setScaling(Pane centerPane) {
         timeSlider.setScalingPane(centerPane);
@@ -574,8 +610,8 @@ public class MediaFXMLController implements Initializable {
     private void setTimeBox(String sign, Node node) {
         timeBoxLabel.setText(sign + START_MOVETO_VALUE + "s");
 
-        Bounds paneBounds = pane.localToScreen(pane.getBoundsInLocal());
-        Bounds buttonBounds = node.localToScreen(node.getBoundsInLocal());
+        Bounds paneBounds = pane.localToScene(pane.getBoundsInLocal());
+        Bounds buttonBounds = node.localToScene(node.getBoundsInLocal());
         double x = buttonBounds.getMinX() - paneBounds.getMinX();
         double y = buttonBounds.getMinY() - paneBounds.getMinY();
 
