@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,6 +37,7 @@ import odtwarzacz.Sliders.VolumeSlider;
 import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Utils.Utils;
 
+import javax.rmi.CORBA.Util;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -57,6 +59,8 @@ public class MediaFXMLController implements Initializable {
     public ToggleButton randomToggleButton;
     public Label mediaLabel;
     public GridPane mediaBar;
+    public Label timeBoxLabel;
+    public AnchorPane timeBox;
     @FXML
     private BorderPane pane;
     @FXML
@@ -232,6 +236,13 @@ public class MediaFXMLController implements Initializable {
 
             MAX_MOVETO_VALUE_SPEED = (int) (duration.toSeconds() * 0.05);
             START_MOVETO_VALUE = (int) (duration.toSeconds() * 0.01);
+            if (duration.toSeconds() < 10) {
+                MAX_MOVETO_VALUE_SPEED = 5;
+                START_MOVETO_VALUE = 2;
+            } else {
+                MAX_MOVETO_VALUE_SPEED = 30;
+                START_MOVETO_VALUE = 5;
+            }
 
             updateValues();
         });
@@ -474,7 +485,7 @@ public class MediaFXMLController implements Initializable {
 
     @FXML
     public void backwardButton(ActionEvent event) {
-        timeSlider.moveTo(BACKWARD_VALUE);
+//        timeSlider.moveTo(BACKWARD_VALUE);
     }
 
     public void forwardButton(MouseEvent mouseEvent) {
@@ -484,12 +495,11 @@ public class MediaFXMLController implements Initializable {
 
     private Timer moveToTimer;
     private int moveToValueJump;
+    private MouseEvent startPosition;
 
     private int START_MOVETO_VALUE = 5;
     private int MAX_MOVETO_VALUE_SPEED = 30;
-    private static final Duration BACKWARD_VALUE = Duration.seconds(-5);
     private boolean clicked = false;
-
 
     public void forwardButtonClick(MouseEvent mouseEvent) {
         if (clicked) {
@@ -500,35 +510,59 @@ public class MediaFXMLController implements Initializable {
     public void forwardButtonPressed(MouseEvent mouseEvent) {
         clicked = true;
         moveToValueJump = 0;
+
+        setTimeBox("+", forwardButton);
+
         moveToTimer = new Timer();
         moveToTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                timeSlider.moveTo(getMoveToValue(1));
+                Duration value = getMoveToValue(1);
+                timeSlider.moveTo(value);
+                Platform.runLater(() ->
+                {
+                    timeBox.setVisible(true);
+                    timeBoxLabel.setText("+" + (long) value.toSeconds() + "s");
+                });
                 clicked = false;
             }
         }, 200, 500);
+        startPosition = mouseEvent;
     }
 
     public void forwardButtonReleased(MouseEvent mouseEvent) {
+        timeBox.setVisible(false);
         moveToTimer.cancel();
         moveToTimer.purge();
     }
 
     public void forwardButtonDrag(MouseEvent mouseEvent) {
-        Bounds buttonBounds = forwardButton.localToScene(forwardButton.getBoundsInLocal());
-        int buttonPosition = (int) (buttonBounds.getMaxX() - (buttonBounds.getWidth()) + (backwardButton.getWidth() / 2));
-        int maxPosition = (int) (timeSlider.getWidth() - buttonPosition);
+        int maxPosition = (int) (timeSlider.getWidth() - startPosition.getSceneX());
 
-        double mouseX = mouseEvent.getX() - (forwardButton.getWidth() / 2);
+        double mouseX = mouseEvent.getSceneX() - startPosition.getSceneX();
 
+        int maxValue = MAX_MOVETO_VALUE_SPEED - START_MOVETO_VALUE;
+
+        double factor;
         if (mouseX >= 0) {
-            moveToValueJump = (int) ((mouseEvent.getX() / maxPosition) * MAX_MOVETO_VALUE_SPEED);
+            factor = ((mouseEvent.getSceneX() - startPosition.getSceneX()) / maxPosition) * maxValue;
+            moveToValueJump = (int) factor;
         } else {
-            moveToValueJump = (int) ((mouseEvent.getX() / buttonPosition) * (START_MOVETO_VALUE - 1));
-            if (moveToValueJump < 1 - START_MOVETO_VALUE) {
-                moveToValueJump = 1 - START_MOVETO_VALUE;
+            factor = (mouseEvent.getSceneX() / startPosition.getSceneX());
+
+            if (factor - 0.5 < 0) {
+                factor = 0;
+            } else {
+                factor = 2 * factor - 1;
             }
+
+            moveToValueJump = (int) (factor * START_MOVETO_VALUE) - START_MOVETO_VALUE;
+        }
+
+        if (moveToValueJump > maxValue) {
+            moveToValueJump = maxValue;
+        } else if (moveToValueJump < 1 - START_MOVETO_VALUE) {
+            moveToValueJump = 1 - START_MOVETO_VALUE;
         }
     }
 
@@ -537,6 +571,17 @@ public class MediaFXMLController implements Initializable {
         return Duration.seconds(sign * (START_MOVETO_VALUE + moveToValueJump));
     }
 
+    private void setTimeBox(String sign, Node node) {
+        timeBoxLabel.setText(sign + START_MOVETO_VALUE + "s");
+
+        Bounds paneBounds = pane.localToScreen(pane.getBoundsInLocal());
+        Bounds buttonBounds = node.localToScreen(node.getBoundsInLocal());
+        double x = buttonBounds.getMinX() - paneBounds.getMinX();
+        double y = buttonBounds.getMinY() - paneBounds.getMinY();
+
+        timeBox.setTranslateY(y - timeBox.getHeight() - 4);
+        timeBox.setTranslateX(x + (buttonBounds.getWidth() / 2) - (timeBox.getWidth() / 2));
+    }
 
     public void backwardButtonClick(MouseEvent mouseEvent) {
         if (clicked) {
@@ -547,36 +592,59 @@ public class MediaFXMLController implements Initializable {
     public void backwardButtonPressed(MouseEvent mouseEvent) {
         clicked = true;
         moveToValueJump = 0;
+
+        setTimeBox("-", backwardButton);
+
         moveToTimer = new Timer();
         moveToTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                timeSlider.moveTo(getMoveToValue(-1));
+                Duration value = getMoveToValue(-1);
+                timeSlider.moveTo(value);
+                Platform.runLater(() ->
+                {
+                    timeBox.setVisible(true);
+                    timeBoxLabel.setText((long) value.toSeconds() + "s");
+                });
                 clicked = false;
             }
         }, 200, 500);
+        startPosition = mouseEvent;
     }
 
     public void backwardButtonReleased(MouseEvent mouseEvent) {
+        timeBox.setVisible(false);
         moveToTimer.cancel();
         moveToTimer.purge();
     }
 
     public void backwardButtonDrag(MouseEvent mouseEvent) {
-        Bounds buttonBounds = backwardButton.localToScene(backwardButton.getBoundsInLocal());
-        int buttonPosition = (int) (buttonBounds.getMaxX() - (buttonBounds.getWidth()) + (backwardButton.getWidth() / 2));
-        int maxPosition = (int) (timeSlider.getWidth() - buttonPosition);
+        int maxPosition = (int) (timeSlider.getWidth() - startPosition.getSceneX());
 
-        double mouseX = -(mouseEvent.getX() - (backwardButton.getWidth() / 2));
+        double mouseX = mouseEvent.getSceneX() - startPosition.getSceneX();
 
+        int maxValue = MAX_MOVETO_VALUE_SPEED - START_MOVETO_VALUE;
 
+        double factor;
         if (mouseX >= 0) {
-            moveToValueJump = (int) ((mouseX / buttonPosition) * MAX_MOVETO_VALUE_SPEED);
-        } else {
-            moveToValueJump = (int) ((mouseX / maxPosition) * (START_MOVETO_VALUE - 1));
-            if (moveToValueJump < 1 - START_MOVETO_VALUE) {
-                moveToValueJump = 1 - START_MOVETO_VALUE;
+            factor = ((mouseEvent.getSceneX() - startPosition.getSceneX()) / maxPosition);
+
+            if (factor > 0.5) {
+                factor = 1;
+            } else {
+                factor = factor * 2;
             }
+
+            moveToValueJump = 1 - (int) (factor * START_MOVETO_VALUE) - 2;
+        } else {
+            factor = (Math.abs(mouseX) / startPosition.getSceneX()) * maxValue;
+            moveToValueJump = (int) factor;
+        }
+
+        if (moveToValueJump > maxValue) {
+            moveToValueJump = maxValue;
+        } else if (moveToValueJump < 1 - START_MOVETO_VALUE) {
+            moveToValueJump = 1 - START_MOVETO_VALUE;
         }
     }
 

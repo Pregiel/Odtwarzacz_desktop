@@ -6,6 +6,7 @@ package odtwarzacz;/*
 
 import java.util.Arrays;
 import java.util.ResourceBundle;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -14,7 +15,6 @@ import javafx.util.Duration;
 import odtwarzacz.Utils.MyLocale;
 
 /**
- *
  * @author Pregiel
  */
 public class InfoLabel extends Label {
@@ -32,11 +32,10 @@ public class InfoLabel extends Label {
 
     private Timeline animation;
 
-    public static enum Animations {
+    public enum Animations {
         threeDots, hideIn;
     }
 
-//    private final Timeline threeDots;
     public InfoLabel() {
         super();
         hide();
@@ -128,7 +127,6 @@ public class InfoLabel extends Label {
                 this.setText(extra[0]);
                 setAnimation(Animations.hideIn);
                 break;
-
 
             default:
                 this.setText(msg + Arrays.toString(extra));
