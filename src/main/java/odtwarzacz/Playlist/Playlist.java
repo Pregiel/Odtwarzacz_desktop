@@ -41,6 +41,7 @@ import odtwarzacz.Utils.Utils;
 
 import static odtwarzacz.Connection.Connection.FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST;
 import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
+import static odtwarzacz.MainFXMLController.getPlaylist;
 
 /**
  * @author Pregiel
@@ -829,7 +830,7 @@ public class Playlist {
     public void addPrevIndex(int index) {
         if (index > 0) {
             if (prevPlaylistIndexList.size() > 0) {
-                if (prevPlaylistIndexList.get(prevPlaylistIndexList.size()-1) == index) {
+                if (prevPlaylistIndexList.get(prevPlaylistIndexList.size() - 1) == index) {
                     return;
                 }
             }
@@ -851,7 +852,8 @@ public class Playlist {
                 play(playlistIndex);
                 if (nextPlayingMode == PlayingMode.QUEUE) {
                     queue.removeFirstElement();
-                    playlistElementList.forEach(PlaylistElement::setQueueLabel);
+                    Platform.runLater(() ->
+                            playlistElementList.forEach(PlaylistElement::setQueueLabel));
                 }
 
             } else {
@@ -968,7 +970,21 @@ public class Playlist {
     private int nextPlaylistIndex;
 
     enum PlayingMode {
-        NORMAL, RANDOM, QUEUE
+        NORMAL, RANDOM, QUEUE;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case QUEUE:
+                    return "QUEUE";
+
+                case RANDOM:
+                    return "RANDOM";
+
+                default:
+                    return "NORMAL";
+            }
+        }
     }
 
     private PlayingMode nextPlayingMode;
@@ -1021,7 +1037,32 @@ public class Playlist {
         } else {
             playlistIndex = -1;
         }
-        playlistFXMLController.setNextPane();
+        Platform.runLater(() -> playlistFXMLController.setNextPane());
+    }
+
+    public void sendNextFile() {
+        if (Connection.getInstance() != null) {
+            if (getPlaylistElementList().size() < 1 || getPlaylistIndex() == -1) {
+                Connection.getInstance().sendMessage(Connection.NEXT_FILE, "NONE");
+            } else {
+                PlaylistElement element = getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1);
+
+                if (element.getMetadata() instanceof MetadataAudio) {
+                    if (((MetadataAudio) element.getMetadata()).getArtist() != null) {
+                        Connection.getInstance().sendMessage(Connection.NEXT_FILE,
+                                getPlaylist().getNextPlayingMode().toString(), element.getMetadata().getTitle(), ((MetadataAudio) element.getMetadata()).getArtist());
+                    } else {
+                        Connection.getInstance().sendMessage(Connection.NEXT_FILE,
+                                getPlaylist().getNextPlayingMode().toString(),
+                                element.getTitleLabel().getText().substring(element.getTitleLabel().getText().indexOf(".") + 1));
+                    }
+                } else {
+                    Connection.getInstance().sendMessage(Connection.NEXT_FILE,
+                            getPlaylist().getNextPlayingMode().toString(),
+                            element.getTitleLabel().getText().substring(element.getTitleLabel().getText().indexOf(".") + 1));
+                }
+            }
+        }
     }
 
     public void incNextPlaylistIndex() {

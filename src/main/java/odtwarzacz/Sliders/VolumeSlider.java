@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -137,7 +138,10 @@ public class VolumeSlider extends CustomSlider {
 
         setSliderPosition(volume);
         mediaPlayer.setVolume(volume);
-        volLabel.setText(String.valueOf(Math.round(volume * 100)) + "%");
+
+        double finalVolume = volume;
+        Platform.runLater(() ->
+                volLabel.setText(String.valueOf(Math.round(finalVolume * 100)) + "%"));
 
         if (connection != null) {
             connection.sendMessage(Connection.VOLUME, volume);
@@ -153,15 +157,17 @@ public class VolumeSlider extends CustomSlider {
     }
 
     private void setButtonIcon(double volume) {
-        if (muted) {
-            volButton.setText(IconFont.ICON_MUTE);
-        } else if (volume == 0.0) {
-            volButton.setText(IconFont.ICON_SOUND_OFF);
-        } else if (volume < 0.5) {
-            volButton.setText(IconFont.ICON_SOUND_HALF);
-        } else {
-            volButton.setText(IconFont.ICON_SOUND_MAX);
-        }
+        Platform.runLater(() -> {
+            if (muted) {
+                volButton.setText(IconFont.ICON_MUTE);
+            } else if (volume == 0.0) {
+                volButton.setText(IconFont.ICON_SOUND_OFF);
+            } else if (volume < 0.5) {
+                volButton.setText(IconFont.ICON_SOUND_HALF);
+            } else {
+                volButton.setText(IconFont.ICON_SOUND_MAX);
+            }
+        });
     }
 
 

@@ -56,6 +56,7 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#chooseFile" text="%menu.file.open" />
                                 <Menu fx:id="openRecentMenu" mnemonicParsing="false" text="%menu.file.openrecent" />
+                        <MenuItem mnemonicParsing="false" onAction="#exitButton" text="%menu.file.exit" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="%menu.connect">
@@ -88,7 +89,7 @@
                                 </Menu>
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Send message">
+                        <Menu mnemonicParsing="false" text="Send message" visible="false">
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#wifiSendTAK" text="Wifi - &quot;TAK&quot;" />
                                 <MenuItem mnemonicParsing="false" onAction="#BTSendTAK" text="Bluetooth - &quot;TAK&quot;" />

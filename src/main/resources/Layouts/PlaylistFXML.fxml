@@ -128,8 +128,8 @@
                      </tooltip></Button>
                   <MenuButton alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" popupSide="TOP" styleClass="playlist-menu-button" text="D" GridPane.columnIndex="2">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Sort by" />
-                        <MenuItem mnemonicParsing="false" text="Group by" />
+                      <MenuItem mnemonicParsing="false" text="Sort by" visible="false" />
+                        <MenuItem mnemonicParsing="false" text="Group by" visible="false" />
                       <MenuItem mnemonicParsing="false" onAction="#showQueue" text="%playlist.showQueue" />
                     </items>
                      <tooltip>

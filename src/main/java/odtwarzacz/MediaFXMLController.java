@@ -122,6 +122,7 @@ public class MediaFXMLController implements Initializable {
             }
             if (metadata != null) {
                 sendFileLabel(metadata);
+                getPlaylist().sendNextFile();
             }
         }
     }
@@ -608,7 +609,8 @@ public class MediaFXMLController implements Initializable {
     }
 
     private void setTimeBox(String sign, Node node) {
-        timeBoxLabel.setText(sign + START_MOVETO_VALUE + "s");
+        Platform.runLater(() ->
+                timeBoxLabel.setText(sign + START_MOVETO_VALUE + "s"));
 
         Bounds paneBounds = pane.localToScene(pane.getBoundsInLocal());
         Bounds buttonBounds = node.localToScene(node.getBoundsInLocal());

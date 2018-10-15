@@ -21,7 +21,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import odtwarzacz.Connection.Connection;
 import odtwarzacz.MainFXMLController;
+import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
 import odtwarzacz.Theme;
@@ -286,9 +288,10 @@ public class PlaylistFXMLController implements Initializable {
                 if (!bottomBar.getChildren().contains(nextPane))
                     bottomBar.getChildren().add(0, nextPane);
 
-                nextFileName.setText(getPlaylist().getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1).getTitleLabel().getText());
+                PlaylistElement element = getPlaylist().getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1);
 
-                nextDuration.setText(getPlaylist().getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1).getDurationLabel().getText());
+                nextFileName.setText(element.getTitleLabel().getText());
+                nextDuration.setText(element.getDurationLabel().getText());
 
                 switch (getPlaylist().getNextPlayingMode()) {
                     case QUEUE:
@@ -320,9 +323,12 @@ public class PlaylistFXMLController implements Initializable {
                         nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.normal"));
                         nextReroll.setText("S");
                 }
+
             }
         } else {
             bottomBar.getChildren().remove(nextPane);
         }
+
+        getPlaylist().sendNextFile();
     }
 }

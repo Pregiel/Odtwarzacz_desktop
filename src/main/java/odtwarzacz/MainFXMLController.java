@@ -379,7 +379,8 @@ public class MainFXMLController implements Initializable {
             refreshRecentFiles();
         } else {
             removeFromRecentFiles(file.getAbsolutePath());
-            fileInfoLabel.setInfoText(InfoLabel.FILE_NOFILE, file.getName());
+            Platform.runLater(() ->
+                    fileInfoLabel.setInfoText(InfoLabel.FILE_NOFILE, file.getName()));
             refreshRecentFiles();
             return false;
         }

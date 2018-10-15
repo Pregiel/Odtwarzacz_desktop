@@ -25,6 +25,8 @@ import odtwarzacz.Utils.Utils;
 
 import javax.imageio.ImageIO;
 
+import static odtwarzacz.MainFXMLController.getPlaylist;
+
 /**
  * @author Pregiel
  */
@@ -46,9 +48,11 @@ public abstract class Connection {
     public static final String REPEAT = "REPEAT";
     public static final String REPEAT_ON = "REPEAT_ON";
     public static final String REPEAT_OFF = "REPEAT_OFF";
+    public static final String REROLL = "REROLL";
 
     public static final String DEVICE_NAME = "DEVICE_NAME";
     public static final String FILE_NAME = "FILE_NAME";
+    public static final String NEXT_FILE = "NEXT_FILE";
 
     public static final String TIMESLIDER_START = "TIMESLIDER_START";
     public static final String TIMESLIDER_STOP = "TIMESLIDER_STOP";
@@ -295,6 +299,11 @@ public abstract class Connection {
                 mediaController.randomToggle();
                 break;
 
+            case REROLL:
+                Platform.runLater(() ->
+                        getPlaylist().getPlaylistFXMLController().nextReroll.fire());
+                break;
+
             case DEVICE_NAME:
                 setConnectedDeviceName(message[1]);
                 ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
@@ -307,12 +316,16 @@ public abstract class Connection {
                     }
                 });
 
-                sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+                sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
                 break;
 
             case PLAYLIST_SEND:
-                sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
-                sendMessage(PLAYLIST_PLAYING_INDEX, MainFXMLController.getPlaylist().getPlaylistIndex());
+                sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
+                sendMessage(PLAYLIST_PLAYING_INDEX, getPlaylist().getPlaylistIndex());
+                break;
+
+            case FORWARD_CLICKED:
+                getPlaylist().playNext();
                 break;
 
             case FORWARD_PRESSED:
@@ -321,6 +334,10 @@ public abstract class Connection {
 
             case FORWARD_RELEASED:
                 mediaController.forwardButtonReleased(null);
+                break;
+
+            case BACKWARD_CLICKED:
+                getPlaylist().playPrev();
                 break;
 
             case BACKWARD_PRESSED:
@@ -332,7 +349,7 @@ public abstract class Connection {
                 break;
 
             case PLAYLIST_PLAY:
-                MainFXMLController.getPlaylist().play(Integer.parseInt(message[1]) + 1);
+                getPlaylist().play(Integer.parseInt(message[1]) + 1);
                 break;
 
             case FILECHOOSER_DIRECTORY_TREE:
@@ -352,11 +369,11 @@ public abstract class Connection {
                 break;
 
             case FILECHOOSER_PLAYLIST_ADD:
-                MainFXMLController.getPlaylist().addCheckIfExist(new File(message[1]), 1);
+                getPlaylist().addCheckIfExist(new File(message[1]), 1);
                 break;
 
             case FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST:
-                MainFXMLController.getPlaylist().add(new File(message[1]));
+                getPlaylist().add(new File(message[1]));
                 break;
 
             case SNAPSHOT_REQUEST:
@@ -397,12 +414,12 @@ public abstract class Connection {
 
     public void sendSnapshot() {
         if (isConnected() && mediaController.getMediaView() != null) {
-//            Image image = Utils.scale(mediaController.getMediaView().snapshot(new SnapshotParameters(), null),
-//                    SNAPSHOT_WIDTH,
-//                    SNAPSHOT_HEIGHT,
-//                    true);
+            Image image = Utils.scale(mediaController.getMediaView().snapshot(new SnapshotParameters(), null),
+                    SNAPSHOT_WIDTH,
+                    SNAPSHOT_HEIGHT,
+                    true);
 
-            Image image = mediaController.getMediaView().snapshot(new SnapshotParameters(), null);
+//            Image image = mediaController.getMediaView().snapshot(new SnapshotParameters(), null);
 
             ByteArrayOutputStream s = new ByteArrayOutputStream();
             byte[] res;

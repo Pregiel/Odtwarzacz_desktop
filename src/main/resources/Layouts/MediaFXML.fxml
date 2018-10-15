@@ -175,7 +175,7 @@
                         <Label fx:id="volLabel" alignment="CENTER" styleClass="media-label" text="68%" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="timeBox" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="volume-box" StackPane.alignment="TOP_LEFT">
+                  <AnchorPane fx:id="timeBox" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="volume-box" visible="false" StackPane.alignment="TOP_LEFT">
                      <children>
                         <Label fx:id="timeBoxLabel" alignment="CENTER" styleClass="media-label" text="-15s" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
