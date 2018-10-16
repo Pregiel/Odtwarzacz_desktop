@@ -12,6 +12,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+import odtwarzacz.Connection.Connection;
+import odtwarzacz.MainFXMLController;
+import odtwarzacz.MediaFXMLController;
 
 
 /**
@@ -54,22 +57,33 @@ public class TimeSlider extends CustomSlider {
 
     public void setScalingPane(Pane pane) {
         this.pane = pane;
-        pane.widthProperty().removeListener(scaleListener);
-        pane.widthProperty().addListener(scaleListener);
+        if (pane != null) {
+            pane.widthProperty().removeListener(scaleListener);
+            pane.widthProperty().addListener(scaleListener);
+        }
     }
 
     public void moveTo(double value) {
         setSliderPosition(value);
         mediaPlayer.seek(mediaPlayer.getMedia().getDuration().multiply(value));
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(Connection.TIME, mediaPlayer.getCurrentTime().toMillis());
+        }
     }
 
     public void moveTo(MouseEvent event) {
         setSliderPosition(event);
         mediaPlayer.seek(mediaPlayer.getMedia().getDuration().multiply(
                 getTrack().getWidth() / getBackTrack().getWidth()));
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(Connection.TIME, mediaPlayer.getCurrentTime().toMillis());
+        }
     }
 
     public void moveTo(Duration time) {
         mediaPlayer.seek(mediaPlayer.getCurrentTime().add(time));
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(Connection.TIME, mediaPlayer.getCurrentTime().toMillis());
+        }
     }
 }

@@ -26,7 +26,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
 import odtwarzacz.Metadata.Metadata;
@@ -37,7 +36,6 @@ import odtwarzacz.Sliders.VolumeSlider;
 import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Utils.Utils;
 
-import javax.rmi.CORBA.Util;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -52,6 +50,8 @@ import static odtwarzacz.MainFXMLController.getPlaylist;
  * @author Pregiel
  */
 public class MediaFXMLController implements Initializable {
+
+    public static final double VOLUME_CLICK_VALUE = 0.05d;
 
     public Button playlistButton;
     public BorderPane parent;
@@ -229,11 +229,27 @@ public class MediaFXMLController implements Initializable {
         hideInTimeBox = new ExpandableTimeTask(() -> {
             timeBox.setVisible(false);
         }, 500);
+
+        Timer T = new Timer();
+        T.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (connection != null) {
+                    if (connection.isConnected()) {
+                        if (mediaPlayer != null) {
+                            connection.sendMessage(Connection.TIME, mediaPlayer.getCurrentTime().toMillis());
+                        }
+                    }
+                }
+            }
+        }, 0, 5000);
+
     }
 
     private ExpandableTimeTask hideInTimeBox;
 
     private Pane centerPane;
+
     public void setScaling(Pane centerPane) {
 //        timeSlider.setScalingPane(centerPane);
         this.centerPane = centerPane;
@@ -262,12 +278,16 @@ public class MediaFXMLController implements Initializable {
 
         mp.setOnPlaying(() -> {
             playButton.setText(ICON_PAUSE);
+            if (connection != null)
+                connection.sendMessage(Connection.PLAY, mp.getCurrentTime().toMillis());
         });
 
         mp.setOnPaused(() -> {
             if (!timeSlider.isChanging()) {
                 playButton.setText(ICON_PLAY);
             }
+            if (connection != null)
+                connection.sendMessage(Connection.PAUSE, mp.getCurrentTime().toMillis());
         });
 
         mp.setOnReady(() -> {
@@ -282,6 +302,9 @@ public class MediaFXMLController implements Initializable {
                 MAX_MOVETO_VALUE_SPEED = 30;
                 START_MOVETO_VALUE = 5;
             }
+
+            if (connection != null)
+                connection.sendMessage(Connection.DURATION, duration.toMillis(), mediaPlayer.getStatus().toString());
 
             updateValues();
         });
@@ -322,7 +345,7 @@ public class MediaFXMLController implements Initializable {
 
     }
 
-    private ExpandableTimeTask volBoxDisapear;
+    private ExpandableTimeTask volBoxDisappear;
     private boolean waitForReleaseVolumeSlider = false, mouseInBox = false;
 
     private void setupVolume(MediaPlayer mp) {
@@ -334,30 +357,30 @@ public class MediaFXMLController implements Initializable {
             volSlider.setSliderPosition(mediaPlayer.getVolume());
         });
 
-        Runnable disapear = () -> volBox.setVisible(false);
+        Runnable disappear = () -> volBox.setVisible(false);
 
-        volBoxDisapear = new ExpandableTimeTask(disapear, 1000);
+        volBoxDisappear = new ExpandableTimeTask(disappear, 1000);
 
         volButton.setOnMouseEntered((event) -> {
             volBox.setVisible(true);
-            if (!volBoxDisapear.isFinished() && volBoxDisapear.isStarted()) {
-                volBoxDisapear.stop();
+            if (!volBoxDisappear.isFinished() && volBoxDisappear.isStarted()) {
+                volBoxDisappear.stop();
             }
             waitForReleaseVolumeSlider = false;
             mouseInBox = true;
         });
 
         volButton.setOnMouseExited(event -> {
-            if (volBoxDisapear.isFinished() || !volBoxDisapear.isStarted()) {
-                volBoxDisapear.start();
+            if (volBoxDisappear.isFinished() || !volBoxDisappear.isStarted()) {
+                volBoxDisappear.start();
             } else {
-                volBoxDisapear.resume();
+                volBoxDisappear.resume();
             }
             mouseInBox = false;
         });
 
         volBox.setOnMouseEntered(event -> {
-            volBoxDisapear.stop();
+            volBoxDisappear.stop();
             waitForReleaseVolumeSlider = false;
             mouseInBox = true;
         });
@@ -366,25 +389,25 @@ public class MediaFXMLController implements Initializable {
             if (event.isPrimaryButtonDown()) {
                 waitForReleaseVolumeSlider = true;
             } else {
-                volBoxDisapear.resume();
+                volBoxDisappear.resume();
             }
             mouseInBox = false;
         });
 
         pane.setOnMouseReleased(event -> {
             if (waitForReleaseVolumeSlider) {
-                volBoxDisapear.resume();
+                volBoxDisappear.resume();
                 waitForReleaseVolumeSlider = false;
             }
         });
 
         pane.setOnScroll(event -> {
             volBox.setVisible(true);
-            if (volBoxDisapear.isFinished() || !volBoxDisapear.isStarted()) {
-                volBoxDisapear.start();
+            if (volBoxDisappear.isFinished() || !volBoxDisappear.isStarted()) {
+                volBoxDisappear.start();
             } else {
                 if (!mouseInBox) {
-                    volBoxDisapear.resume();
+                    volBoxDisappear.resume();
                 }
             }
             volSlider.addVolume(Math.signum(event.getDeltaY()) * 0.02);
@@ -414,6 +437,9 @@ public class MediaFXMLController implements Initializable {
             } else {
                 connection.sendMessage(Connection.FILE_NAME, metadata.generateLabel());
             }
+            if (mediaPlayer != null) {
+                connection.sendMessage(Connection.DURATION, mediaPlayer.getTotalDuration().toMillis(), mediaPlayer.getStatus().toString());
+            }
         }
     }
 
@@ -423,11 +449,13 @@ public class MediaFXMLController implements Initializable {
         this.pilotTimeSliderMoving = pilotTimeSliderMoving;
     }
 
+    public boolean isPilotTimeSliderMoving() {
+        return pilotTimeSliderMoving;
+    }
+
     private void updateValues() {
         Platform.runLater(() -> {
             Duration currentTime = mediaPlayer.getCurrentTime();
-//            String timeText = durationToTime(currentTime) + "/" + durationToTime(duration);
-//            timeLabel.setText(timeText);
             timeLabel1.setText(durationToTime(currentTime));
             timeLabel2.setText(durationToTime(duration));
 
@@ -439,13 +467,11 @@ public class MediaFXMLController implements Initializable {
             }
 
 
-            if (connection != null) {
-                if (!pilotTimeSliderMoving) {
-                    connection.sendMessage(Connection.TIME, currentTime.toMillis(), duration.toMillis());
-                } else {
-//                    connection.sendSnapshot();
-                }
-            }
+//            if (connection != null) {
+//                if (!pilotTimeSliderMoving) {
+//                    connection.sendMessage(Connection.TIME, currentTime.toMillis(), duration.toMillis());
+//                }
+//            }
         });
     }
 

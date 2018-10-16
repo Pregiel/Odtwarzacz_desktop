@@ -37,6 +37,7 @@ public abstract class Connection {
     public static final String FORWARD = "FORWARD";
     public static final String BACKWARD = "BACKWARD";
     public static final String TIME = "TIME";
+    public static final String DURATION = "DURATION";
     public static final String VOLUME = "VOLUME";
     public static final String MUTE = "MUTE";
     public static final String MUTE_ON = "MUTE_ON";
@@ -218,9 +219,7 @@ public abstract class Connection {
         switch (message[0]) {
             case TIME:
                 final double currentTimeMilis = Double.parseDouble(message[1]);
-//            final double mediaTimeMilis = Double.parseDouble(message[2]);
                 if (mediaController != null) {
-
                     mediaController.getTimeSlider().moveTo(currentTimeMilis);
                 }
                 break;
@@ -264,6 +263,8 @@ public abstract class Connection {
                     mediaController.setPilotTimeSliderMoving(false);
                     mediaController.getTimeSlider().moveTo(Double.parseDouble(message[1]));
                     mediaController.play();
+
+                    sendMessage(PLAY, mediaController.getMediaView().getMediaPlayer().getCurrentTime().toMillis());
                 }
                 break;
 
@@ -344,6 +345,18 @@ public abstract class Connection {
                 mediaController.backwardButtonReleased(null);
                 break;
 
+            case VOLUME_UP_CLICKED:
+                if (mediaController != null) {
+                    mediaController.getVolSlider().addVolume(MediaFXMLController.VOLUME_CLICK_VALUE);
+                }
+                break;
+
+            case VOLUME_DOWN_CLICKED:
+                if (mediaController != null) {
+                    mediaController.getVolSlider().addVolume(-MediaFXMLController.VOLUME_CLICK_VALUE);
+                }
+                break;
+
             case PLAYLIST_PLAY:
                 getPlaylist().play(Integer.parseInt(message[1]) + 1);
                 break;
@@ -398,7 +411,9 @@ public abstract class Connection {
                 for (Object o : messages) {
                     stringBuilder.append(o).append(SEPARATOR);
                 }
-                DOS.writeUTF(stringBuilder.toString());
+                System.out.println(stringBuilder.toString());
+                if (DOS != null)
+                    DOS.writeUTF(stringBuilder.toString());
             } catch (IOException ex) {
                 disconnect();
 //                    Logger.getLogger(WifiConnection.class.getName()).log(Level.SEVERE, null, ex);

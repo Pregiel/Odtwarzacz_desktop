@@ -241,7 +241,9 @@ public class Playlist {
     }
 
     public void makePlaylistPane() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Layouts/PlaylistFXML.fxml"), Utils.getTranslationsBundle());
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/Layouts/PlaylistFXML.fxml"));
+        loader.setResources(Utils.getTranslationsBundle());
 
         pane = loader.load();
         playlistFXMLController = loader.getController();
@@ -1043,7 +1045,9 @@ public class Playlist {
     public void sendNextFile() {
         if (Connection.getInstance() != null) {
             if (getPlaylistElementList().size() < 1 || getPlaylistIndex() == -1) {
-                Connection.getInstance().sendMessage(Connection.NEXT_FILE, "NONE");
+                if (Connection.getInstance().isConnected()) {
+                    Connection.getInstance().sendMessage(Connection.NEXT_FILE, "NONE");
+                }
             } else {
                 PlaylistElement element = getPlaylistElementList().get(getPlaylist().getNextPlaylistIndex() - 1);
 
