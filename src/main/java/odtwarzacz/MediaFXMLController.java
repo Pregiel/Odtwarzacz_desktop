@@ -233,8 +233,10 @@ public class MediaFXMLController implements Initializable {
 
     private ExpandableTimeTask hideInTimeBox;
 
+    private Pane centerPane;
     public void setScaling(Pane centerPane) {
-        timeSlider.setScalingPane(centerPane);
+//        timeSlider.setScalingPane(centerPane);
+        this.centerPane = centerPane;
 
         mediaView.setPreserveRatio(true);
         mediaView.fitWidthProperty().bind(pane.widthProperty());
@@ -315,12 +317,8 @@ public class MediaFXMLController implements Initializable {
         });
 
         sendFileLabel(metadata);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                fileInfoLabel.setInfoText(InfoLabel.FILE_OPEN, metadata.generateLabel());
-            }
-        });
+        fileInfoLabel.setInfoText(InfoLabel.FILE_OPEN, metadata.generateLabel());
+        timeSlider.setScalingPane(centerPane);
 
     }
 

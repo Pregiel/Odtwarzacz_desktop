@@ -309,12 +309,8 @@ public abstract class Connection {
                 ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
                         ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
                 System.out.println(resourceBundle.getString("connection.connectedwith") + message[1]);
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        connectionInfo.setInfoText(InfoLabel.CONNECTION_CONNECTED, message[1]);
-                    }
-                });
+                connectionInfo.setInfoText(InfoLabel.CONNECTION_CONNECTED, message[1]);
+
 
                 sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
                 break;
@@ -441,14 +437,12 @@ public abstract class Connection {
             setConnected(false);
             DIS = null;
             DOS = null;
-            Platform.runLater(() -> {
-                if (this instanceof UsbConnection) {
-                    if (((UsbConnection) this).isRetryConnect()) {
-                        return;
-                    }
+            if (this instanceof UsbConnection) {
+                if (((UsbConnection) this).isRetryConnect()) {
+                    return;
                 }
-                connectionInfo.setInfoText(InfoLabel.CONNECTION_DISCONNECTED, getConnectedDeviceName());
-            });
+            }
+            connectionInfo.setInfoText(InfoLabel.CONNECTION_DISCONNECTED, getConnectedDeviceName());
             executorService.shutdown();
         }
 

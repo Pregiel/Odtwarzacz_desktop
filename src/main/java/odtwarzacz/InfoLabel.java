@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
@@ -27,6 +28,7 @@ public class InfoLabel extends Label {
     public static final String CONNECTION_WAITFORCLIENT_USB = "CONNECTION_WAITFORCLIENT_USB";
     public static final String CONNECTION_CONNECTED = "CONNECTION_CONNECTED";
     public static final String CONNECTION_DISCONNECTED = "CONNECTION_DISCONNECTED";
+    public static final String CONNECTION_USB_NOPILOT = "CONNECTION_USB_NOPILOT";
     public static final String FILE_NOFILE = "FILE_NOFILE";
     public static final String FILE_OPEN = "FILE_OPEN";
 
@@ -85,52 +87,62 @@ public class InfoLabel extends Label {
     }
 
     public void setInfoText(String msg, String... extra) {
-        this.setVisible(true);
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
-                ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
-        switch (msg) {
-            case CONNECTION_WAITFORCLIENT:
-                this.setText(resourceBundle.getString("connection.waitforclient"));
-                break;
+        Platform.runLater(() -> {
 
-            case CONNECTION_WAITFORCLIENT_WIFI:
-                this.setText(resourceBundle.getString("connection.connectingwifi") + ".");
-                setAnimation(Animations.threeDots);
-                break;
+            this.setVisible(true);
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
+                    ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+            switch (msg) {
+                case CONNECTION_WAITFORCLIENT:
+                    this.setText(resourceBundle.getString("connection.waitforclient"));
+                    break;
 
-            case CONNECTION_WAITFORCLIENT_BT:
-                this.setText(resourceBundle.getString("connection.connectingbt") + ".");
-                setAnimation(Animations.threeDots);
-                break;
+                case CONNECTION_WAITFORCLIENT_WIFI:
+                    this.setText(resourceBundle.getString("connection.connectingwifi") + ".");
+                    setAnimation(Animations.threeDots);
+                    break;
 
-            case CONNECTION_WAITFORCLIENT_USB:
-                this.setText(resourceBundle.getString("connection.connectingusb") + ".");
-                setAnimation(Animations.threeDots);
-                break;
+                case CONNECTION_WAITFORCLIENT_BT:
+                    this.setText(resourceBundle.getString("connection.connectingbt") + ".");
+                    setAnimation(Animations.threeDots);
+                    break;
 
-            case CONNECTION_CONNECTED:
-                this.setText(resourceBundle.getString("connection.connectedwith") + extra[0]);
-                setAnimation(Animations.hideIn);
-                break;
+                case CONNECTION_WAITFORCLIENT_USB:
+                    this.setText(resourceBundle.getString("connection.connectingusb") + ".");
+                    setAnimation(Animations.threeDots);
+                    break;
 
-            case CONNECTION_DISCONNECTED:
-                this.setText(resourceBundle.getString("connection.disconnectedwith") + extra[0]);
-                setAnimation(Animations.hideIn);
-                break;
+                case CONNECTION_CONNECTED:
+                    this.setText(resourceBundle.getString("connection.connectedwith") + extra[0]);
+                    setAnimation(Animations.hideIn);
+                    break;
 
-            case FILE_NOFILE:
-                this.setText(resourceBundle.getString("file.nofile") + extra[0]);
-                setAnimation(Animations.hideIn);
-                break;
+                case CONNECTION_DISCONNECTED:
+                    this.setText(resourceBundle.getString("connection.disconnectedwith") + extra[0]);
+                    setAnimation(Animations.hideIn);
+                    break;
 
-            case FILE_OPEN:
-                this.setText(extra[0]);
-                setAnimation(Animations.hideIn);
-                break;
+                case FILE_NOFILE:
+                    this.setText(resourceBundle.getString("file.nofile") + extra[0]);
+                    setAnimation(Animations.hideIn);
+                    break;
 
-            default:
-                this.setText(msg + Arrays.toString(extra));
-        }
+                case FILE_OPEN:
+                    this.setText(extra[0]);
+                    setAnimation(Animations.hideIn);
+                    break;
+
+                case CONNECTION_USB_NOPILOT:
+                    this.setText(resourceBundle.getString("connection.usb.nopilot"));
+                    setAnimation(Animations.hideIn);
+                    break;
+
+
+                default:
+                    this.setText(msg + (extra.length > 0 ? Arrays.toString(extra) : ""));
+                    setAnimation(Animations.hideIn);
+            }
+        });
     }
 
     public void setAnimation(Animations animation) {

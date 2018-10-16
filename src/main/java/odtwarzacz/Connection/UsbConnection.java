@@ -29,6 +29,7 @@ public class UsbConnection extends Connection {
     public static final int CONNECTION_PERIOD = 250, CONNECTION_MAX_RETRY = 20;
 
     private static final String ADB_PATH = "C:\\adb\\platform-tools\\adb.exe";
+    private static final String ACTION_USB_CONNECT = "com.pregiel.odtwarzacz_pilot.UsbConnectReceiver.ACTION_USB_CONNECT";
     private static final int PORT = 38300;
 
     private boolean retryConnect = false;
@@ -36,50 +37,54 @@ public class UsbConnection extends Connection {
 
     @Override
     public void connect() {
-        System.out.println("Connecting");
-        getConnectionInfo().setInfoText(InfoLabel.CONNECTION_WAITFORCLIENT_USB);
 
         Thread connect = new Thread(new Runnable() {
             @Override
             public void run() {
 
                 try {
-                    Runtime.getRuntime().exec(ADB_PATH + " forward tcp:" + PORT + " tcp:" + PORT);
+                    Runtime rt = Runtime.getRuntime();
+                    rt.exec(ADB_PATH + " forward tcp:" + PORT + " tcp:" + PORT);
 
 
-                    if (isPilotOpened()) {
+                    switch (isPilotOpened()) {
+                        case 0:
+                            getConnectionInfo().setInfoText(InfoLabel.CONNECTION_WAITFORCLIENT_USB);
+                            retryConnect = true;
 
-                        retryConnect = true;
+                            Timer t = new Timer();
+                            t.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    if (retryConnect && retryCount < CONNECTION_MAX_RETRY) {
+                                        retryCount++;
+                                        try {
+                                            setConnected(false);
+                                            socket = new Socket("localhost", PORT);
 
-                        Timer t = new Timer();
-                        t.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                if (retryConnect && retryCount < CONNECTION_MAX_RETRY) {
-                                    retryCount++;
-                                    try {
-                                        setConnected(false);
-                                        socket = new Socket("localhost", PORT);
+                                            setConnected(true);
 
-                                        setConnected(true);
-
-                                        setStreams(socket.getInputStream(), socket.getOutputStream());
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(UsbConnection.class.getName()).log(Level.SEVERE, null, ex);
+                                            setStreams(socket.getInputStream(), socket.getOutputStream());
+                                        } catch (IOException ex) {
+                                            Logger.getLogger(UsbConnection.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    } else {
+                                        cancel();
                                     }
-                                } else {
-                                    cancel();
                                 }
-                            }
-                        }, 0, CONNECTION_PERIOD);
+                            }, 0, CONNECTION_PERIOD);
+                            //adb shell am broadcast -a com.pregiel.odtwarzacz_pilot.UsbConnectReceiver.ACTION_USB_CONNECT
+                            String[] commands = {ADB_PATH, "shell", "am", "broadcast", "-a", ACTION_USB_CONNECT};
+                            rt.exec(commands);
+                            break;
 
-                    } else {
-                        System.out.println("wlacz pilot");
+
+                        default:
+                            getConnectionInfo().setInfoText(InfoLabel.CONNECTION_USB_NOPILOT);
                     }
 
-                } catch (ConnectException e) {
-                    System.out.println("nie podlaczony");
                 } catch (IOException e) {
+                    getConnectionInfo().setInfoText(InfoLabel.CONNECTION_USB_NOPILOT);
                     e.printStackTrace();
                 }
             }
@@ -97,7 +102,7 @@ public class UsbConnection extends Connection {
         return retryConnect;
     }
 
-    private boolean isPilotOpened() {
+    private int isPilotOpened() {
         try {
             Runtime rt = Runtime.getRuntime();
             String[] commands = {ADB_PATH, "shell", "dumpsys", "activity", "recents"};
@@ -105,19 +110,24 @@ public class UsbConnection extends Connection {
 
             BufferedReader stdInput = new BufferedReader(new
                     InputStreamReader(proc.getInputStream()));
-            String s = null;
+            String s;
+            boolean connected = false;
             while ((s = stdInput.readLine()) != null) {
+                connected = true;
                 if (s.contains("A=com.pregiel.odtwarzacz_pilot")) {
                     if (s.contains("Recent #0:")) {
-                        return true;
+                        return 0;
                     }
                 }
             }
-            return false;
+            if (connected) {
+                return 1;
+            }
+            return 1;
 
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return 1;
         }
     }
 
@@ -125,10 +135,12 @@ public class UsbConnection extends Connection {
     @Override
     public void disconnect() {
         super.disconnect();
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
