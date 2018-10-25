@@ -107,6 +107,29 @@
                   <Insets />
                </VBox.margin>
             </GridPane>
+            <GridPane fx:id="searchPane" minHeight="-Infinity">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="NEVER" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="searchLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="next-title" text="nextplaying">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="8.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Pane maxWidth="1.7976931348623157E308" prefHeight="1.0" styleClass="separator" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="6.0" top="6.0" />
+                     </GridPane.margin>
+                  </Pane>
+               </children>
+            </GridPane>
             <GridPane>
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="46.0" />

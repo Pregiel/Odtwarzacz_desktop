@@ -5,6 +5,7 @@
  */
 package odtwarzacz.Playlist;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -59,6 +60,8 @@ public class PlaylistFXMLController implements Initializable {
     public Tooltip nextRerollTooltip;
     public GridPane nextPane;
     public VBox bottomBar;
+    public Label searchLabel;
+    public GridPane searchPane;
 
     @FXML
     private ScrollPane playlistScroll;
@@ -104,22 +107,41 @@ public class PlaylistFXMLController implements Initializable {
         reloadCombobox();
 
         setNextPane();
+        bottomBar.getChildren().remove(searchPane);
 
 
         searchTask = new ExpandableTimeTask(() -> {
             if (searchBox.getText().equals("")) {
                 for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
                     playlistElement.show();
+                    Platform.runLater(() -> {
+                        bottomBar.getChildren().remove(searchPane);
+                        searchLabel.setText("");
+                    });
                 }
             } else {
                 String searchText = searchBox.getText();
+                int results = 0;
                 for (PlaylistElement playlistElement : getPlaylist().getPlaylistElementList()) {
                     if (!playlistElement.getTitleLabel().getText().toLowerCase().contains(searchText.toLowerCase())) {
                         playlistElement.hide();
                     } else {
+                        results++;
                         playlistElement.show();
                     }
                 }
+
+                String resultText = String.format(Utils.getString("playlist.search.found"), results);
+                Platform.runLater(() -> {
+                    if (!bottomBar.getChildren().contains(searchPane)) {
+                        if (bottomBar.getChildren().contains(nextPane)) {
+                            bottomBar.getChildren().add(1, searchPane);
+                        } else {
+                            bottomBar.getChildren().add(0, searchPane);
+                        }
+                    }
+                    searchLabel.setText(resultText);
+                });
             }
             getPlaylist().redrawElementsBackground();
         }, 200);
@@ -166,7 +188,7 @@ public class PlaylistFXMLController implements Initializable {
             getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(selectedIndex));
             getPlaylist().loadPlaylist();
 
-//            lastedComboboxIndex = selectedIndex;
+            lastedComboboxIndex = selectedIndex;
         }
 
         playlistComboBox.showingProperty().addListener(changeListener);

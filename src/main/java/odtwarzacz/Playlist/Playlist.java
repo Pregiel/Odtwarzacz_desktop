@@ -558,7 +558,7 @@ public class Playlist {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(s -> {
-            this.playlistProperties = new PlaylistProperties(PLAYLIST_FOLDER + "/" + s + ".playlist", s);
+            playlistProperties = new PlaylistProperties(PLAYLIST_FOLDER + "/" + s + ".playlist", s);
             loadPlaylistFiles();
             playlistFXMLController.reloadCombobox(-1);
         });
