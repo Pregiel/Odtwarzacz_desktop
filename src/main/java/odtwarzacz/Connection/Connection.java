@@ -215,7 +215,7 @@ public abstract class Connection {
 
     public void pilotController(String msg) {
         String[] message = msg.split(SEPARATOR);
-
+        System.out.println(msg);
         switch (message[0]) {
             case TIME:
                 final double currentTimeMilis = Double.parseDouble(message[1]);

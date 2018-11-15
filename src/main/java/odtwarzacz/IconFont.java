@@ -11,8 +11,8 @@ public class IconFont {
     public static final String ICON_SOUND_MAX = "8";
     public static final String ICON_SOUND_HALF = "K";
     public static final String ICON_MUTE = "9";
-    public static final String ICON_MAXIMIZE = "A";
-    public static final String ICON_MINIMIZE = "B";
+    public static final String ICON_FULLSCREEN = "A";
+    public static final String ICON_FULLSCREEN_RESTORE = "B";
     public static final String ICON_PLAYLIST = "C";
     public static final String ICON_MENU_HORIZONTAL = "D";
     public static final String ICON_MENU_VERTICAL = "E";
@@ -21,4 +21,14 @@ public class IconFont {
     public static final String ICON_LOOP = "H";
     public static final String ICON_RANDOM = "I";
     public static final String ICON_SEARCH = "J";
+
+    public static final String ICON_CLEAR = "L";
+    public static final String ICON_NEXT_FORWARD = "M";
+    public static final String ICON_PREV_BACKWARD = "N";
+    public static final String ICON_MINIMIZE = "O";
+    public static final String ICON_MAXIMIZE = "P";
+    public static final String ICON_DOCK = "Q";
+    public static final String ICON_UNDOCK = "R";
+    public static final String ICON_SKIP = "S";
+    public static final String ICON_RANDOMIZE = "T";
 }

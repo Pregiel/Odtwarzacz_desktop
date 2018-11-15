@@ -249,21 +249,36 @@ public class MainFXMLController implements Initializable {
 
         playlist.setMediaFXMLController(mediaControl);
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                centerPane.getChildren().clear();
+        Platform.runLater(() -> {
+            centerPane.getChildren().clear();
 
-                centerPane.getChildren().add(mediaPane);
-                centerPane.getChildren().add(connectionInfoLabel);
-                centerPane.getChildren().add(fileInfoLabel);
+            centerPane.getChildren().add(mediaPane);
+            centerPane.getChildren().add(connectionInfoLabel);
+            centerPane.getChildren().add(fileInfoLabel);
 
-                mediaControl.setScaling(centerPane);
+            mediaControl.setScaling(centerPane);
 
-            }
         });
 
     }
+
+    public void showRecentFilesView() {
+        mediaControl.stop();
+        fileInfoLabel.hide();
+        getPlaylist().setNoPlayAll();
+        Platform.runLater(() -> {
+            centerPane.getChildren().clear();
+
+            refreshRecentFiles();
+            centerPane.getChildren().add(lastPickedPane);
+            centerPane.getChildren().add(connectionInfoLabel);
+            centerPane.getChildren().add(fileInfoLabel);
+
+            mediaControl.setScaling(centerPane);
+
+        });
+    }
+
 
     private void refreshRecentFiles() {
         Platform.runLater(() -> {
@@ -364,7 +379,7 @@ public class MainFXMLController implements Initializable {
         if (ifFileExists(file)) {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Load file: {0}", file);
 
-            if (mediaControl != null) {
+            if (mediaControl != null && !centerPane.getChildren().contains(lastPickedPane)) {
                 mediaControl.changeFile(file);
             } else {
                 try {
@@ -473,10 +488,10 @@ public class MainFXMLController implements Initializable {
         if (!stage.isMoving() && !stage.isResizing()) {
             if (stage.isWindowMaximized()) {
                 stage.setWindowMaximized(false);
-                maximizeButton.setText("P");
+                maximizeButton.setText(IconFont.ICON_MAXIMIZE);
             } else {
                 stage.setWindowMaximized(true);
-                maximizeButton.setText("O");
+                maximizeButton.setText(IconFont.ICON_MINIMIZE);
             }
         }
     }

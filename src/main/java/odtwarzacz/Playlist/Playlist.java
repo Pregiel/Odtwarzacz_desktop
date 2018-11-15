@@ -379,7 +379,8 @@ public class Playlist {
         }
     }
 
-    public void loadPlaylist() {
+    public void loadPlaylist(boolean playFirst) {
+
         if (loadPlaylistThread != null) {
             if (loadPlaylistThread.isAlive())
                 loadPlaylistThread.interrupt();
@@ -415,6 +416,9 @@ public class Playlist {
                     playlistPane.getChildren().add(playlistElement.getPane());
 
                 }
+                if (playFirst) {
+                    play(1);
+                }
             });
 
             if (mainController.getConnection() != null) {
@@ -424,7 +428,10 @@ public class Playlist {
 
         });
         loadPlaylistThread.start();
+    }
 
+    public void loadPlaylist() {
+        loadPlaylist(false);
     }
 
     public void loadPlaylistList(String playlistPath) {
@@ -810,22 +817,27 @@ public class Playlist {
     }
 
     public void play(int index) {
-        if (mainController.loadFile(new File(playlistList.get(index - 1)), index)) {
-            playlistElementList.get(index - 1).setNotFounded(false);
-            if (mainController.getConnection() != null) {
-                mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, playlistIndex);
-            }
-            playlistElementList.forEach((t) -> {
-                if (t.getIndex() == index) {
-                    t.setPlaying(true);
-                } else {
-                    t.setPlaying(false);
+        if (playlistElementList.size() > 0) {
+            if (mainController.loadFile(new File(playlistList.get(index - 1)), index)) {
+                playlistElementList.get(index - 1).setNotFounded(false);
+                if (mainController.getConnection() != null) {
+                    mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, playlistIndex);
                 }
-            });
+                playlistElementList.forEach((t) -> {
+                    if (t.getIndex() == index) {
+                        t.setPlaying(true);
+                    } else {
+                        t.setPlaying(false);
+                    }
+                });
 
-            setNextPlaylistIndex();
+                setNextPlaylistIndex();
+            } else {
+                playlistElementList.get(index - 1).setNotFounded(true);
+            }
         } else {
-            playlistElementList.get(index - 1).setNotFounded(true);
+            System.out.println("ta");
+            mainController.showRecentFilesView();
         }
     }
 
@@ -873,8 +885,9 @@ public class Playlist {
 
     private List<Integer> prevPlaylistIndexList;
 
-    public void clearPrevPlaylistIndexList() {
+    public void clearPrevPlaylistList() {
         prevPlaylistIndexList.clear();
+        prevPlaylistIndex = -1;
     }
 
     public void playPrev() {

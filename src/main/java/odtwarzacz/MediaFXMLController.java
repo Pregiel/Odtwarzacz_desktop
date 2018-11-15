@@ -153,7 +153,7 @@ public class MediaFXMLController implements Initializable {
         pane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 fullscreened = false;
-                fullscreenButton.setText(IconFont.ICON_MAXIMIZE);
+                fullscreenButton.setText(IconFont.ICON_FULLSCREEN);
             }
         });
 
@@ -760,7 +760,7 @@ public class MediaFXMLController implements Initializable {
 
             parent.setCenter(splitPane);
             fullscreened = false;
-            fullscreenButton.setText(IconFont.ICON_MAXIMIZE);
+            fullscreenButton.setText(IconFont.ICON_FULLSCREEN);
 
             Platform.runLater(() -> {
                 pane.setPrefHeight(Odtwarzacz.PLAYER_MIN_HEIGHT);
@@ -788,7 +788,7 @@ public class MediaFXMLController implements Initializable {
             fullscreenStage.setFullScreen(true);
 
             fullscreened = true;
-            fullscreenButton.setText(IconFont.ICON_MINIMIZE);
+            fullscreenButton.setText(IconFont.ICON_FULLSCREEN_RESTORE);
 
             parent.getScene().getWindow().hide();
         }
@@ -820,4 +820,7 @@ public class MediaFXMLController implements Initializable {
         return random;
     }
 
+    public void stop() {
+        mediaPlayer.stop();
+    }
 }

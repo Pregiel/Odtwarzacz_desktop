@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import odtwarzacz.IconFont;
 import odtwarzacz.Theme;
 
 import java.awt.*;
@@ -125,10 +126,10 @@ public class WindowFXMLController implements Initializable {
         if (!stage.isMoving() && !stage.isResizing()) {
             if (stage.isWindowMaximized()) {
                 stage.setWindowMaximized(false);
-                maximizeButton.setText("P");
+                maximizeButton.setText(IconFont.ICON_MAXIMIZE);
             } else {
                 stage.setWindowMaximized(true);
-                maximizeButton.setText("O");
+                maximizeButton.setText(IconFont.ICON_MINIMIZE);
             }
         }
     }

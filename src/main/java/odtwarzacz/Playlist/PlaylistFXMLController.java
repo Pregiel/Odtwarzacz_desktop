@@ -8,23 +8,17 @@ package odtwarzacz.Playlist;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import odtwarzacz.Connection.Connection;
+import odtwarzacz.IconFont;
 import odtwarzacz.MainFXMLController;
-import odtwarzacz.Metadata.MetadataAudio;
 import odtwarzacz.Odtwarzacz;
 import odtwarzacz.Playlist.Queue.QueueFXMLController;
 import odtwarzacz.Theme;
@@ -35,7 +29,6 @@ import odtwarzacz.Utils.Utils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -79,9 +72,7 @@ public class PlaylistFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         getPlaylist().setPlaylistPane(playlistPane);
-//        getPlaylist().loadPlaylist();
 
         playlistScroll.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.A && event.isControlDown()) {
@@ -99,7 +90,8 @@ public class PlaylistFXMLController implements Initializable {
         changeListener = (observable, oldValue, newValue) -> {
             if (!newValue && playlistComboBox.getSelectionModel().getSelectedIndex() != lastedComboboxIndex) {
                 getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(playlistComboBox.getSelectionModel().getSelectedIndex()));
-                getPlaylist().loadPlaylist();
+                getPlaylist().loadPlaylist(getPlaylist().getPlaylistIndex() > 0);
+                getPlaylist().clearPrevPlaylistList();
                 lastedComboboxIndex = playlistComboBox.getSelectionModel().getSelectedIndex();
             }
         };
@@ -283,10 +275,10 @@ public class PlaylistFXMLController implements Initializable {
     public void undock(ActionEvent event) {
         if (getPlaylist().getPlaylistWindow() == null) {
             getPlaylist().undock();
-            undockButton.setText("R");
+            undockButton.setText(IconFont.ICON_UNDOCK);
         } else {
             getPlaylist().dock();
-            undockButton.setText("Q");
+            undockButton.setText(IconFont.ICON_DOCK);
         }
     }
 
@@ -324,7 +316,7 @@ public class PlaylistFXMLController implements Initializable {
                             getPlaylist().setNextPlaylistIndex();
                         });
                         nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.queue"));
-                        nextReroll.setText("L");
+                        nextReroll.setText(IconFont.ICON_CLEAR);
                         break;
 
                     case RANDOM:
@@ -333,7 +325,7 @@ public class PlaylistFXMLController implements Initializable {
                             getPlaylist().setNextPlaylistIndex();
                         });
                         nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.random"));
-                        nextReroll.setText("T");
+                        nextReroll.setText(IconFont.ICON_RANDOMIZE);
                         break;
 
                     default:
@@ -343,7 +335,7 @@ public class PlaylistFXMLController implements Initializable {
                             setNextPane();
                         });
                         nextRerollTooltip.setText(Utils.getString("playlist.nextfile.reroll.normal"));
-                        nextReroll.setText("S");
+                        nextReroll.setText(IconFont.ICON_SKIP);
                 }
 
             }
