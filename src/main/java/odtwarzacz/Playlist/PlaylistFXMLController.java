@@ -66,8 +66,6 @@ public class PlaylistFXMLController implements Initializable {
 
     private ChangeListener<Boolean> changeListener;
 
-    private int selectedPlaylistTitle;
-
     /**
      * Initializes the controller class.
      */
@@ -89,14 +87,8 @@ public class PlaylistFXMLController implements Initializable {
         });
 
         changeListener = (observable, oldValue, newValue) -> {
-            if (!newValue && playlistComboBox.getSelectionModel().getSelectedIndex() != selectedPlaylistTitle) {
-                getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(playlistComboBox.getSelectionModel().getSelectedIndex()));
-                getPlaylist().loadPlaylist(getPlaylist().getPlaylistIndex() > 0);
-                getPlaylist().clearPrevPlaylistList();
-                selectedPlaylistTitle = playlistComboBox.getSelectionModel().getSelectedIndex();
-                if (Connection.getInstance() != null) {
-                    Connection.getInstance().sendMessage(Connection.PLAYLIST_TITLES, getSelectedPlaylistTitle(), getPlaylist().titlesToMessage());
-                }
+            if (!newValue && playlistComboBox.getSelectionModel().getSelectedIndex() != getPlaylist().getPlaylistTitleIndex()) {
+                getPlaylist().changePlaylist(playlistComboBox.getSelectionModel().getSelectedIndex());
             }
         };
 
@@ -184,14 +176,10 @@ public class PlaylistFXMLController implements Initializable {
             getPlaylist().loadPlaylistList(getPlaylist().getPlaylistFilesList().get(selectedIndex));
             getPlaylist().loadPlaylist();
 
-            selectedPlaylistTitle = selectedIndex;
+            getPlaylist().setPlaylistTitleIndex(selectedIndex);
         }
 
         playlistComboBox.showingProperty().addListener(changeListener);
-    }
-
-    public int getSelectedPlaylistTitle() {
-        return selectedPlaylistTitle;
     }
 
     public ComboBox<String> getPlaylistComboBox() {

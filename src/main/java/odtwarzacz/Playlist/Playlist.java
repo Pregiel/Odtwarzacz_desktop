@@ -62,7 +62,7 @@ public class Playlist {
 
     private Queue queue;
 
-    private int playlistIndex;
+    private int playlistIndex, playlistTitleIndex;
 
     private boolean random;
 
@@ -212,10 +212,6 @@ public class Playlist {
         }
 
         return results;
-    }
-
-    public int getPlaylistTitleIndex() {
-        return playlistFXMLController.getSelectedPlaylistTitle();
     }
 
     public Queue getQueue() {
@@ -444,6 +440,16 @@ public class Playlist {
 
         Odtwarzacz.getConfig().setProperty("playlist.lastused", playlistPath);
         Odtwarzacz.getConfig().save();
+    }
+
+    public void changePlaylist(int index) {
+        loadPlaylistList(getPlaylist().getPlaylistFilesList().get(index));
+        loadPlaylist(getPlaylist().getPlaylistIndex() > 0);
+        clearPrevPlaylistList();
+        playlistTitleIndex = index;
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(Connection.PLAYLIST_TITLES, playlistTitleIndex, getPlaylist().titlesToMessage());
+        }
     }
 
     public PlaylistProperties getPlaylistProperties() {
@@ -1011,6 +1017,14 @@ public class Playlist {
 
     public int getPlaylistIndex() {
         return playlistIndex;
+    }
+
+    public int getPlaylistTitleIndex() {
+        return playlistTitleIndex;
+    }
+
+    public void setPlaylistTitleIndex(int playlistTitleIndex) {
+        this.playlistTitleIndex = playlistTitleIndex;
     }
 
     public List<PlaylistElement> getPlaylistElementList() {
