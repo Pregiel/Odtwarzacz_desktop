@@ -469,10 +469,11 @@ public class PlaylistElement {
             Dragboard dragboard = event.getDragboard();
             boolean success = false;
             if (dragboard.hasString()) {
+                int indexFrom = Integer.parseInt(dragboard.getString());
                 if (event.getY() > pane.getHeight() / 2) {
-                    getPlaylist().moveToPosition(Integer.parseInt(dragboard.getString()), index + 1);
+                    getPlaylist().moveToPosition(indexFrom, ((index > indexFrom) ? index : index + 1));
                 } else {
-                    getPlaylist().moveToPosition(Integer.parseInt(dragboard.getString()), index);
+                    getPlaylist().moveToPosition(indexFrom, ((index > indexFrom) ? index - 1 : index));
                 }
                 success = true;
             }

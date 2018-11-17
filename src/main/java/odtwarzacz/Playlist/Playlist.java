@@ -770,6 +770,7 @@ public class Playlist {
     }
 
     public void moveToPosition(int from, int to) {
+        System.out.println("from: " + from + "  to: " + to);
         if (from != to) {
             if (playlistElementList.size() == to - 1) {
                 to--;
