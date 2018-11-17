@@ -127,6 +127,10 @@ public class MediaFXMLController implements Initializable {
         }
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
     public void setFileInfoLabel(InfoLabel fileInfoLabel) {
         this.fileInfoLabel = fileInfoLabel;
     }

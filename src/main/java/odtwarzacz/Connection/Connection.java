@@ -62,6 +62,7 @@ public abstract class Connection {
     public static final String PLAYLIST_UPDATE = "PLAYLIST_UPDATE";
     public static final String PLAYLIST_PLAY = "PLAYLIST_PLAY";
     public static final String PLAYLIST_PLAYING_INDEX = "PLAYLIST_PLAYING_INDEX";
+    public static final String PLAYLIST_TITLES = "PLAYLIST_TITLES";
 
     public static final String FORWARD_PRESSED = "FORWARD_PRESSED";
     public static final String FORWARD_RELEASED = "FORWARD_RELEASED";
@@ -314,11 +315,16 @@ public abstract class Connection {
 
 
                 sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
+                sendMessage(PLAYLIST_TITLES, getPlaylist().getPlaylistTitleIndex(), getPlaylist().titlesToMessage());
                 break;
 
             case PLAYLIST_SEND:
                 sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
                 sendMessage(PLAYLIST_PLAYING_INDEX, getPlaylist().getPlaylistIndex());
+                break;
+
+            case PLAYLIST_TITLES:
+                sendMessage(PLAYLIST_TITLES, getPlaylist().getPlaylistTitleIndex(), getPlaylist().titlesToMessage());
                 break;
 
             case FORWARD_CLICKED:

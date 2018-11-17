@@ -204,7 +204,7 @@ public class Playlist {
     }
 
 
-    public List<String> getPlaylistNames() {
+    public List<String> getPlaylistTitles() {
         List<String> results = new ArrayList<>();
 
         for (String s : playlistFilesList) {
@@ -212,6 +212,10 @@ public class Playlist {
         }
 
         return results;
+    }
+
+    public int getPlaylistTitleIndex() {
+        return playlistFXMLController.getSelectedPlaylistTitle();
     }
 
     public Queue getQueue() {
@@ -421,8 +425,8 @@ public class Playlist {
                 }
             });
 
-            if (mainController.getConnection() != null) {
-                mainController.getConnection().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+            if (Connection.getInstance() != null) {
+                Connection.getInstance().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
             }
 
 
@@ -518,7 +522,10 @@ public class Playlist {
             e.printStackTrace();
         }
         setNextPlaylistIndex();
-//        save();
+
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+        }
     }
 
     public void redrawElementsBackground() {
@@ -549,6 +556,9 @@ public class Playlist {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(s -> setPlaylistName(s));
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(Connection.PLAYLIST_TITLES, getPlaylistTitleIndex(), titlesToMessage());
+        }
     }
 
     public void newPlaylist() {
@@ -569,6 +579,10 @@ public class Playlist {
             loadPlaylistFiles();
             playlistFXMLController.reloadCombobox(-1);
         });
+
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(Connection.PLAYLIST_TITLES, getPlaylistTitleIndex(), titlesToMessage());
+        }
     }
 
     public void closePlaylist() {
@@ -589,6 +603,10 @@ public class Playlist {
                 removePlaylist(playlistProperties.getPlaylistId());
             }
         });
+
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(Connection.PLAYLIST_TITLES, getPlaylistTitleIndex(), titlesToMessage());
+        }
     }
 
     public PlaylistFXMLController getPlaylistFXMLController() {
@@ -686,6 +704,10 @@ public class Playlist {
             setNextPlaylistIndex();
             reloadLabelsPlaylist();
             redrawElementsBackground();
+
+            if (Connection.getInstance() != null) {
+                Connection.getInstance().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+            }
         }
     }
 
@@ -710,6 +732,10 @@ public class Playlist {
         reloadLabelsPlaylist();
         redrawElementsBackground();
 
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+        }
+
     }
 
     public void swapElement(int index_1, int index_2) {
@@ -730,6 +756,10 @@ public class Playlist {
 
             reloadLabelsPlaylist();
             redrawElementsBackground();
+
+            if (Connection.getInstance() != null) {
+                Connection.getInstance().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+            }
         }
     }
 
@@ -743,6 +773,10 @@ public class Playlist {
             moveToIndexInLists(from, to);
             reloadLabelsPlaylist();
             redrawElementsBackground();
+
+            if (Connection.getInstance() != null) {
+                Connection.getInstance().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
+            }
         }
     }
 
@@ -820,9 +854,10 @@ public class Playlist {
         if (playlistElementList.size() > 0) {
             if (mainController.loadFile(new File(playlistList.get(index - 1)), index)) {
                 playlistElementList.get(index - 1).setNotFounded(false);
-                if (mainController.getConnection() != null) {
-                    mainController.getConnection().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, playlistIndex);
+                if (Connection.getInstance() != null) {
+                    Connection.getInstance().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, playlistIndex);
                 }
+
                 playlistElementList.forEach((t) -> {
                     if (t.getIndex() == index) {
                         t.setPlaying(true);
@@ -1107,7 +1142,19 @@ public class Playlist {
     public String toMessage() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (String s : playlistList) {
+        for (PlaylistElement element : playlistElementList) {
+            stringBuilder
+                    .append(element.getTitleLabel().getText()).append(Connection.SEPARATOR)
+                    .append(element.getDurationLabel().getText()).append(Connection.SEPARATOR);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public String titlesToMessage() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String s : getPlaylistTitles()) {
             stringBuilder.append(s).append(Connection.SEPARATOR);
         }
 
