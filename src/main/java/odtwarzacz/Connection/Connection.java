@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -54,6 +55,7 @@ public abstract class Connection {
     public static final String DEVICE_NAME = "DEVICE_NAME";
     public static final String FILE_NAME = "FILE_NAME";
     public static final String NEXT_FILE = "NEXT_FILE";
+    public static final String RECENT_FILES = "RECENT_FILES";
 
     public static final String TIMESLIDER_START = "TIMESLIDER_START";
     public static final String TIMESLIDER_STOP = "TIMESLIDER_STOP";
@@ -79,8 +81,9 @@ public abstract class Connection {
     public static final String VOLUME_DOWN_RELEASED = "VOLUME_DOWN_RELEASED";
     public static final String VOLUME_DOWN_CLICKED = "VOLUME_DOWN_CLICKED";
 
+    public static final String FILECHOOSER_SHOW_PLAYLIST = "FILECHOOSER_SHOW_PLAYLIST";
+    public static final String FILECHOOSER_SHOW_OPEN = "FILECHOOSER_SHOW_OPEN";
     public static final String FILECHOOSER_DIRECTORY_TREE = "FILECHOOSER_DIRECTORY_TREE";
-    public static final String FILECHOOSER_SHOW = "FILECHOOSER_SHOW";
     public static final String FILECHOOSER_DRIVE_LIST = "FILECHOOSER_DRIVE_LIST";
     public static final String FILECHOOSER_PLAY = "FILECHOOSER_PLAY";
     public static final String FILECHOOSER_PLAYLIST_ADD = "FILECHOOSER_PLAYLIST_ADD";
@@ -88,6 +91,8 @@ public abstract class Connection {
 
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final String SNAPSHOT_REQUEST = "SNAPSHOT_REQUEST";
+
+    public static final String NOTHING_PLAYING = "NOTHING_PLAYING";
 
     private static final int SNAPSHOT_WIDTH = 200;
     private static final int SNAPSHOT_HEIGHT = 200;
@@ -314,9 +319,19 @@ public abstract class Connection {
                 System.out.println(resourceBundle.getString("connection.connectedwith") + message[1]);
                 connectionInfo.setInfoText(InfoLabel.CONNECTION_CONNECTED, message[1]);
 
+                if (mainFXMLController.getCurrentView() == MainFXMLController.View.RECENT_FILES) {
+                    sendMessage(NOTHING_PLAYING);
+                }
 
                 sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
                 sendMessage(PLAYLIST_TITLES, getPlaylist().getPlaylistTitleIndex(), getPlaylist().titlesToMessage());
+
+                sendMessage(Connection.RECENT_FILES, Connection.listToMessage(Odtwarzacz.getConfig().getArrayProperty("last")));
+
+                break;
+
+            case FILE_NAME:
+                mainFXMLController.loadFile(new File(message[1]));
                 break;
 
             case PLAYLIST_SEND:
@@ -325,8 +340,11 @@ public abstract class Connection {
                 break;
 
             case PLAYLIST_TITLE_INDEX:
-                Platform.runLater(() ->
-                        getPlaylist().changePlaylist(Integer.parseInt(message[1])));
+                Platform.runLater(() -> {
+                    getPlaylist().getPlaylistFXMLController().getPlaylistComboBox().getSelectionModel().select(Integer.parseInt(message[1]));
+                    getPlaylist().changePlaylist(Integer.parseInt(message[1]));
+                });
+
                 break;
 
             case FORWARD_CLICKED:
@@ -373,8 +391,12 @@ public abstract class Connection {
                 sendMessage(FILECHOOSER_DIRECTORY_TREE, Utils.getDirectoryTree(new File(message[1])));
                 break;
 
-            case FILECHOOSER_SHOW:
-                sendMessage(FILECHOOSER_SHOW, Utils.getDriveList());
+            case FILECHOOSER_SHOW_PLAYLIST:
+                sendMessage(FILECHOOSER_SHOW_PLAYLIST, Utils.getDriveList());
+                break;
+
+            case FILECHOOSER_SHOW_OPEN:
+                sendMessage(FILECHOOSER_SHOW_OPEN, Utils.getDriveList());
                 break;
 
             case FILECHOOSER_DRIVE_LIST:
@@ -386,7 +408,9 @@ public abstract class Connection {
                 break;
 
             case FILECHOOSER_PLAYLIST_ADD:
-                getPlaylist().addCheckIfExist(new File(message[1]), 1);
+                for (int i = 1; i < message.length; i++) {
+                    getPlaylist().addCheckIfExist(new File(message[i]), 1);
+                }
                 break;
 
             case FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST:
@@ -478,5 +502,15 @@ public abstract class Connection {
         }
     }
 
+
+    public static String listToMessage(List<String> list) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String s : list) {
+            stringBuilder.append(s).append(SEPARATOR);
+        }
+
+        return stringBuilder.toString();
+    }
 
 }

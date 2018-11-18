@@ -241,6 +241,7 @@ public class MediaFXMLController implements Initializable {
                 if (connection != null) {
                     if (connection.isConnected()) {
                         if (mediaPlayer != null) {
+
                             connection.sendMessage(Connection.TIME, mediaPlayer.getCurrentTime().toMillis());
                         }
                     }

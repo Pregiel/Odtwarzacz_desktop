@@ -38,6 +38,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -277,15 +278,30 @@ public class MainFXMLController implements Initializable {
             mediaControl.setScaling(centerPane);
 
         });
+
+        if (connection != null) {
+            connection.sendMessage(Connection.NOTHING_PLAYING);
+        }
     }
 
+    public enum View {
+        RECENT_FILES, MEDIA
+    }
+
+    public View getCurrentView() {
+        if (centerPane.getChildren().contains(lastPickedPane)) {
+            return View.RECENT_FILES;
+        } else {
+            return View.MEDIA;
+        }
+    }
 
     private void refreshRecentFiles() {
         Platform.runLater(() -> {
             ((Pane) lastPickedPane.lookup("#scrollPane").lookup("#recentFiles")).getChildren().clear();
             openRecentMenu.getItems().clear();
-
-            Odtwarzacz.getConfig().getArrayProperty("last").forEach((s) -> {
+            List<String> recentFiles = Odtwarzacz.getConfig().getArrayProperty("last");
+            recentFiles.forEach((s) -> {
                 Hyperlink recentFile = new Hyperlink(s);
                 recentFile.getStyleClass().add("first-link");
                 recentFile.setOnAction((event) -> {
@@ -301,9 +317,15 @@ public class MainFXMLController implements Initializable {
 
                 openRecentMenu.getItems().add(menuItem);
             });
+
+            if (connection != null) {
+                connection.sendMessage(Connection.RECENT_FILES, Connection.listToMessage(recentFiles));
+            }
         });
 
     }
+
+
 
     private Connection connection;
 
