@@ -26,7 +26,7 @@ public class Theme {
 
     public static final int MAIN_FXML = 1, MEDIA_FXML = 2,
             PLAYLIST_FXML = 3, PLAYLISTELEMENT_FXML = 4,
-            FIRSTVIEW_FXML = 5, WINDOW_FXML = 6;
+            FIRSTVIEW_FXML = 5, WINDOW_FXML = 6, ALERT_FXML = 7;
 
     private static Theme instance;
 
@@ -212,6 +212,15 @@ public class Theme {
                         getStyle("-box-hover-color-secondary", "box.hover.color.secondary"),
                         getStyle("-background-selected-color", "background.selected.color"),
                         getStyle("-background-selected-hover-color", "background.selected.hover.color"));
+
+            case ALERT_FXML:
+                return getStyles(
+                        getStyle("-background-color", "background.color"),
+                        getStyle("-background-hover-color", "background.hover.color"),
+                        getStyle("-background-pressed-color", "background.pressed.color"),
+                        getStyle("-text-color", "text.color"),
+                        getStyle("-text-pressed-color", "text.pressed.color")
+                );
 
 
         }

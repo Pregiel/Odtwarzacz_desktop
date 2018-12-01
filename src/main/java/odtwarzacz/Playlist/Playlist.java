@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -385,8 +386,6 @@ public class Playlist {
         playlistPane.getChildren().clear();
         playlistElementList.clear();
         Theme.getInstance().clearPlayListElementNode();
-
-
         loadPlaylistThread = new Thread(() -> {
 
             int i = 1;
@@ -440,7 +439,7 @@ public class Playlist {
 
     public void changePlaylist(int index) {
         loadPlaylistList(getPlaylist().getPlaylistFilesList().get(index));
-        loadPlaylist(getPlaylist().getPlaylistIndex() > 0);
+        loadPlaylist(getPlaylist().getPlaylistIndex() > 0 && mainController.getCurrentView() == MainFXMLController.View.MEDIA);
         clearPrevPlaylistList();
         playlistTitleIndex = index;
         if (Connection.getInstance() != null) {
@@ -552,16 +551,49 @@ public class Playlist {
         dialog.setContentText(Utils.getString("dialog.entername"));
         dialog.setGraphic(null);
 
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/Layouts/Styles/AlertFXMLStyle.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("myDialog");
+        dialog.getDialogPane().setStyle(Theme.getStyleConst(Theme.ALERT_FXML));
+
         Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         okButton.setText(Utils.getString("dialog.ok"));
+        okButton.addEventFilter(ActionEvent.ACTION, event -> {
+            if (playlistNameAlreadyInUse(dialog.getEditor().getText())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle(Utils.getString("dialog.addplaylist"));
+                alert.setHeaderText(null);
+                alert.setContentText(Utils.getString("dialog.nameInUse"));
+
+                alert.getDialogPane().getStylesheets().add(getClass().getResource("/Layouts/Styles/AlertFXMLStyle.css").toExternalForm());
+                alert.getDialogPane().getStyleClass().add("myDialog");
+                alert.getDialogPane().setStyle(Theme.getStyleConst(Theme.ALERT_FXML));
+
+                alert.showAndWait();
+                event.consume();
+            }
+        });
+
         Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
         cancelButton.setText(Utils.getString("dialog.cancel"));
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(s -> setPlaylistName(s));
+        result.ifPresent(s -> {
+            setPlaylistName(s);
+
+        });
+
         if (Connection.getInstance() != null) {
             Connection.getInstance().sendMessage(Connection.PLAYLIST_TITLES, getPlaylistTitleIndex(), titlesToMessage());
         }
+    }
+
+    public boolean playlistNameAlreadyInUse(String name) {
+        for (String s : getPlaylistTitles()) {
+            if (s.equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void newPlaylist() {
@@ -571,8 +603,28 @@ public class Playlist {
         dialog.setContentText(Utils.getString("dialog.entername"));
         dialog.setGraphic(null);
 
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/Layouts/Styles/AlertFXMLStyle.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("myDialog");
+        dialog.getDialogPane().setStyle(Theme.getStyleConst(Theme.ALERT_FXML));
+
         Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         okButton.setText(Utils.getString("dialog.ok"));
+        okButton.addEventFilter(ActionEvent.ACTION, event -> {
+            if (playlistNameAlreadyInUse(dialog.getEditor().getText())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle(Utils.getString("dialog.addplaylist"));
+                alert.setHeaderText(null);
+                alert.setContentText(Utils.getString("dialog.nameInUse"));
+
+                alert.getDialogPane().getStylesheets().add(getClass().getResource("/Layouts/Styles/AlertFXMLStyle.css").toExternalForm());
+                alert.getDialogPane().getStyleClass().add("myDialog");
+                alert.getDialogPane().setStyle(Theme.getStyleConst(Theme.ALERT_FXML));
+
+                alert.showAndWait();
+                event.consume();
+            }
+        });
+
         Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
         cancelButton.setText(Utils.getString("dialog.cancel"));
 

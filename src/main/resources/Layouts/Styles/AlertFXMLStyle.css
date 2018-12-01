@@ -1,0 +1,73 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Medium.ttf');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Bold.ttf');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url('Fonts/Roboto-Regular.ttf');
+}
+
+*.const {
+	-background-color: #545454;
+	-background-hover-color: #6d6d6d;
+
+	-text-color: #d6d6d6;
+	-text-pressed-color: #ffffff;
+
+	-background-pressed-color: #969696;
+	-exit-button-hover-color: #ee3333;
+	-exit-button-pressed-color: #ee7777;
+}
+
+.myDialog {
+    -fx-background-color: -background-color;
+}
+
+.label{
+    -fx-text-fill: -text-color;
+	-fx-font-size: 14px;
+    -fx-font-family: 'Roboto Regular';
+}
+
+
+.button {
+    -fx-background-color: transparent;
+    -fx-padding: 5 5 2 5;
+    -fx-background-radius: 0em;
+}
+
+.button:hover {
+    -fx-background-color: -background-hover-color;
+}
+
+.button:pressed {
+    -fx-background-color: -background-pressed-color;
+}
+
+.button > .text {
+	-fx-font-size: 16px;
+    -fx-font-family: 'Roboto';
+	-fx-fill: -text-color;
+}
+
+.button:pressed > .text {
+    -fx-fill: -text-pressed-color;
+}
+
+.text-field {
+    -fx-background-color: -background-hover-color;
+    -fx-background-radius: 0em;
+	-fx-font-size: 14px;
+    -fx-font-family: 'Roboto Medium';
+    -fx-text-fill: -text-color;
+}
+
+.text-field > .text {
+	-fx-font-size: 18px;
+}
