@@ -6,6 +6,7 @@ import odtwarzacz.Playlist.PlaylistElement;
 import odtwarzacz.Utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static odtwarzacz.MainFXMLController.getPlaylist;
@@ -27,10 +28,12 @@ public class Queue {
 
     public void removeFirstElement() {
         queueElements.remove(0);
+        getPlaylist().refreshQueueView();
     }
 
     public void removeElement(int index) {
         queueElements.remove(index);
+        getPlaylist().refreshQueueView();
     }
 
     public int removeLastElementByPlaylistIndex(int index) {
@@ -48,6 +51,8 @@ public class Queue {
         if (foundedElement != null) {
             queueElements.remove(foundedElement);
         }
+
+        getPlaylist().refreshQueueView();
 
         return lastIndex;
     }
@@ -77,14 +82,16 @@ public class Queue {
     }
 
     public void moveToIndexInLists(int from, int to) {
-        for (QueueElement queueElement : queueElements) {
-            if (queueElement.getQueueIndex() == from) {
+        for (int i = 0; i < queueElements.size(); i++) {
+            QueueElement queueElement = queueElements.get(i);
+            int queueIndex = i + 1;
+            if (queueIndex == from) {
                 queueElement.setQueueIndex(to);
-            } else if (queueElement.getQueueIndex() >= Math.min(from, to) && queueElement.getQueueIndex() <= Math.max(from, to)) {
+            } else if (queueIndex >= Math.min(from, to) && queueIndex <= Math.max(from, to)) {
                 if (from > to) {
-                    queueElement.setQueueIndex(queueElement.getQueueIndex() + 1);
+                    queueElement.setQueueIndex(queueIndex + 1);
                 } else {
-                    queueElement.setQueueIndex(queueElement.getQueueIndex() - 1);
+                    queueElement.setQueueIndex(queueIndex - 1);
                 }
             }
         }
@@ -111,6 +118,61 @@ public class Queue {
             playlistElement.setQueueLabel();
         }
     }
+
+    private class RememberPosition {
+        public int fromPosition, toPosition;
+        public List<Integer> fromPositions;
+
+        public RememberPosition(int fromPosition, int toPosition) {
+            this.fromPosition = fromPosition;
+            this.toPosition = toPosition;
+        }
+
+        public RememberPosition(int toPosition) {
+            this.toPosition = toPosition;
+            fromPositions = new ArrayList<>();
+        }
+    }
+
+    private List<RememberPosition> rememberPositions;
+
+    public void initRememberPositions() {
+        rememberPositions = new ArrayList<>();
+    }
+
+    public void addRememberPosition(int fromPosition, int toPosition) {
+        rememberPositions.add(new RememberPosition(fromPosition, toPosition));
+    }
+
+    public void updateQueueFromRememberPositions() {
+        List<RememberPosition> newPositions = new ArrayList<>();
+
+        for (RememberPosition position : rememberPositions) {
+            RememberPosition newPosition = new RememberPosition(position.toPosition);
+
+            for (int i = 0; i < queueElements.size(); i++) {
+                if (queueElements.get(i).getPlaylistIndex() == position.fromPosition) {
+                    newPosition.fromPositions.add(i + 1);
+                }
+            }
+            newPositions.add(newPosition);
+        }
+
+        for (RememberPosition newPosition : newPositions) {
+            for (Integer fromPosition : newPosition.fromPositions) {
+                queueElements.get(fromPosition - 1).setPlaylistIndex(newPosition.toPosition);
+            }
+        }
+
+        updateQueueIndexes();
+    }
+
+    public void updateQueueIndexes() {
+        for (int i = 0; i < queueElements.size(); i++) {
+            queueElements.get(i).setQueueIndex(i + 1);
+        }
+    }
+
 
     @Override
     public String toString() {

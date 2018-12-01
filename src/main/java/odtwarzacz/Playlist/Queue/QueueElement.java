@@ -11,7 +11,8 @@ import static odtwarzacz.MainFXMLController.getPlaylist;
 public class QueueElement {
     private static final String CSS_BACKGROUND_SELECTED = "background-selected";
 
-    private int playlistIndex, queueIndex;
+    private int playlistIndex;
+    private int queueIndex;
     private String title;
     private boolean selected;
 
@@ -122,9 +123,9 @@ public class QueueElement {
 
     }
 
-    public int getQueueIndex() {
-        return queueIndex;
-    }
+//    public int getQueueIndex() {
+//        return queueIndex;
+//    }
 
     public boolean isSelected() {
         return selected;

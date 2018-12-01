@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sun.istack.internal.Nullable;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -26,6 +29,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.StageStyle;
+import odtwarzacz.Connection.Connection;
 import odtwarzacz.Theme;
 import odtwarzacz.Utils.*;
 import odtwarzacz.MainFXMLController;
@@ -62,10 +66,16 @@ public class PlaylistElement {
 
     private FileType fileType;
 
+    private PlaylistProperties playlistProperties;
 
     public PlaylistElement(int index, String path, GridPane pane) {
+        this(index, path, null, pane);
+    }
+
+    public PlaylistElement(int index, String path, @Nullable PlaylistProperties properties, GridPane pane) {
         this.pane = pane;
         this.pane.setStyle(Theme.getStyleConst(Theme.PLAYLISTELEMENT_FXML));
+        this.playlistProperties = properties;
         setIndex(index);
 
         Theme.getInstance().addPlayListElementNode(pane);
@@ -83,7 +93,7 @@ public class PlaylistElement {
 
         initContextMenu();
 
-        songCheckbox.selectedProperty().set(true);
+
         file = new File(path);
 
         setSelected(false);
@@ -98,6 +108,29 @@ public class PlaylistElement {
         } else {
             fileType = FileType.NONE;
         }
+
+        String enable;
+
+        if (playlistProperties != null) {
+            metadata.setMetadata(index, playlistProperties);
+            enable = playlistProperties.getProperty(index, PlaylistProperties.ENABLE);
+            if (enable == null) {
+                enable = "true";
+            }
+        } else {
+            enable = "true";
+        }
+
+
+        songCheckbox.selectedProperty().set(Boolean.parseBoolean(enable));
+        songCheckbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                playlistProperties.setProperty(index, PlaylistProperties.ENABLE, newValue);
+                playlistProperties.save();
+                Connection.getInstance().sendMessage(Connection.PLAYLIST_ENABLE, index, newValue);
+            }
+        });
 
         if (file.exists()) {
             generateTitleLabel();
@@ -477,7 +510,6 @@ public class PlaylistElement {
                 }
                 success = true;
             }
-
             event.setDropCompleted(success);
             event.consume();
         });
@@ -574,6 +606,12 @@ public class PlaylistElement {
         this.songCheckbox = songCheckbox;
     }
 
+    public void setPlaylistProperties(PlaylistProperties playlistProperties) {
+        this.playlistProperties = playlistProperties;
+        playlistProperties.setProperty(index, PlaylistProperties.ENABLE, getSongCheckbox().isSelected());
+        playlistProperties.save();
+    }
+
     public GridPane getPane() {
         return pane;
     }
@@ -590,4 +628,44 @@ public class PlaylistElement {
         return metadata;
     }
 
+    public void setChecked(boolean value) {
+        songCheckbox.setSelected(value);
+        playlistProperties.setProperty(index, PlaylistProperties.ENABLE, value);
+        playlistProperties.save();
+    }
+
+
+    /**
+     * @return name, path, duration
+     *          (for audio file) "audio", artist, album, bit rate, channels, sampling rate
+     *          (for video file) "video", bit rate, width, height, frame rate
+     */
+    public String propertiesToMessage() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(metadata.getName()).append(Connection.SEPARATOR)
+                .append(file.getAbsolutePath()).append(Connection.SEPARATOR)
+                .append(durationLabel.getText()).append(Connection.SEPARATOR);
+
+        if (metadata instanceof MetadataAudio) {
+            stringBuilder.append("audio").append(Connection.SEPARATOR)
+                    .append(((MetadataAudio) metadata).getArtist()).append(Connection.SEPARATOR)
+                    .append(((MetadataAudio) metadata).getAlbum()).append(Connection.SEPARATOR)
+                    .append(((MetadataAudio) metadata).getBitRate()).append(Connection.SEPARATOR)
+                    .append(((MetadataAudio) metadata).getChannels()).append(Connection.SEPARATOR)
+                    .append(((MetadataAudio) metadata).getSamplingRate()).append(Connection.SEPARATOR);
+        } else if (metadata instanceof MetadataVideo) {
+            stringBuilder.append("video").append(Connection.SEPARATOR)
+                    .append(((MetadataVideo) metadata).getBitRate()).append(Connection.SEPARATOR)
+                    .append(((MetadataVideo) metadata).getWidth()).append(Connection.SEPARATOR)
+                    .append(((MetadataVideo) metadata).getHeight()).append(Connection.SEPARATOR)
+                    .append(((MetadataVideo) metadata).getFrameRate()).append(Connection.SEPARATOR);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public boolean isInQueue() {
+        return !queueIndexLabel.getText().equals("");
+
+    }
 }

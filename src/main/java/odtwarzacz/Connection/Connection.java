@@ -66,6 +66,9 @@ public abstract class Connection {
     public static final String PLAYLIST_PLAYING_INDEX = "PLAYLIST_PLAYING_INDEX";
     public static final String PLAYLIST_TITLES = "PLAYLIST_TITLES";
     public static final String PLAYLIST_TITLE_INDEX = "PLAYLIST_TITLE_INDEX";
+    public static final String PLAYLIST_PROPERTIES = "PLAYLIST_PROPERTIES";
+    public static final String PLAYLIST_REMOVE = "PLAYLIST_REMOVE";
+    public static final String PLAYLIST_ENABLE = "PLAYLIST_ENABLE";
 
     public static final String FORWARD_PRESSED = "FORWARD_PRESSED";
     public static final String FORWARD_RELEASED = "FORWARD_RELEASED";
@@ -334,6 +337,10 @@ public abstract class Connection {
                 mainFXMLController.loadFile(new File(message[1]));
                 break;
 
+            case PLAYLIST_PLAY:
+                getPlaylist().play(Integer.parseInt(message[1]));
+                break;
+
             case PLAYLIST_SEND:
                 sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
                 sendMessage(PLAYLIST_PLAYING_INDEX, getPlaylist().getPlaylistIndex());
@@ -345,6 +352,18 @@ public abstract class Connection {
                     getPlaylist().changePlaylist(Integer.parseInt(message[1]));
                 });
 
+                break;
+
+            case PLAYLIST_PROPERTIES:
+                sendMessage(PLAYLIST_PROPERTIES, getPlaylist().getPlaylistElementList().get(Integer.parseInt(message[1]) - 1).propertiesToMessage());
+                break;
+
+            case PLAYLIST_REMOVE:
+                Platform.runLater(() -> getPlaylist().remove(Integer.parseInt(message[1])));
+                break;
+
+            case PLAYLIST_ENABLE:
+                Platform.runLater(() -> getPlaylist().selectPlaylistElement(Integer.valueOf(message[1]), Boolean.parseBoolean(message[2])));
                 break;
 
             case FORWARD_CLICKED:
@@ -383,10 +402,6 @@ public abstract class Connection {
                 }
                 break;
 
-            case PLAYLIST_PLAY:
-                getPlaylist().play(Integer.parseInt(message[1]) + 1);
-                break;
-
             case FILECHOOSER_DIRECTORY_TREE:
                 sendMessage(FILECHOOSER_DIRECTORY_TREE, Utils.getDirectoryTree(new File(message[1])));
                 break;
@@ -414,7 +429,9 @@ public abstract class Connection {
                 break;
 
             case FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST:
-                getPlaylist().add(new File(message[1]));
+                for (int i = 1; i < message.length; i++) {
+                    getPlaylist().add(new File(message[i]));
+                }
                 break;
 
             case SNAPSHOT_REQUEST:

@@ -18,10 +18,17 @@ import java.util.function.Function;
  * @author Pregiel
  */
 public abstract class Metadata {
-    public static final String TITLE = "title", ARTIST = "artist", ALBUM = "album",
-            DURATION = "duration", BIT_RATE = "bit_rate", WIDTH = "width", HEIGHT = "height",
-            FRAME_RATE = "frame_rate", CHANNELS = "channels", SAMPLING_RATE = "sampling_rate",
-            NAME = "name";
+    public static final String TITLE = "title";
+    public static final String ARTIST = "artist";
+    public static final String ALBUM = "album";
+    public static final String DURATION = "duration";
+    public static final String BIT_RATE = "bit_rate";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
+    public static final String FRAME_RATE = "frame_rate";
+    public static final String CHANNELS = "channels";
+    public static final String SAMPLING_RATE = "sampling_rate";
+    public static final String NAME = "name";
 
 
     private Duration duration;
@@ -100,7 +107,10 @@ public abstract class Metadata {
 
     public void setMetadata(int index, PlaylistProperties playlistProperties) {
         name = playlistProperties.getProperty(index, NAME);
-        duration = Duration.valueOf(playlistProperties.getProperty(index, DURATION));
+        String durationProperty = playlistProperties.getProperty(index, DURATION);
+        if (durationProperty != null) {
+            duration = Duration.valueOf(durationProperty);
+        }
         title = playlistProperties.getProperty(index, TITLE);
     }
 

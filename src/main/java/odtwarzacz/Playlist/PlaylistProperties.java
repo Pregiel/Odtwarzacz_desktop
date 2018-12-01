@@ -24,6 +24,7 @@ import java.util.logging.Logger;
  * @author Pregiel
  */
 public final class PlaylistProperties extends Properties {
+    public static final String ENABLE = "enable";
 
     private static final String PROPERTY_NAME = "playlist";
     private File playlistFile;
