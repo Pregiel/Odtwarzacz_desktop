@@ -5,7 +5,9 @@
  */
 package odtwarzacz.Utils;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,7 +18,6 @@ import java.util.ResourceBundle;
  * @author Pregiel
  */
 public class PropertiesFXMLController implements Initializable {
-
 
     /**
      * Initializes the controller class.

@@ -123,9 +123,9 @@ public class QueueElement {
 
     }
 
-//    public int getQueueIndex() {
-//        return queueIndex;
-//    }
+    public int getQueueIndex() {
+        return queueIndex;
+    }
 
     public boolean isSelected() {
         return selected;

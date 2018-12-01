@@ -42,3 +42,28 @@
 .property-value {
     -fx-padding: 5;
 }
+
+
+.property-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5 5 2 5;
+    -fx-background-radius: 0em;
+}
+
+.property-button:hover {
+    -fx-background-color: -background-hover-color;
+}
+
+.property-button:pressed {
+    -fx-background-color: -background-pressed-color;
+}
+
+.property-button > .text {
+	-fx-font-size: 16px;
+    -fx-font-family: 'Roboto';
+	-fx-fill: -text-color;
+}
+
+.property-button:pressed > .text {
+    -fx-fill: -text-pressed-color;
+}

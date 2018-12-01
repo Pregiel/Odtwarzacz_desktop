@@ -230,6 +230,7 @@ public class PlaylistElement {
 
             ((AnchorPane) root.lookup("#center")).getChildren().add(propertiesPane);
 
+
             AnchorPane.setTopAnchor(propertiesPane, 0.0);
             AnchorPane.setRightAnchor(propertiesPane, 0.0);
             AnchorPane.setLeftAnchor(propertiesPane, 0.0);
@@ -239,6 +240,11 @@ public class PlaylistElement {
             stage.setTitle(Utils.getString("player.properties"));
             stage.setScene(new Scene(root, 500, 300));
             stage.initStyle(StageStyle.UNDECORATED);
+
+
+            ((Button) propertiesPane.lookup("#closeButton")).setOnAction(event -> {
+                stage.close();
+            });
 
             ResizeHelper.addResizeListener(stage, 300, 200, 1.7976931348623157E308D, 1.7976931348623157E308D);
 

@@ -265,7 +265,7 @@ public final class PlaylistProperties extends Properties {
                 setProperty(keyValue.getIndex(), keyValue.getKey(), keyValue.getValue());
             }
         }
-//        save();
+        save();
     }
 
     private void clearArray() {

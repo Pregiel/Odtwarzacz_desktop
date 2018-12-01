@@ -738,7 +738,6 @@ public class Playlist {
         if (Connection.getInstance() != null) {
             Connection.getInstance().sendMessage(PLAYLIST_SEND, MainFXMLController.getPlaylist().toMessage());
         }
-
     }
 
     public void swapElement(int index_1, int index_2) {
