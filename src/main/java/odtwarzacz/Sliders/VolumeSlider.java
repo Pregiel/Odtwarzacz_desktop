@@ -5,6 +5,8 @@
  */
 package odtwarzacz.Sliders;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +36,7 @@ public class VolumeSlider extends CustomSlider {
     private Connection connection;
     private Label volLabel;
     private Button volButton;
+    private double volume;
 
     public VolumeSlider(AnchorPane slider, Pane track, MediaPlayer mediaPlayer, Label volLabel, Button volButton) {
         super(slider, track);
@@ -117,14 +120,14 @@ public class VolumeSlider extends CustomSlider {
         setVolume(event);
     }
 
-    public void setVolume(double volume) {
-        if (volume < 0.0) {
-            volume = 0.0;
-        } else if (volume > 1.0) {
-            volume = 1.0;
+    public void setVolume(double newVolume) {
+        if (newVolume < 0.0) {
+            newVolume = 0.0;
+        } else if (newVolume > 1.0) {
+            newVolume = 1.0;
         }
 
-        if (volume > 0.0) {
+        if (newVolume > 0.0) {
             mutedVolume = 0;
 
             if (connection != null) {
@@ -133,19 +136,17 @@ public class VolumeSlider extends CustomSlider {
             muted = false;
         }
 
-        setButtonIcon(volume);
+        setButtonIcon(newVolume);
 
 
-        setSliderPosition(volume);
-        mediaPlayer.setVolume(volume);
+        setSliderPosition(newVolume);
+        mediaPlayer.setVolume(newVolume);
 
-        double finalVolume = volume;
+        volume = newVolume;
         Platform.runLater(() ->
-                volLabel.setText(String.valueOf(Math.round(finalVolume * 100)) + "%"));
+                volLabel.setText(String.valueOf(Math.round(volume * 100)) + "%"));
 
-        if (connection != null) {
-            connection.sendMessage(Connection.VOLUME, volume);
-        }
+
     }
 
     public void addVolume(double value) {
@@ -180,4 +181,38 @@ public class VolumeSlider extends CustomSlider {
             setVolume(1);
         }
     }
+
+    private Timer volumeChangeTimer;
+
+    public void volumePressed(double value) {
+        if (volumeChangeTimer != null) {
+            volumeChangeTimer.cancel();
+            volumeChangeTimer.purge();
+        }
+        volumeChangeTimer = new Timer();
+        volumeChangeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                addVolume(value);
+                if (connection != null) {
+                    connection.sendMessage(Connection.VOLUME, String.valueOf(Math.round(volume * 100)) + "%");
+                } else {
+                    volumeChangeTimer.cancel();
+                    volumeChangeTimer.purge();
+                }
+            }
+        }, 200, 500);
+    }
+
+    public void volumeReleased() {
+        if (volumeChangeTimer != null) {
+            volumeChangeTimer.cancel();
+            volumeChangeTimer.purge();
+        }
+
+        if (connection != null) {
+            connection.sendMessage(Connection.VOLUME, String.valueOf(Math.round(volume * 100)) + "%");
+        }
+    }
+
 }

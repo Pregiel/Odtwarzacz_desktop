@@ -2,6 +2,7 @@ package odtwarzacz.Playlist.Queue;
 
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import odtwarzacz.Connection.Connection;
 import odtwarzacz.Playlist.PlaylistElement;
 import odtwarzacz.Utils.Utils;
 
@@ -36,6 +37,23 @@ public class Queue {
         getPlaylist().refreshQueueView();
     }
 
+    public void removeElementByQueueIndex(int index) {
+        int removedIndex = getPlaylist().getQueue().getQueueElements().get(index).getPlaylistIndex() - 1;
+
+        getPlaylist().getQueue().removeElement(index);
+        for (int i = index; i < getPlaylist().getQueue().getQueueElements().size(); i++) {
+            getPlaylist().getPlaylistElementList().get(
+                    getPlaylist().getQueue().getQueueElements().get(i).getPlaylistIndex() - 1
+            ).setQueueLabel();
+        }
+
+        getPlaylist().getPlaylistElementList().get(removedIndex).setQueueLabel();
+        if (getPlaylist().getQueueFXMLController() != null) {
+            getPlaylist().getQueueFXMLController().loadQueue();
+        }
+        getPlaylist().setNextPlaylistIndex();
+    }
+
     public int removeLastElementByPlaylistIndex(int index) {
         QueueElement foundedElement = null;
         int i = 0, lastIndex = -1;
@@ -67,6 +85,7 @@ public class Queue {
         }
 
         getPlaylist().getQueue().getQueueElements().clear();
+        getPlaylist().refreshQueueView();
         getPlaylist().setNextPlaylistIndex();
     }
 
@@ -178,6 +197,15 @@ public class Queue {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         queueElements.forEach((element) -> stringBuilder.append(element.toString()).append("\n"));
+        return stringBuilder.toString();
+    }
+
+    public String toMessage() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (QueueElement queueElement : queueElements) {
+            stringBuilder.append(queueElement.getPlaylistIndex()).append(Connection.SEPARATOR);
+        }
+
         return stringBuilder.toString();
     }
 }

@@ -128,7 +128,9 @@ public class PlaylistElement {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 playlistProperties.setProperty(index, PlaylistProperties.ENABLE, newValue);
                 playlistProperties.save();
-                Connection.getInstance().sendMessage(Connection.PLAYLIST_ENABLE, index, newValue);
+                if (Connection.getInstance() != null) {
+                    Connection.getInstance().sendMessage(Connection.PLAYLIST_ENABLE, index, newValue);
+                }
             }
         });
 
@@ -213,7 +215,8 @@ public class PlaylistElement {
                 new SeparatorMenuItem(), queueShow);
 
         contextMenu.getItems().addAll(play, new SeparatorMenuItem(), properties, fileLocation, queue,
-                new SeparatorMenuItem(), remove, removeSelected, new SeparatorMenuItem(), playableMenuItem);
+                new SeparatorMenuItem(), playableMenuItem,
+                new SeparatorMenuItem(), remove, removeSelected);
 
     }
 
@@ -673,5 +676,17 @@ public class PlaylistElement {
     public boolean isInQueue() {
         return !queueIndexLabel.getText().equals("");
 
+    }
+
+    public String getQueueIndexes() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (QueueElement queueElement : getPlaylist().getQueue().getQueueElements()) {
+            if (queueElement.getPlaylistIndex() == index) {
+                stringBuilder.append(queueElement.getQueueIndex()).append(",");
+            }
+        }
+
+        return stringBuilder.toString();
     }
 }

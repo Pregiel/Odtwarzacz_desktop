@@ -52,6 +52,7 @@ import static odtwarzacz.MainFXMLController.getPlaylist;
 public class MediaFXMLController implements Initializable {
 
     public static final double VOLUME_CLICK_VALUE = 0.05d;
+    public static final double VOLUME_PRESSED_VALUE = 0.05d;
 
     public Button playlistButton;
     public BorderPane parent;
@@ -714,7 +715,6 @@ public class MediaFXMLController implements Initializable {
             moveToValueJump = 1 - START_MOVETO_VALUE;
         }
     }
-
 
     public VolumeSlider getVolSlider() {
         return volSlider;

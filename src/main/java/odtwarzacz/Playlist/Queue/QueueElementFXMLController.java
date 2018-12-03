@@ -31,17 +31,6 @@ public class QueueElementFXMLController implements Initializable {
     }
 
     public void removeElement(ActionEvent event) {
-        int removedIndex = getPlaylist().getQueue().getQueueElements().get(queueIndex).getPlaylistIndex() - 1;
-
-        getPlaylist().getQueue().removeElement(queueIndex);
-        for (int i1 = queueIndex; i1 < getPlaylist().getQueue().getQueueElements().size(); i1++) {
-            getPlaylist().getPlaylistElementList().get(
-                    getPlaylist().getQueue().getQueueElements().get(i1).getPlaylistIndex() - 1
-            ).setQueueLabel();
-        }
-
-        getPlaylist().getPlaylistElementList().get(removedIndex).setQueueLabel();
-        getPlaylist().getQueueFXMLController().loadQueue();
-        getPlaylist().setNextPlaylistIndex();
+        getPlaylist().getQueue().removeElementByQueueIndex(queueIndex);
     }
 }

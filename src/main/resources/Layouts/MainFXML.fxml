@@ -63,7 +63,7 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#connectWifi" text="%menu.connect.wifi" />
                                 <MenuItem mnemonicParsing="false" onAction="#connectBT" text="%menu.connect.bt" />
-                                <MenuItem mnemonicParsing="false" onAction="#connectUSB" text="%menu.connect.usb" />
+                                <MenuItem mnemonicParsing="false" onAction="#connectUSB" text="%menu.connect.usb" visible="false" />
                                 <SeparatorMenuItem mnemonicParsing="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#disconnect" text="%menu.connect.disconnect" />
                             </items>

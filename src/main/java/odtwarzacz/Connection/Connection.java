@@ -70,6 +70,12 @@ public abstract class Connection {
     public static final String PLAYLIST_REMOVE = "PLAYLIST_REMOVE";
     public static final String PLAYLIST_ENABLE = "PLAYLIST_ENABLE";
 
+    public static final String QUEUE_SEND = "QUEUE_SEND";
+    public static final String QUEUE_ADD = "QUEUE_ADD";
+    public static final String QUEUE_REMOVE = "QUEUE_REMOVE";
+    public static final String QUEUE_REMOVE_INDEX = "QUEUE_REMOVE_INDEX";
+    public static final String QUEUE_CLEAR = "QUEUE_CLEAR";
+
     public static final String FORWARD_PRESSED = "FORWARD_PRESSED";
     public static final String FORWARD_RELEASED = "FORWARD_RELEASED";
     public static final String FORWARD_CLICKED = "FORWARD_CLICKED";
@@ -226,32 +232,247 @@ public abstract class Connection {
     public void pilotController(String msg) {
         String[] message = msg.split(SEPARATOR);
         System.out.println(msg);
-        switch (message[0]) {
-            case TIME:
-                final double currentTimeMilis = Double.parseDouble(message[1]);
-                if (mediaController != null) {
-                    mediaController.getTimeSlider().moveTo(currentTimeMilis);
-                }
-                break;
+        try {
+            switch (message[0]) {
+                case TIME:
+                    final double currentTimeMilis = Double.parseDouble(message[1]);
+                    if (mediaController != null) {
+                        mediaController.getTimeSlider().moveTo(currentTimeMilis);
+                    }
+                    break;
 
-            case VOLUME:
-                if (mediaController != null) {
-                    final double volumeValue = Double.parseDouble(message[1]);
+                case VOLUME:
+                    if (mediaController != null) {
+                        final double volumeValue = Double.parseDouble(message[1]);
 
-                    mediaController.getVolSlider().setVolume(volumeValue);
-                }
-                break;
+                        mediaController.getVolSlider().setVolume(volumeValue);
+                    }
+                    break;
 
-            case PLAY:
-                if (mediaController != null) {
-                    mediaController.playPauseButton(null);
-                }
-                break;
+                case PLAY:
+                    if (mediaController != null) {
+                        mediaController.playPauseButton(null);
+                    }
+                    break;
 
-            case TIMESLIDER_START:
-                if (mediaController != null) {
-                    mediaController.pause();
-                    mediaController.setPilotTimeSliderMoving(true);
+                case TIMESLIDER_START:
+                    if (mediaController != null) {
+                        mediaController.pause();
+                        mediaController.setPilotTimeSliderMoving(true);
+                        executorService.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sendSnapshot();
+
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+                    break;
+
+                case TIMESLIDER_STOP:
+                    if (mediaController != null) {
+                        mediaController.setPilotTimeSliderMoving(false);
+                        mediaController.getTimeSlider().moveTo(Double.parseDouble(message[1]));
+                        mediaController.play();
+
+                        sendMessage(PLAY, mediaController.getMediaView().getMediaPlayer().getCurrentTime().toMillis());
+                    }
+                    break;
+
+                case FORWARD:
+                    if (mediaController != null) {
+                        mediaController.forwardButton(null);
+                    }
+                    break;
+
+                case BACKWARD:
+                    if (mediaController != null) {
+                        mediaController.backwardButton(null);
+                    }
+                    break;
+
+                case MUTE:
+                    if (mediaController != null) {
+                        mediaController.getVolSlider().mute();
+                    }
+                    break;
+
+                case UNMUTE:
+                    if (mediaController != null) {
+                        mediaController.getVolSlider().mute();
+                    }
+                    break;
+
+                case REPEAT:
+                    mediaController.repeatToggle();
+                    break;
+
+                case RANDOM:
+                    mediaController.randomToggle();
+                    break;
+
+                case REROLL:
+                    Platform.runLater(() ->
+                            getPlaylist().getPlaylistFXMLController().nextReroll.fire());
+                    break;
+
+                case DEVICE_NAME:
+                    setConnectedDeviceName(message[1]);
+                    ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
+                            ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+                    System.out.println(resourceBundle.getString("connection.connectedwith") + message[1]);
+                    connectionInfo.setInfoText(InfoLabel.CONNECTION_CONNECTED, message[1]);
+
+                    if (mainFXMLController.getCurrentView() == MainFXMLController.View.RECENT_FILES) {
+                        sendMessage(NOTHING_PLAYING);
+                    }
+
+                    sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
+                    sendMessage(PLAYLIST_TITLES, getPlaylist().getPlaylistTitleIndex(), getPlaylist().titlesToMessage());
+
+                    sendMessage(Connection.RECENT_FILES, Connection.listToMessage(Odtwarzacz.getConfig().getArrayProperty("last")));
+
+                    break;
+
+                case FILE_NAME:
+                    mainFXMLController.loadFile(new File(message[1]));
+                    break;
+
+                case PLAYLIST_PLAY:
+                    getPlaylist().play(Integer.parseInt(message[1]));
+                    break;
+
+                case PLAYLIST_SEND:
+                    sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
+                    sendMessage(PLAYLIST_PLAYING_INDEX, getPlaylist().getPlaylistIndex());
+                    break;
+
+                case PLAYLIST_TITLE_INDEX:
+                    Platform.runLater(() -> {
+                        getPlaylist().getPlaylistFXMLController().getPlaylistComboBox().getSelectionModel().select(Integer.parseInt(message[1]));
+                        getPlaylist().changePlaylist(Integer.parseInt(message[1]));
+                    });
+
+                    break;
+
+                case PLAYLIST_PROPERTIES:
+                    sendMessage(PLAYLIST_PROPERTIES, getPlaylist().getPlaylistElementList().get(Integer.parseInt(message[1]) - 1).propertiesToMessage());
+                    break;
+
+                case PLAYLIST_REMOVE:
+                    Platform.runLater(() -> getPlaylist().remove(Integer.parseInt(message[1])));
+                    break;
+
+                case PLAYLIST_ENABLE:
+                    Platform.runLater(() -> getPlaylist().selectPlaylistElement(Integer.valueOf(message[1]), Boolean.parseBoolean(message[2])));
+                    break;
+
+                case QUEUE_ADD:
+                    Platform.runLater(() -> getPlaylist().getPlaylistElementList().get(Integer.parseInt(message[1]) - 1).addToQueue());
+                    break;
+
+                case QUEUE_REMOVE:
+                    Platform.runLater(() -> getPlaylist().getPlaylistElementList().get(Integer.parseInt(message[1]) - 1).removeFromQueue());
+                    break;
+
+                case QUEUE_REMOVE_INDEX:
+                    Platform.runLater(() -> getPlaylist().getQueue().removeElementByQueueIndex(Integer.parseInt(message[1]) - 1));
+                    break;
+
+                case QUEUE_CLEAR:
+                    Platform.runLater(() -> getPlaylist().getQueue().removeAllElements());
+                    break;
+
+                case FORWARD_CLICKED:
+                    getPlaylist().playNext();
+                    break;
+
+                case FORWARD_PRESSED:
+                    mediaController.forwardButtonPressed(null);
+                    break;
+
+                case FORWARD_RELEASED:
+                    mediaController.forwardButtonReleased(null);
+                    break;
+
+                case BACKWARD_CLICKED:
+                    getPlaylist().playPrev();
+                    break;
+
+                case BACKWARD_PRESSED:
+                    mediaController.backwardButtonPressed(null);
+                    break;
+
+                case BACKWARD_RELEASED:
+                    mediaController.backwardButtonReleased(null);
+                    break;
+
+                case VOLUME_UP_PRESSED:
+                    mediaController.getVolSlider().volumePressed(MediaFXMLController.VOLUME_PRESSED_VALUE);
+                    break;
+
+                case VOLUME_UP_RELEASED:
+                    mediaController.getVolSlider().volumeReleased();
+                    break;
+
+                case VOLUME_UP_CLICKED:
+                    mediaController.getVolSlider().addVolume(MediaFXMLController.VOLUME_CLICK_VALUE);
+                    mediaController.getVolSlider().volumeReleased();
+                    break;
+
+                case VOLUME_DOWN_PRESSED:
+                    mediaController.getVolSlider().volumePressed(-MediaFXMLController.VOLUME_PRESSED_VALUE);
+                    break;
+
+                case VOLUME_DOWN_RELEASED:
+                    mediaController.getVolSlider().volumeReleased();
+                    break;
+
+                case VOLUME_DOWN_CLICKED:
+                    mediaController.getVolSlider().addVolume(-MediaFXMLController.VOLUME_CLICK_VALUE);
+                    mediaController.getVolSlider().volumeReleased();
+
+                    break;
+
+                case FILECHOOSER_DIRECTORY_TREE:
+                    sendMessage(FILECHOOSER_DIRECTORY_TREE, Utils.getDirectoryTree(new File(message[1])));
+                    break;
+
+                case FILECHOOSER_SHOW_PLAYLIST:
+                    sendMessage(FILECHOOSER_SHOW_PLAYLIST, Utils.getDriveList());
+                    break;
+
+                case FILECHOOSER_SHOW_OPEN:
+                    sendMessage(FILECHOOSER_SHOW_OPEN, Utils.getDriveList());
+                    break;
+
+                case FILECHOOSER_DRIVE_LIST:
+                    sendMessage(FILECHOOSER_DRIVE_LIST, Utils.getDriveList());
+                    break;
+
+                case FILECHOOSER_PLAY:
+                    mainFXMLController.loadFile(new File(message[1]));
+                    break;
+
+                case FILECHOOSER_PLAYLIST_ADD:
+                    for (int i = 1; i < message.length; i++) {
+                        getPlaylist().addCheckIfExist(new File(message[i]), 1);
+                    }
+                    break;
+
+                case FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST:
+                    for (int i = 1; i < message.length; i++) {
+                        getPlaylist().add(new File(message[i]));
+                    }
+                    break;
+
+                case SNAPSHOT_REQUEST:
                     executorService.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -265,189 +486,9 @@ public abstract class Connection {
 
                         }
                     });
-                }
-                break;
-
-            case TIMESLIDER_STOP:
-                if (mediaController != null) {
-                    mediaController.setPilotTimeSliderMoving(false);
-                    mediaController.getTimeSlider().moveTo(Double.parseDouble(message[1]));
-                    mediaController.play();
-
-                    sendMessage(PLAY, mediaController.getMediaView().getMediaPlayer().getCurrentTime().toMillis());
-                }
-                break;
-
-            case FORWARD:
-                if (mediaController != null) {
-                    mediaController.forwardButton(null);
-                }
-                break;
-
-            case BACKWARD:
-                if (mediaController != null) {
-                    mediaController.backwardButton(null);
-                }
-                break;
-
-            case MUTE:
-                if (mediaController != null) {
-                    mediaController.getVolSlider().mute();
-                }
-                break;
-
-            case UNMUTE:
-                if (mediaController != null) {
-                    mediaController.getVolSlider().mute();
-                }
-                break;
-
-            case REPEAT:
-                mediaController.repeatToggle();
-                break;
-
-            case RANDOM:
-                mediaController.randomToggle();
-                break;
-
-            case REROLL:
-                Platform.runLater(() ->
-                        getPlaylist().getPlaylistFXMLController().nextReroll.fire());
-                break;
-
-            case DEVICE_NAME:
-                setConnectedDeviceName(message[1]);
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("Translations.MessagesBundle", MyLocale.getLocale(),
-                        ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
-                System.out.println(resourceBundle.getString("connection.connectedwith") + message[1]);
-                connectionInfo.setInfoText(InfoLabel.CONNECTION_CONNECTED, message[1]);
-
-                if (mainFXMLController.getCurrentView() == MainFXMLController.View.RECENT_FILES) {
-                    sendMessage(NOTHING_PLAYING);
-                }
-
-                sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
-                sendMessage(PLAYLIST_TITLES, getPlaylist().getPlaylistTitleIndex(), getPlaylist().titlesToMessage());
-
-                sendMessage(Connection.RECENT_FILES, Connection.listToMessage(Odtwarzacz.getConfig().getArrayProperty("last")));
-
-                break;
-
-            case FILE_NAME:
-                mainFXMLController.loadFile(new File(message[1]));
-                break;
-
-            case PLAYLIST_PLAY:
-                getPlaylist().play(Integer.parseInt(message[1]));
-                break;
-
-            case PLAYLIST_SEND:
-                sendMessage(PLAYLIST_SEND, getPlaylist().toMessage());
-                sendMessage(PLAYLIST_PLAYING_INDEX, getPlaylist().getPlaylistIndex());
-                break;
-
-            case PLAYLIST_TITLE_INDEX:
-                Platform.runLater(() -> {
-                    getPlaylist().getPlaylistFXMLController().getPlaylistComboBox().getSelectionModel().select(Integer.parseInt(message[1]));
-                    getPlaylist().changePlaylist(Integer.parseInt(message[1]));
-                });
-
-                break;
-
-            case PLAYLIST_PROPERTIES:
-                sendMessage(PLAYLIST_PROPERTIES, getPlaylist().getPlaylistElementList().get(Integer.parseInt(message[1]) - 1).propertiesToMessage());
-                break;
-
-            case PLAYLIST_REMOVE:
-                Platform.runLater(() -> getPlaylist().remove(Integer.parseInt(message[1])));
-                break;
-
-            case PLAYLIST_ENABLE:
-                Platform.runLater(() -> getPlaylist().selectPlaylistElement(Integer.valueOf(message[1]), Boolean.parseBoolean(message[2])));
-                break;
-
-            case FORWARD_CLICKED:
-                getPlaylist().playNext();
-                break;
-
-            case FORWARD_PRESSED:
-                mediaController.forwardButtonPressed(null);
-                break;
-
-            case FORWARD_RELEASED:
-                mediaController.forwardButtonReleased(null);
-                break;
-
-            case BACKWARD_CLICKED:
-                getPlaylist().playPrev();
-                break;
-
-            case BACKWARD_PRESSED:
-                mediaController.backwardButtonPressed(null);
-                break;
-
-            case BACKWARD_RELEASED:
-                mediaController.backwardButtonReleased(null);
-                break;
-
-            case VOLUME_UP_CLICKED:
-                if (mediaController != null) {
-                    mediaController.getVolSlider().addVolume(MediaFXMLController.VOLUME_CLICK_VALUE);
-                }
-                break;
-
-            case VOLUME_DOWN_CLICKED:
-                if (mediaController != null) {
-                    mediaController.getVolSlider().addVolume(-MediaFXMLController.VOLUME_CLICK_VALUE);
-                }
-                break;
-
-            case FILECHOOSER_DIRECTORY_TREE:
-                sendMessage(FILECHOOSER_DIRECTORY_TREE, Utils.getDirectoryTree(new File(message[1])));
-                break;
-
-            case FILECHOOSER_SHOW_PLAYLIST:
-                sendMessage(FILECHOOSER_SHOW_PLAYLIST, Utils.getDriveList());
-                break;
-
-            case FILECHOOSER_SHOW_OPEN:
-                sendMessage(FILECHOOSER_SHOW_OPEN, Utils.getDriveList());
-                break;
-
-            case FILECHOOSER_DRIVE_LIST:
-                sendMessage(FILECHOOSER_DRIVE_LIST, Utils.getDriveList());
-                break;
-
-            case FILECHOOSER_PLAY:
-                mainFXMLController.loadFile(new File(message[1]));
-                break;
-
-            case FILECHOOSER_PLAYLIST_ADD:
-                for (int i = 1; i < message.length; i++) {
-                    getPlaylist().addCheckIfExist(new File(message[i]), 1);
-                }
-                break;
-
-            case FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST:
-                for (int i = 1; i < message.length; i++) {
-                    getPlaylist().add(new File(message[i]));
-                }
-                break;
-
-            case SNAPSHOT_REQUEST:
-                executorService.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                sendSnapshot();
-
-                            }
-                        });
-
-                    }
-                });
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 

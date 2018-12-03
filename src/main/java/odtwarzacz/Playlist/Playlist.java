@@ -233,10 +233,18 @@ public class Playlist {
     }
 
     public void refreshQueueView() {
+        refreshQueueView(true);
+    }
+
+    public void refreshQueueView(boolean sendMessage) {
         if (queueFXMLController != null) {
             queueFXMLController.loadQueue();
         }
         queue.updateQueueIndexes();
+
+        if (Connection.getInstance() != null && sendMessage) {
+            Connection.getInstance().sendMessage(Connection.QUEUE_SEND, queue.toMessage());
+        }
     }
 
     public void makePlaylistPane() throws IOException {
@@ -1226,10 +1234,12 @@ public class Playlist {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (PlaylistElement element : playlistElementList) {
+
             stringBuilder
                     .append(element.getTitleLabel().getText()).append(Connection.SEPARATOR)
                     .append(element.getDurationLabel().getText()).append(Connection.SEPARATOR)
-                    .append(element.getSongCheckbox().isSelected()).append(Connection.SEPARATOR);
+                    .append(element.getSongCheckbox().isSelected()).append(Connection.SEPARATOR)
+                    .append((element.getQueueIndexes().equals("") ? "none" : element.getQueueIndexes())).append(Connection.SEPARATOR);
         }
 
         return stringBuilder.toString();
