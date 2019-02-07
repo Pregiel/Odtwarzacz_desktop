@@ -14,7 +14,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jave-1.0.2" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.bluecove:bluecove:2.1.0" level="project" />
+    <orderEntry type="library" name="Maven: io.ultreia:bluecove:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.0.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.0.0" level="project" />

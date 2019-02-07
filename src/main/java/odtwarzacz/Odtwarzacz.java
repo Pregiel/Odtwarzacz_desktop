@@ -106,3 +106,4 @@ public class Odtwarzacz extends Application {
         return configProp;
     }
 }
+

@@ -344,7 +344,7 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void wifiSendTAK(ActionEvent event) {
-        connection.sendSnapshot();
+
     }
 
     @FXML
@@ -373,17 +373,20 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void chooseFile(ActionEvent event) {
+        chooseFile();
+    }
+
+    private void chooseFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
+        fileChooser.setTitle(Utils.getString("file.open"));
         fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Video Files", SUPPORTED_VIDEO),
-                new ExtensionFilter("Audio Files", SUPPORTED_AUDIO),
-                new ExtensionFilter("All Files", "*.*"));
+                new ExtensionFilter(Utils.getString("file.all"), "*.*"),
+                new ExtensionFilter(Utils.getString("file.video"), SUPPORTED_VIDEO),
+                new ExtensionFilter(Utils.getString("file.audio"), SUPPORTED_AUDIO));
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             loadFile(file);
         }
-
     }
 
     public boolean loadFile(File file) {

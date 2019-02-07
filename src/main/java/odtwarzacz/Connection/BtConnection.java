@@ -10,22 +10,23 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.bluetooth.BluetoothStateException;
 import javax.bluetooth.RemoteDevice;
 import javax.bluetooth.UUID;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
+
 import odtwarzacz.InfoLabel;
 import odtwarzacz.MainFXMLController;
 
 /**
- *
  * @author Pregiel
  */
 public class BtConnection extends Connection {
-    
+
     private StreamConnection connection;
-    private StreamConnectionNotifier streamConnNotifier;
+    private StreamConnectionNotifier service;
 
     @Override
     public void connect() {
@@ -36,25 +37,28 @@ public class BtConnection extends Connection {
             @Override
             public void run() {
                 try {
-                    UUID uuid = new UUID("1101", true);
-                    //Create the servicve url
-                    String connectionString = "btspp://localhost:" + uuid + ";name=Sample SPP Server";
-                    streamConnNotifier = (StreamConnectionNotifier) Connector.open(connectionString);//open server url
+                    UUID uuid = new UUID("b6324e17d6024765822ae68be2112efd", false);
 
-                    connection = streamConnNotifier.acceptAndOpen();
+                    String connectionString = "btspp://localhost:" + uuid + ";name=Server";
+                    service = (StreamConnectionNotifier) Connector.open(connectionString);
+
+                    connection = service.acceptAndOpen();
+
                     RemoteDevice dev = RemoteDevice.getRemoteDevice(connection);
                     System.out.println("Remote device address: " + dev.getBluetoothAddress());
 
-                } catch (IOException ex) {
+                    DataInputStream DIS = new DataInputStream(connection.openDataInputStream());
+                    DataOutputStream DOS = new DataOutputStream(connection.openDataOutputStream());
+
+                    setConnected(true);
+                    setStreams(DIS, DOS);
+                } catch (BluetoothStateException ex) {
+                    ex.printStackTrace();
+                    getConnectionInfo().setInfoText(InfoLabel.NO_BLUETOOTH_SUPPORT);
+                } catch (IOException | NullPointerException ex) {
                     Logger.getLogger(MainFXMLController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                setConnected(true);
-                try {
-                    setStreams(connection.openDataInputStream(), connection.openDataOutputStream());
-                } catch (IOException ex) {
-                    Logger.getLogger(BtConnection.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
             }
         });
         connect.setDaemon(true);
@@ -65,9 +69,11 @@ public class BtConnection extends Connection {
     public void disconnect() {
         super.disconnect();
         try {
-            connection.close();
-            streamConnNotifier.close();
-        } catch (IOException e) {
+            if (connection != null)
+                connection.close();
+            if (service != null)
+                service.close();
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
 

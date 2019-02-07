@@ -23,6 +23,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import odtwarzacz.Connection.Connection;
@@ -39,6 +40,8 @@ import odtwarzacz.Playlist.Queue.QueueFXMLController;
 
 import static odtwarzacz.Connection.Connection.FILECHOOSER_PLAYLIST_ADD_ALREADYEXIST;
 import static odtwarzacz.Connection.Connection.PLAYLIST_SEND;
+import static odtwarzacz.MainFXMLController.SUPPORTED_AUDIO;
+import static odtwarzacz.MainFXMLController.SUPPORTED_VIDEO;
 import static odtwarzacz.MainFXMLController.getPlaylist;
 
 /**
@@ -500,11 +503,11 @@ public class Playlist {
         String extension = Utils.getExtension(path).toUpperCase();
         Metadata metadata = null;
 
-        if (Arrays.asList(MainFXMLController.SUPPORTED_AUDIO).contains("*." + extension)) {
+        if (Arrays.asList(SUPPORTED_AUDIO).contains("*." + extension)) {
             metadata = new MetadataAudio();
             playlistProperties.setProperty(index, "type", "AUDIO");
             playlistProperties.save();
-        } else if (Arrays.asList(MainFXMLController.SUPPORTED_VIDEO).contains("*." + extension)) {
+        } else if (Arrays.asList(SUPPORTED_VIDEO).contains("*." + extension)) {
             metadata = new MetadataVideo();
             playlistProperties.setProperty(index, "type", "VIDEO");
             playlistProperties.save();
@@ -731,11 +734,11 @@ public class Playlist {
     //TODO: przetlumaczyc
     public void addNew() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource Files");
+        fileChooser.setTitle(Utils.getString("file.open"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Video Files", MainFXMLController.SUPPORTED_VIDEO),
-                new FileChooser.ExtensionFilter("Audio Files", MainFXMLController.SUPPORTED_AUDIO),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
+                new ExtensionFilter(Utils.getString("file.all"), "*.*"),
+                new ExtensionFilter(Utils.getString("file.video"), SUPPORTED_VIDEO),
+                new ExtensionFilter(Utils.getString("file.audio"), SUPPORTED_AUDIO));
         List<File> list = fileChooser.showOpenMultipleDialog(null);
         if (list != null) {
             if (list.size() > 0) {

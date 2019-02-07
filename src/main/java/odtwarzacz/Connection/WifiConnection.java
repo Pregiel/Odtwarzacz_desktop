@@ -5,44 +5,66 @@
  */
 package odtwarzacz.Connection;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import odtwarzacz.InfoLabel;
 import odtwarzacz.MainFXMLController;
+import odtwarzacz.Utils.Utils;
+
+import javax.rmi.CORBA.Util;
 
 /**
  *
  * @author Pregiel
  */
 public class WifiConnection extends Connection {
-    
-    private ServerSocket socket;
+
+    private final static int PORT = 1755;
+    private final static String SEARCHING = "SEARCHING";
+    private final static String CONNECTING = "CONNECTING";
+
+    private ServerSocket serverSocket;
     private Socket clientSocket;
 
 
     @Override
     public void connect() {
-        System.out.println("Connecting");
         getConnectionInfo().setInfoText(InfoLabel.CONNECTION_WAITFORCLIENT_WIFI);
 
         Thread connect = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    socket = new ServerSocket(1755);
-                    clientSocket = socket.accept();
-                    clientSocket = socket.accept();      //This is blocking. It will wait.
+                    boolean next = false;
+                    DataInputStream DIS = null;
+                    DataOutputStream DOS = null;
 
-                } catch (IOException ex) {
-                    Logger.getLogger(MainFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                setConnected(true);
-                try {
-                    setStreams(clientSocket.getInputStream(), clientSocket.getOutputStream());
+                    serverSocket = new ServerSocket(PORT);
+                    while (!next) {
+                        clientSocket = serverSocket.accept();
+                        DIS = new DataInputStream(clientSocket.getInputStream());
+                        DOS = new DataOutputStream(clientSocket.getOutputStream());
+
+                        String msg = DIS.readUTF();
+                        if (msg.contains(SEARCHING)) {
+                            DOS.writeUTF(Utils.getComputerName());
+
+                            DIS.close();
+                            DOS.close();
+                            clientSocket.close();
+                        } else if (msg.contains(CONNECTING)) {
+                            next = true;
+                        }
+                    }
+
+                    setConnected(true);
+                    setStreams(DIS, DOS);
                 } catch (IOException ex) {
                     Logger.getLogger(WifiConnection.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -50,17 +72,21 @@ public class WifiConnection extends Connection {
         });
         connect.setDaemon(true);
         connect.start();
-    
+
     }
 
     @Override
     public void disconnect() {
         super.disconnect();
         try {
-            socket.close();
+            serverSocket.close();
             clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
+
+
 }

@@ -29,6 +29,7 @@ public class InfoLabel extends Label {
     public static final String CONNECTION_CONNECTED = "CONNECTION_CONNECTED";
     public static final String CONNECTION_DISCONNECTED = "CONNECTION_DISCONNECTED";
     public static final String CONNECTION_USB_NOPILOT = "CONNECTION_USB_NOPILOT";
+    public static final String NO_BLUETOOTH_SUPPORT = "NO_BLUETOOTH_SUPPORT";
     public static final String FILE_NOFILE = "FILE_NOFILE";
     public static final String FILE_OPEN = "FILE_OPEN";
 
@@ -134,6 +135,11 @@ public class InfoLabel extends Label {
 
                 case CONNECTION_USB_NOPILOT:
                     this.setText(resourceBundle.getString("connection.usb.nopilot"));
+                    setAnimation(Animations.hideIn);
+                    break;
+
+                case NO_BLUETOOTH_SUPPORT:
+                    this.setText(resourceBundle.getString("connection.bluetooth.nosupport"));
                     setAnimation(Animations.hideIn);
                     break;
 

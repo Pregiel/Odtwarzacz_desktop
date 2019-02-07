@@ -13,10 +13,12 @@ import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -58,7 +60,7 @@ public class MediaFXMLController implements Initializable {
     public BorderPane parent;
     public Button fullscreenButton;
     public ToggleButton randomToggleButton;
-    public Label mediaLabel;
+    public Label mediaPlayerView;
     public GridPane mediaBar;
     public Label timeBoxLabel;
     public AnchorPane timeBox;
@@ -162,7 +164,7 @@ public class MediaFXMLController implements Initializable {
             }
         });
 
-        mediaLabel.setOnMouseClicked(event -> {
+        mediaPlayerView.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
                 playPauseButton(null);
             }
@@ -177,11 +179,11 @@ public class MediaFXMLController implements Initializable {
 
         hideMediaBarTask.start();
 
-        mediaLabel.setOnMouseMoved(event -> {
-            if (hideMediaBarTask.isFinished() || !hideMediaBarTask.isStarted()) {
-                hideMediaBarTask.start();
-            } else {
+        mediaPlayerView.setOnMouseMoved(event -> {
+            if (hideMediaBarTask.isStarted() && !hideMediaBarTask.isFinished()) {
                 hideMediaBarTask.expand();
+            } else {
+                hideMediaBarTask.start();
             }
             if (fullscreened && pane.getCursor() == Cursor.NONE) {
                 pane.setCursor(Cursor.DEFAULT);
@@ -299,13 +301,13 @@ public class MediaFXMLController implements Initializable {
         mp.setOnReady(() -> {
             duration = mp.getMedia().getDuration();
 
-            MAX_MOVETO_VALUE_SPEED = (int) (duration.toSeconds() * 0.05);
+            MAX_MOVETO_VALUE = (int) (duration.toSeconds() * 0.05);
             START_MOVETO_VALUE = (int) (duration.toSeconds() * 0.01);
             if (duration.toSeconds() < 10) {
-                MAX_MOVETO_VALUE_SPEED = 5;
+                MAX_MOVETO_VALUE = 5;
                 START_MOVETO_VALUE = 2;
             } else {
-                MAX_MOVETO_VALUE_SPEED = 30;
+                MAX_MOVETO_VALUE = 30;
                 START_MOVETO_VALUE = 5;
             }
 
@@ -465,7 +467,6 @@ public class MediaFXMLController implements Initializable {
             timeLabel1.setText(durationToTime(currentTime));
             timeLabel2.setText(durationToTime(duration));
 
-
             if (duration.greaterThan(Duration.ZERO) && !timeSlider.isChanging()) {
                 timeSlider.setSliderPosition(currentTime.divide(
                         duration.toMillis()).toMillis() * timeSlider.getBackTrack().getWidth()
@@ -565,7 +566,8 @@ public class MediaFXMLController implements Initializable {
     private MouseEvent startPosition;
 
     private int START_MOVETO_VALUE = 5;
-    private int MAX_MOVETO_VALUE_SPEED = 30;
+    private int MAX_MOVETO_VALUE = 30;
+
     private boolean clicked = false;
 
     public void forwardButtonClick(MouseEvent mouseEvent) {
@@ -608,22 +610,18 @@ public class MediaFXMLController implements Initializable {
 
         double mouseX = mouseEvent.getSceneX() - startPosition.getSceneX();
 
-        int maxValue = MAX_MOVETO_VALUE_SPEED - START_MOVETO_VALUE;
+        int maxValue = MAX_MOVETO_VALUE - START_MOVETO_VALUE;
 
-        double factor;
         if (mouseX >= 0) {
-            factor = ((mouseEvent.getSceneX() - startPosition.getSceneX()) / maxPosition) * maxValue;
-            moveToValueJump = (int) factor;
+            moveToValueJump = (int) ((mouseX / maxPosition) * maxValue);
         } else {
-            factor = (mouseEvent.getSceneX() / startPosition.getSceneX());
+            double factor = (mouseEvent.getSceneX() / startPosition.getSceneX());
 
-            if (factor - 0.5 < 0) {
-                factor = 0;
+            if (factor < 0.5) {
+                moveToValueJump = 1 - START_MOVETO_VALUE;
             } else {
-                factor = 2 * factor - 1;
+                moveToValueJump = (int) (2 * START_MOVETO_VALUE * (factor - 1));
             }
-
-            moveToValueJump = (int) (factor * START_MOVETO_VALUE) - START_MOVETO_VALUE;
         }
 
         if (moveToValueJump > maxValue) {
@@ -691,11 +689,10 @@ public class MediaFXMLController implements Initializable {
 
         double mouseX = mouseEvent.getSceneX() - startPosition.getSceneX();
 
-        int maxValue = MAX_MOVETO_VALUE_SPEED - START_MOVETO_VALUE;
+        int maxValue = MAX_MOVETO_VALUE - START_MOVETO_VALUE;
 
-        double factor;
         if (mouseX >= 0) {
-            factor = ((mouseEvent.getSceneX() - startPosition.getSceneX()) / maxPosition);
+            double factor = ((mouseEvent.getSceneX() - startPosition.getSceneX()) / maxPosition);
 
             if (factor > 0.5) {
                 factor = 1;
@@ -705,8 +702,7 @@ public class MediaFXMLController implements Initializable {
 
             moveToValueJump = 1 - (int) (factor * START_MOVETO_VALUE) - 2;
         } else {
-            factor = (Math.abs(mouseX) / startPosition.getSceneX()) * maxValue;
-            moveToValueJump = (int) factor;
+            moveToValueJump = (int) ((Math.abs(mouseX) / startPosition.getSceneX()) * maxValue);
         }
 
         if (moveToValueJump > maxValue) {
@@ -828,4 +824,15 @@ public class MediaFXMLController implements Initializable {
     public void stop() {
         mediaPlayer.stop();
     }
+
+    public Image getSnapshot(int width, int height) {
+        return Utils.scale(mediaView.snapshot(new SnapshotParameters(), null),
+                width,
+                height,
+                true);
+    }
+
+
 }
+
+

@@ -6,6 +6,8 @@ import odtwarzacz.Connection.Connection;
 
 import java.awt.*;
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
 public class Utils {
@@ -88,5 +90,19 @@ public class Utils {
             stringBuilder.append(s.toString()).append("\n");
         }
         System.out.println(stringBuilder.toString());
+    }
+
+    public static String getComputerName() {
+        String name = "";
+
+        try {
+            InetAddress inetAddress;
+            inetAddress = InetAddress.getLocalHost();
+            name = inetAddress.getHostName();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        return name;
     }
 }

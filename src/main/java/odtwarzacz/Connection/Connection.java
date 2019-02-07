@@ -103,8 +103,8 @@ public abstract class Connection {
 
     public static final String NOTHING_PLAYING = "NOTHING_PLAYING";
 
-    private static final int SNAPSHOT_WIDTH = 200;
-    private static final int SNAPSHOT_HEIGHT = 200;
+    private static final int SNAPSHOT_WIDTH = 1000;
+    private static final int SNAPSHOT_HEIGHT = 1000;
 
     public static final String SEPARATOR = "::";
 
@@ -197,6 +197,23 @@ public abstract class Connection {
         }
     }
 
+    public void setStreams(DataInputStream dataInputStream, DataOutputStream dataOutputStream) {
+        this.DIS = dataInputStream;
+        this.DOS = dataOutputStream;
+        executorService = Executors.newFixedThreadPool(10);
+//        connectionInfo = mediaController.getConnectionInfo();
+        getMessage();
+        if (mediaController != null) {
+            mediaController.setConnection(this);
+        }
+
+        try {
+            sendMessage(DEVICE_NAME, InetAddress.getLocalHost().getHostName());
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public abstract void connect();
 
     public Connection getConnection() {
@@ -205,7 +222,7 @@ public abstract class Connection {
 
     public void getMessage() {
         if (isConnected()) {
-            Thread connect = new Thread(new Runnable() {
+            Thread getMsg = new Thread(new Runnable() {
                 String msg_received = "";
 
                 @Override
@@ -223,8 +240,8 @@ public abstract class Connection {
                     }
                 }
             });
-            connect.setDaemon(true);
-            connect.start();
+            getMsg.setDaemon(true);
+            getMsg.start();
         }
     }
 
@@ -390,7 +407,8 @@ public abstract class Connection {
                     break;
 
                 case FORWARD_CLICKED:
-                    getPlaylist().playNext();
+                    if (getPlaylist().getPlaylistIndex() > -1)
+                        getPlaylist().playNext();
                     break;
 
                 case FORWARD_PRESSED:
@@ -402,7 +420,8 @@ public abstract class Connection {
                     break;
 
                 case BACKWARD_CLICKED:
-                    getPlaylist().playPrev();
+                    if (getPlaylist().getPlaylistIndex() > -1)
+                        getPlaylist().playPrev();
                     break;
 
                 case BACKWARD_PRESSED:
@@ -515,12 +534,8 @@ public abstract class Connection {
 
     public void sendSnapshot() {
         if (isConnected() && mediaController.getMediaView() != null) {
-            Image image = Utils.scale(mediaController.getMediaView().snapshot(new SnapshotParameters(), null),
-                    SNAPSHOT_WIDTH,
-                    SNAPSHOT_HEIGHT,
-                    true);
 
-//            Image image = mediaController.getMediaView().snapshot(new SnapshotParameters(), null);
+            Image image = mediaController.getSnapshot(SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
 
             ByteArrayOutputStream s = new ByteArrayOutputStream();
             byte[] res;
@@ -547,9 +562,12 @@ public abstract class Connection {
                     return;
                 }
             }
-            connectionInfo.setInfoText(InfoLabel.CONNECTION_DISCONNECTED, getConnectedDeviceName());
             executorService.shutdown();
         }
+        if (getConnectedDeviceName() != null)
+            connectionInfo.setInfoText(InfoLabel.CONNECTION_DISCONNECTED, getConnectedDeviceName());
+        else
+            connectionInfo.hide();
 
     }
 
