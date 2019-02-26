@@ -89,13 +89,6 @@
                                 </Menu>
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Send message" visible="false">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#wifiSendTAK" text="Wifi - &quot;TAK&quot;" />
-                                <MenuItem mnemonicParsing="false" onAction="#BTSendTAK" text="Bluetooth - &quot;TAK&quot;" />
-                                <MenuItem mnemonicParsing="false" onAction="#sendDirectoryTree" text="Send directory tree" />
-                            </items>
-                        </Menu>
                     </menus>
                 </MenuBar>
             </children>

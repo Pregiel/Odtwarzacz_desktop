@@ -108,11 +108,6 @@ public class VolumeSlider extends CustomSlider {
         if (collapseOnRelease) {
             collapseOnRelease = false;
         }
-
-        Odtwarzacz.getConfig().setProperty("volume", String.valueOf(mediaPlayer.getVolume()));
-        Odtwarzacz.getConfig().save();
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Volume changed to: {0}", String.valueOf(mediaPlayer.getVolume()));
-
     }
 
     @Override
@@ -146,7 +141,9 @@ public class VolumeSlider extends CustomSlider {
         Platform.runLater(() ->
                 volLabel.setText(String.valueOf(Math.round(volume * 100)) + "%"));
 
-
+        Odtwarzacz.getConfig().setProperty("volume", String.valueOf(mediaPlayer.getVolume()));
+        Odtwarzacz.getConfig().save();
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Volume changed to: {0}", String.valueOf(mediaPlayer.getVolume()));
     }
 
     public void addVolume(double value) {

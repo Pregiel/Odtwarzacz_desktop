@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -27,6 +28,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import odtwarzacz.Connection.Connection;
@@ -37,13 +40,16 @@ import odtwarzacz.Sliders.TimeSlider;
 import odtwarzacz.Sliders.VolumeSlider;
 import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Utils.Utils;
+import odtwarzacz.Utils.WindowFXMLController;
 
+import javax.rmi.CORBA.Util;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
 
 import static odtwarzacz.IconFont.ICON_PAUSE;
 import static odtwarzacz.IconFont.ICON_PLAY;
+import static odtwarzacz.MainFXMLController.SUPPORTED_AUDIO;
 import static odtwarzacz.MainFXMLController.getPlaylist;
 
 /**
@@ -52,7 +58,7 @@ import static odtwarzacz.MainFXMLController.getPlaylist;
  * @author Pregiel
  */
 public class MediaFXMLController implements Initializable {
-
+    //M124,202.338v152.856c-7.966-5.883-18.256-9.435-29.5-9.435c-25.267,0-45.75,17.907-45.75,39.996S69.233,425.75,94.5,425.75c25.097,0,45.464-17.669,45.737-39.553l0.429,0.807V252.338L273,219.671v99.214c-8.043-6.146-18.562-9.877-30.083-9.877c-25.267,0-45.75,17.907-45.75,39.996S217.65,389,242.917,389c23.881,0,43.479-16,45.557-36.406l0.193,0.41V161.671L124,202.338zM124,202.338v152.856c-7.966-5.883-18.256-9.435-29.5-9.435c-25.267,0-45.75,17.907-45.75,39.996S69.233,425.75,94.5,425.75c25.097,0,45.464-17.669,45.737-39.553l0.429,0.807V252.338L273,219.671v99.214c-8.043-6.146-18.562-9.877-30.083-9.877c-25.267,0-45.75,17.907-45.75,39.996S217.65,389,242.917,389c23.881,0,43.479-16,45.557-36.406l0.193,0.41V161.671L124,202.338z
     public static final double VOLUME_CLICK_VALUE = 0.05d;
     public static final double VOLUME_PRESSED_VALUE = 0.05d;
 
@@ -64,6 +70,7 @@ public class MediaFXMLController implements Initializable {
     public GridPane mediaBar;
     public Label timeBoxLabel;
     public AnchorPane timeBox;
+
     @FXML
     private BorderPane pane;
     @FXML
@@ -258,13 +265,22 @@ public class MediaFXMLController implements Initializable {
 
     private Pane centerPane;
 
-    public void setScaling(Pane centerPane) {
-//        timeSlider.setScalingPane(centerPane);
+    public void setScaling(Pane centerPane, Pane mainPane) {
         this.centerPane = centerPane;
 
         mediaView.setPreserveRatio(true);
-        mediaView.fitWidthProperty().bind(pane.widthProperty());
-        mediaView.fitHeightProperty().bind(pane.heightProperty());
+
+        mainPane.heightProperty().addListener((observable, oldValue, newValue) -> {
+            mediaView.setFitHeight(newValue.doubleValue() - 90);
+        });
+
+        centerPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            mediaView.setFitWidth(newValue.doubleValue());
+        });
+
+        Platform.runLater(() -> {
+            mediaView.setFitHeight(pane.getHeight() - 90);
+        });
     }
 
     public void changeFile(File file) {
@@ -330,6 +346,14 @@ public class MediaFXMLController implements Initializable {
             }
         });
 
+        Platform.runLater(() -> {
+            if (Arrays.asList(MainFXMLController.SUPPORTED_AUDIO).contains("*." + Utils.getExtension(file.getAbsolutePath()).toUpperCase())) {
+//                musicIcon.setVisible(true);
+            } else {
+//                musicIcon.setVisible(false);
+            }
+        });
+
         mediaView.setMediaPlayer(mp);
 
         setupVolume(mp);
@@ -350,6 +374,7 @@ public class MediaFXMLController implements Initializable {
         sendFileLabel(metadata);
         fileInfoLabel.setInfoText(InfoLabel.FILE_OPEN, metadata.generateLabel());
         timeSlider.setScalingPane(centerPane);
+
 
     }
 
@@ -570,9 +595,18 @@ public class MediaFXMLController implements Initializable {
 
     private boolean clicked = false;
 
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
+
     public void forwardButtonClick(MouseEvent mouseEvent) {
         if (clicked) {
-            getPlaylist().playNext();
+            if (getPlaylist().getPlaylistIndex() > -1) {
+                getPlaylist().playNext();
+            } else {
+                Duration value = getMoveToValue(1);
+                timeSlider.moveTo(value);
+            }
         }
     }
 
@@ -601,8 +635,10 @@ public class MediaFXMLController implements Initializable {
 
     public void forwardButtonReleased(MouseEvent mouseEvent) {
         timeBox.setVisible(false);
-        moveToTimer.cancel();
-        moveToTimer.purge();
+        if (moveToTimer != null) {
+            moveToTimer.cancel();
+            moveToTimer.purge();
+        }
     }
 
     public void forwardButtonDrag(MouseEvent mouseEvent) {
@@ -631,7 +667,6 @@ public class MediaFXMLController implements Initializable {
         }
     }
 
-
     private Duration getMoveToValue(int sign) {
         return Duration.seconds(sign * (START_MOVETO_VALUE + moveToValueJump));
     }
@@ -651,7 +686,12 @@ public class MediaFXMLController implements Initializable {
 
     public void backwardButtonClick(MouseEvent mouseEvent) {
         if (clicked) {
-            getPlaylist().playPrev();
+            if (getPlaylist().getPlaylistIndex() > -1) {
+                getPlaylist().playPrev();
+            } else {
+                Duration value = getMoveToValue(-1);
+                timeSlider.moveTo(value);
+            }
         }
     }
 
@@ -680,8 +720,10 @@ public class MediaFXMLController implements Initializable {
 
     public void backwardButtonReleased(MouseEvent mouseEvent) {
         timeBox.setVisible(false);
-        moveToTimer.cancel();
-        moveToTimer.purge();
+        if (moveToTimer != null) {
+            moveToTimer.cancel();
+            moveToTimer.purge();
+        }
     }
 
     public void backwardButtonDrag(MouseEvent mouseEvent) {
@@ -792,6 +834,9 @@ public class MediaFXMLController implements Initializable {
             fullscreenButton.setText(IconFont.ICON_FULLSCREEN_RESTORE);
 
             parent.getScene().getWindow().hide();
+
+
+            mediaView.setFitHeight(pane.getHeight() - 90);
         }
     }
 

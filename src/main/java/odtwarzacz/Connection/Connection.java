@@ -407,11 +407,13 @@ public abstract class Connection {
                     break;
 
                 case FORWARD_CLICKED:
-                    if (getPlaylist().getPlaylistIndex() > -1)
-                        getPlaylist().playNext();
+                    mediaController.forwardButtonReleased(null);
+                    mediaController.setClicked(true);
+                    mediaController.forwardButtonClick(null);
                     break;
 
                 case FORWARD_PRESSED:
+                    mediaController.forwardButtonReleased(null);
                     mediaController.forwardButtonPressed(null);
                     break;
 
@@ -420,11 +422,13 @@ public abstract class Connection {
                     break;
 
                 case BACKWARD_CLICKED:
-                    if (getPlaylist().getPlaylistIndex() > -1)
-                        getPlaylist().playPrev();
+                    mediaController.backwardButtonReleased(null);
+                    mediaController.setClicked(true);
+                    mediaController.backwardButtonClick(null);
                     break;
 
                 case BACKWARD_PRESSED:
+                    mediaController.backwardButtonReleased(null);
                     mediaController.backwardButtonPressed(null);
                     break;
 
@@ -499,7 +503,6 @@ public abstract class Connection {
                                 @Override
                                 public void run() {
                                     sendSnapshot();
-
                                 }
                             });
 

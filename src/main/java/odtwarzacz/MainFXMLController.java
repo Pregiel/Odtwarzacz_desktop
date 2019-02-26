@@ -257,7 +257,7 @@ public class MainFXMLController implements Initializable {
             centerPane.getChildren().add(connectionInfoLabel);
             centerPane.getChildren().add(fileInfoLabel);
 
-            mediaControl.setScaling(centerPane);
+            mediaControl.setScaling(centerPane, pane);
 
         });
 
@@ -275,7 +275,7 @@ public class MainFXMLController implements Initializable {
             centerPane.getChildren().add(connectionInfoLabel);
             centerPane.getChildren().add(fileInfoLabel);
 
-            mediaControl.setScaling(centerPane);
+            mediaControl.setScaling(centerPane, pane);
 
         });
 
@@ -325,8 +325,6 @@ public class MainFXMLController implements Initializable {
 
     }
 
-
-
     private Connection connection;
 
     public Connection getConnection() {
@@ -343,11 +341,6 @@ public class MainFXMLController implements Initializable {
     }
 
     @FXML
-    private void wifiSendTAK(ActionEvent event) {
-
-    }
-
-    @FXML
     private void connectBT(ActionEvent event) {
         connection = new BtConnection();
         connection.setMediaController(mediaControl);
@@ -355,12 +348,6 @@ public class MainFXMLController implements Initializable {
         connection.setConnectionInfo(connectionInfoLabel);
         connection.connect();
     }
-
-    @FXML
-    private void BTSendTAK(ActionEvent event) {
-
-    }
-
 
     public void connectUSB(ActionEvent event) {
         connection = new UsbConnection();

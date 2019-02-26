@@ -66,16 +66,7 @@ public class Odtwarzacz extends Application {
             }
         });
 
-
-//        if (Boolean.valueOf(getConfig().getProperty("playlist.visible", "false"))) {
-//            stage.setMinWidth(PLAYER_MIN_WIDTH-30);
-//        } else {
-//            stage.setMinWidth(MEDIA_MIN_WIDTH-30);
-//        }
-
         stage.setFullScreenExitHint("");
-
-//        stage.setMinHeight(PLAYER_MIN_HEIGHT);
 
         stage.setOnCloseRequest(event -> {
             try {
@@ -106,4 +97,3 @@ public class Odtwarzacz extends Application {
         return configProp;
     }
 }
-
