@@ -103,8 +103,8 @@ public abstract class Connection {
 
     public static final String NOTHING_PLAYING = "NOTHING_PLAYING";
 
-    private static final int SNAPSHOT_WIDTH = 1000;
-    private static final int SNAPSHOT_HEIGHT = 1000;
+    private static final int SNAPSHOT_WIDTH = 512;
+    private static final int SNAPSHOT_HEIGHT = 512;
 
     public static final String SEPARATOR = "::";
 

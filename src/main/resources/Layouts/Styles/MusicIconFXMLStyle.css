@@ -1,0 +1,5 @@
+.music-icon {
+	-fx-background-image: url("../Icons/ic_music_white.png"); 
+	-fx-background-repeat: stretch;
+	-fx-background-position: center center;
+}

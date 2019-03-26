@@ -58,7 +58,6 @@ import static odtwarzacz.MainFXMLController.getPlaylist;
  * @author Pregiel
  */
 public class MediaFXMLController implements Initializable {
-    //M124,202.338v152.856c-7.966-5.883-18.256-9.435-29.5-9.435c-25.267,0-45.75,17.907-45.75,39.996S69.233,425.75,94.5,425.75c25.097,0,45.464-17.669,45.737-39.553l0.429,0.807V252.338L273,219.671v99.214c-8.043-6.146-18.562-9.877-30.083-9.877c-25.267,0-45.75,17.907-45.75,39.996S217.65,389,242.917,389c23.881,0,43.479-16,45.557-36.406l0.193,0.41V161.671L124,202.338zM124,202.338v152.856c-7.966-5.883-18.256-9.435-29.5-9.435c-25.267,0-45.75,17.907-45.75,39.996S69.233,425.75,94.5,425.75c25.097,0,45.464-17.669,45.737-39.553l0.429,0.807V252.338L273,219.671v99.214c-8.043-6.146-18.562-9.877-30.083-9.877c-25.267,0-45.75,17.907-45.75,39.996S217.65,389,242.917,389c23.881,0,43.479-16,45.557-36.406l0.193,0.41V161.671L124,202.338z
     public static final double VOLUME_CLICK_VALUE = 0.05d;
     public static final double VOLUME_PRESSED_VALUE = 0.05d;
 
@@ -70,6 +69,8 @@ public class MediaFXMLController implements Initializable {
     public GridPane mediaBar;
     public Label timeBoxLabel;
     public AnchorPane timeBox;
+    public SVGPath musicIcon;
+    public StackPane mainStackPane;
 
     @FXML
     private BorderPane pane;
@@ -151,7 +152,19 @@ public class MediaFXMLController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        try {
+            setupScene();
+        } catch (NullPointerException e) {
+            new ExpandableTimeTask(new Runnable() {
+                @Override
+                public void run() {
+                    setupScene();
+                }
+            }, 200);
+        }
+    }
 
+    private void setupScene() {
         repeat = Boolean.parseBoolean(String.valueOf(Odtwarzacz.getConfig().get("repeat")));
 
         if (repeat) {
@@ -258,7 +271,6 @@ public class MediaFXMLController implements Initializable {
                 }
             }
         }, 0, 5000);
-
     }
 
     private ExpandableTimeTask hideInTimeBox;
@@ -275,11 +287,20 @@ public class MediaFXMLController implements Initializable {
         });
 
         centerPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            double factor = newValue.doubleValue() / Odtwarzacz.MEDIA_MIN_WIDTH;
             mediaView.setFitWidth(newValue.doubleValue());
+
+            musicIcon.setScaleX(factor);
+            musicIcon.setScaleY(factor);
         });
 
+
         Platform.runLater(() -> {
+            double factor = centerPane.getWidth() / Odtwarzacz.MEDIA_MIN_WIDTH;
             mediaView.setFitHeight(pane.getHeight() - 90);
+
+            musicIcon.setScaleX(factor);
+            musicIcon.setScaleY(factor);
         });
     }
 
@@ -348,10 +369,11 @@ public class MediaFXMLController implements Initializable {
 
         Platform.runLater(() -> {
             if (Arrays.asList(MainFXMLController.SUPPORTED_AUDIO).contains("*." + Utils.getExtension(file.getAbsolutePath()).toUpperCase())) {
-//                musicIcon.setVisible(true);
+                musicIcon.setVisible(true);
             } else {
-//                musicIcon.setVisible(false);
+                musicIcon.setVisible(false);
             }
+
         });
 
         mediaView.setMediaPlayer(mp);

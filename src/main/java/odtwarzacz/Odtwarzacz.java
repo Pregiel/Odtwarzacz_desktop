@@ -79,7 +79,7 @@ public class Odtwarzacz extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         ResizeHelper.addResizeListener(stage, PLAYER_MIN_WIDTH+20, PLAYER_MIN_HEIGHT+30, 1.7976931348623157E308D, 1.7976931348623157E308D);
 
-
+        stage.setTitle("Player");
         stage.show();
 
 

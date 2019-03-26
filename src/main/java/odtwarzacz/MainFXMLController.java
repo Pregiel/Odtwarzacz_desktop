@@ -14,10 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -32,6 +29,7 @@ import odtwarzacz.Playlist.Playlist;
 import odtwarzacz.Playlist.Queue.QueueElement;
 import odtwarzacz.Utils.CustomStage;
 import odtwarzacz.Utils.Delta;
+import odtwarzacz.Utils.ExpandableTimeTask;
 import odtwarzacz.Utils.Utils;
 
 import java.awt.*;
@@ -105,9 +103,8 @@ public class MainFXMLController implements Initializable {
             if (Odtwarzacz.getConfig().getProperty("playlist.visible").equals("true")) {
                 playlist.show();
             }
-
+            playlist.hide();
             Platform.runLater(() -> splitPane.setDividerPosition(0, 1 - (dividerPosition / windowWidth)));
-
 
             splitPane.widthProperty().addListener((observable, oldValue, newValue) -> {
                 double dividerPosition2 = Double.parseDouble(Odtwarzacz.getConfig().getProperty("playlist.divider"));

@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -304,7 +305,6 @@ public class Playlist {
                 saveDividerPositionTask.start();
             }
         });
-
 
         Odtwarzacz.getConfig().setProperty("playlist.visible", "true");
         Odtwarzacz.getConfig().save();
@@ -1089,6 +1089,10 @@ public class Playlist {
             t.setPlaying(false);
 
         });
+
+        if (Connection.getInstance() != null) {
+            Connection.getInstance().sendMessage(Connection.PLAYLIST_PLAYING_INDEX, -1);
+        }
     }
 
     public List<String> getPlaylistList() {

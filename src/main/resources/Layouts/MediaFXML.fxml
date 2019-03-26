@@ -19,19 +19,20 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.media.MediaView?>
+<?import javafx.scene.shape.SVGPath?>
 
 <BorderPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="420.0" prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@Styles/MediaFXMLStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odtwarzacz.MediaFXMLController">
    <center>
-      <SplitPane styleClass="background" BorderPane.alignment="CENTER">
+      <SplitPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="background" BorderPane.alignment="CENTER">
          <items>
-            <StackPane>
+            <StackPane fx:id="mainStackPane">
                <children>
                   <Label fx:id="mediaPlayerView" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                      <graphic>
                         <MediaView fx:id="mediaView" />
                      </graphic>
                   </Label>
-                  <GridPane fx:id="mediaBar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" StackPane.alignment="BOTTOM_CENTER">
+                  <GridPane fx:id="mediaBar" maxHeight="-Infinity" StackPane.alignment="BOTTOM_CENTER">
                      <StackPane.margin>
                         <Insets />
                      </StackPane.margin>
@@ -49,7 +50,7 @@
                      <children>
                         <AnchorPane GridPane.columnSpan="2147483647">
                            <children>
-                              <AnchorPane fx:id="timeBackTrack" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="8.0" styleClass="time-slider-background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="22.0">
+                              <AnchorPane fx:id="timeBackTrack" maxHeight="-Infinity" prefHeight="8.0" styleClass="time-slider-background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="22.0">
                                  <children>
                                     <Pane fx:id="timeTrack" styleClass="time-slider-foreground" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
@@ -180,6 +181,7 @@
                         <Label fx:id="timeBoxLabel" alignment="CENTER" styleClass="media-label" text="-15s" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
+                  <SVGPath fx:id="musicIcon" content="M71.6,174.02v46.416c-2.419-1.786-5.543-2.865-8.958-2.865c-7.672,0-13.892,5.438-13.892,12.145c0,6.707,6.22,12.145,13.892,12.145c7.621,0,13.806-5.365,13.888-12.011l0.13,0.245v-40.892l40.184-9.92v30.127c-2.442-1.866-5.637-2.999-9.135-2.999c-7.673,0-13.893,5.438-13.893,12.145s6.22,12.145,13.893,12.145c7.251,0,13.202-4.858,13.833-11.055l0.059,0.125v-58.099L71.6,174.02z M71.6,174.02v46.416c-2.419-1.786-5.543-2.865-8.958-2.865c-7.672,0-13.892,5.438-13.892,12.145c0,6.707,6.22,12.145,13.892,12.145c7.621,0,13.806-5.365,13.888-12.011l0.13,0.245v-40.892l40.184-9.92v30.127c-2.442-1.866-5.637-2.999-9.135-2.999c-7.673,0-13.893,5.438-13.893,12.145s6.22,12.145,13.893,12.145c7.251,0,13.202-4.858,13.833-11.055l0.059,0.125v-58.099L71.6,174.02z" fill="WHITE" mouseTransparent="true" />
                </children>
             </StackPane>
          </items>
